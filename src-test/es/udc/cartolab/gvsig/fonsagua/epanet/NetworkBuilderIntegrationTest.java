@@ -50,6 +50,12 @@ public class NetworkBuilderIntegrationTest {
 	executeTest("reservoir_tank_junction-with-demand");
     }
 
+    @Test
+    public void reservoir__valve_tank_juctionWithDemand() throws Exception {
+	getReservoirValveTankJuctionWithDemand();
+	executeTest("reservoir_valve_tank_junctionWithDemand");
+    }
+
     private void executeTest(String patternName) throws Exception {
 	try {
 	    nb.prepare();
@@ -91,6 +97,18 @@ public class NetworkBuilderIntegrationTest {
 	nb.getTank("3", -557.32, 8704.88, 50, 5, 0, 10, 5);
 	nb.getPipe("1", "2", "3", 200, 50, 0.1);
 	nb.getPipe("2", "1", "3", 1000, 90, 0.1);
+    }
+
+    private void getReservoirValveTankJuctionWithDemand() {
+	nb.getNode("2", -1406.58, 7728.24, 90, 0);
+	nb.getNode("3", -1119.96, 7728.24, 90, 0);
+	nb.getNode("4", 4145.44, 7664.54, 20, 1);
+	nb.getReservoir("1", -1884.29, 7738.85, 100);
+	nb.getTank("5", 1204.88, 8046.71, 50, 5, 0, 10, 5);
+	nb.getPipe("1", "3", "5", 900, 50, 0.1);
+	nb.getPipe("2", "5", "4", 200, 50, 0.1);
+	nb.getPipe("3", "1", "2", 100, 50, 0.1);
+	nb.getFlowControlValve("4", "2", "3", 90, 2);
     }
 
 }

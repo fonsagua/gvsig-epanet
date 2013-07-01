@@ -23,6 +23,7 @@ import org.addition.epanet.network.structures.Pattern;
 import org.addition.epanet.network.structures.Point;
 import org.addition.epanet.network.structures.Pump;
 import org.addition.epanet.network.structures.Tank;
+import org.addition.epanet.network.structures.Valve;
 import org.addition.epanet.util.ENException;
 
 //Los getXX pueden seguir devolviendo el valor para poder referenciar
@@ -215,6 +216,21 @@ public class NetworkBuilder {
 
     public void prepare() throws ENException {
 	parser.parse(net, null);
+    }
+
+    public void getFlowControlValve(String id, String startNode,
+	    String endNode, double diameter, double flow) {
+	// TODO: MinorLoss; Checks from InpParser
+	Valve valve = new Valve();
+	valve.setId(id);
+	valve.setFirst(net.getNode(startNode));
+	valve.setSecond(net.getNode(endNode));
+	valve.setDiameter(diameter);
+	valve.setType(LinkType.FCV);
+	valve.setStatus(StatType.ACTIVE);
+	valve.setRoughness(flow);
+	net.addValve(valve.getId(), valve);
+
     }
 
 }
