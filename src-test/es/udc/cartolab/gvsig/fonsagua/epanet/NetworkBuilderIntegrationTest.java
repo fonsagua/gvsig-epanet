@@ -1,0 +1,96 @@
+package es.udc.cartolab.gvsig.fonsagua.epanet;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+
+import org.addition.epanet.network.Network.FileType;
+import org.addition.epanet.network.io.output.OutputComposer;
+import org.addition.epanet.util.ENException;
+import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+public class NetworkBuilderIntegrationTest {
+
+    // TODO: COMPROBAR EL INP DE LOS DOS ÚLTIMOS
+    private static EpanetWrapper epanet;
+
+    private static BaseformWrapper baseform;
+
+    private NetworkBuilder nb;
+
+    @Rule
+    public TemporaryFolder temp = new TemporaryFolder();
+
+    @BeforeClass
+    public static void setUpBeforeClass() {
+	epanet = new EpanetWrapper(TestProperties.epanetPath);
+	baseform = new BaseformWrapper("binaries/BaseformEpaNetLib-1.0.jar");
+    }
+
+    @Before
+    public void setUp() throws Exception {
+	nb = new NetworkBuilder();
+    }
+
+    @Test
+    public void reservoir_junctionWithDemand() throws Exception {
+	getReservoirJunctionWithDemand();
+	executeTest("reservoir_junction-with-demand");
+    }
+
+    @Test
+    public void reservoir_tank_juctionWithDemand() throws Exception {
+	getReservoirTankJuctionWithDemand();
+	executeTest("reservoir_tank_junction-with-demand");
+    }
+
+    private void executeTest(String patternName) throws Exception {
+	try {
+	    nb.prepare();
+	} catch (ENException e) {
+	    e.printStackTrace();
+	}
+
+	File inp = temp.newFile("foo.inp");
+	createInpFile(inp);
+
+	// Epanet
+	String actualRPT[] = epanet.execute(inp.getAbsolutePath());
+	final File expectedRPT = new File("fixtures/" + patternName + ".rpt");
+	assertTrue(ComparatorUtils.rptComparator(expectedRPT, new File(
+		actualRPT[0])));
+
+	// Baseform
+	String actualRPT2[] = baseform.execute(inp.getAbsolutePath());
+	assertFalse(FileUtils.contentEquals(new File(actualRPT2[0]), new File(
+		"fixtures/" + patternName + ".inp.nodes.out")));
+	assertFalse(FileUtils.contentEquals(new File(actualRPT2[1]), new File(
+		"fixtures/" + patternName + ".inp.links.out")));
+    }
+
+    private void createInpFile(File ofile) throws ENException {
+	OutputComposer composer = OutputComposer.create(FileType.INP_FILE);
+	composer.composer(nb.getNet(), ofile);
+    }
+
+    private void getReservoirJunctionWithDemand() {
+	nb.getNode("2", 207.01, 8428.87, 50, 1);
+	nb.getReservoir("1", -1321.66, 8460.72, 100);
+	nb.getPipe("1", "1", "2", 1000, 300, 0.1);
+    }
+
+    private void getReservoirTankJuctionWithDemand() {
+	nb.getNode("2", 207.01, 8428.87, 20, 1);
+	nb.getReservoir("1", -1321.66, 8460.72, 100);
+	nb.getTank("3", -557.32, 8704.88, 50, 5, 0, 10, 5);
+	nb.getPipe("1", "2", "3", 200, 50, 0.1);
+	nb.getPipe("2", "1", "3", 1000, 90, 0.1);
+    }
+
+}
