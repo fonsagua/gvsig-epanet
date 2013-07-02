@@ -7,6 +7,7 @@ import java.util.Properties;
 public class TestProperties {
 
     public static String epanetPath;
+    public static String driversPath;
     static {
 	Properties p = new Properties();
 	FileInputStream in;
@@ -15,6 +16,7 @@ public class TestProperties {
 	    p.load(in);
 	    in.close();
 	    epanetPath = p.getProperty("epanetPath");
+	    driversPath = p.getProperty("driversPath");
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}

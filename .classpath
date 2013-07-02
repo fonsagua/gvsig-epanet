@@ -7,5 +7,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Epanet"/>
 	<classpathentry kind="lib" path="lib-test/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="lib-test/commons-io-2.4.jar"/>
+	<classpathentry kind="src" path="/libDriverManager"/>
+	<classpathentry kind="src" path="/libFMap"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/libGDBMS"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/libExceptions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/libProjection"/>
+	<classpathentry kind="lib" path="/libFMap/lib/jts-1.12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
