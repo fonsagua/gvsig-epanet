@@ -173,14 +173,45 @@ public class NetworkBuilder {
 	net.addPipe(link.getId(), link);
     }
 
-    public void getPump(String id, String startNode, String endNode,
-	    String headCurve) {
+    private Pump getPump(String id, String startNode, String endNode) {
 	Pump pump = new Pump();
 	pump.setId(id);
+	// Link attributes
 	pump.setFirst(net.getNode(startNode));
 	pump.setSecond(net.getNode(endNode));
-	pump.setHcurve(net.getCurve(headCurve));
+	pump.setDiameter(0);
+	pump.setLenght(0.0d);
+	pump.setRoughness(1.0d);
+	pump.setKm(0.0d);
+	pump.setKb(0.0d);
+	pump.setKw(0.0d);
+	pump.setType(LinkType.PUMP);
+	pump.setStatus(StatType.OPEN);
+	pump.setReportFlag(false);
 
+	// Pump attributes
+	pump.setHcurve(null);
+	pump.setEcurve(null);
+	pump.setUpat(null);
+	pump.setEcost(0.0d);
+	pump.setEpat(null);
+	return pump;
+    }
+
+    public void getPumpWithPower(String id, String startNode, String endNode,
+	    double power) {
+
+	Pump pump = getPump(id, startNode, endNode);
+	pump.setPtype(Pump.Type.CONST_HP);
+	pump.setKm(power);
+	net.addPump(pump.getId(), pump);
+    }
+
+    public void getPumpWithCurve(String id, String startNode, String endNode,
+	    String headCurveId) {
+	Pump pump = getPump(id, startNode, endNode);
+	pump.setPtype(Pump.Type.NOCURVE);
+	pump.setHcurve(net.getCurve(headCurveId));
 	net.addPump(pump.getId(), pump);
     }
 
