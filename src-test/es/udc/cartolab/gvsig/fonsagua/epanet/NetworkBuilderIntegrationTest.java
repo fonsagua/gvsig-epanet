@@ -5,9 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.addition.epanet.network.Network.FileType;
-import org.addition.epanet.network.io.output.OutputComposer;
-import org.addition.epanet.util.ENException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -57,14 +54,9 @@ public class NetworkBuilderIntegrationTest {
     }
 
     private void executeTest(String patternName) throws Exception {
-	try {
-	    nb.prepare();
-	} catch (ENException e) {
-	    e.printStackTrace();
-	}
 
 	File inp = temp.newFile("foo.inp");
-	createInpFile(inp);
+	nb.createInpFile(inp);
 
 	// Epanet
 	String actualRPT[] = epanet.execute(inp.getAbsolutePath());
@@ -78,11 +70,6 @@ public class NetworkBuilderIntegrationTest {
 		"fixtures/" + patternName + ".inp.nodes.out")));
 	assertFalse(FileUtils.contentEquals(new File(actualRPT2[1]), new File(
 		"fixtures/" + patternName + ".inp.links.out")));
-    }
-
-    private void createInpFile(File ofile) throws ENException {
-	OutputComposer composer = OutputComposer.create(FileType.INP_FILE);
-	composer.composer(nb.getNet(), ofile);
     }
 
     private void getReservoirJunctionWithDemand() {

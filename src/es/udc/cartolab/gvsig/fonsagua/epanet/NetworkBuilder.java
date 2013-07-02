@@ -1,5 +1,6 @@
 package es.udc.cartolab.gvsig.fonsagua.epanet;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.addition.epanet.network.Network;
@@ -10,6 +11,7 @@ import org.addition.epanet.network.PropertiesMap.FormType;
 import org.addition.epanet.network.PropertiesMap.ReportFlag;
 import org.addition.epanet.network.PropertiesMap.StatFlag;
 import org.addition.epanet.network.io.input.InputParser;
+import org.addition.epanet.network.io.output.OutputComposer;
 import org.addition.epanet.network.structures.Control;
 import org.addition.epanet.network.structures.Control.ControlType;
 import org.addition.epanet.network.structures.Curve;
@@ -214,10 +216,6 @@ public class NetworkBuilder {
 	net.addControl(control);
     }
 
-    public void prepare() throws ENException {
-	parser.parse(net, null);
-    }
-
     public void getFlowControlValve(String id, String startNode,
 	    String endNode, double diameter, double flow) {
 	// TODO: MinorLoss; Checks from InpParser
@@ -231,6 +229,17 @@ public class NetworkBuilder {
 	valve.setRoughness(flow);
 	net.addValve(valve.getId(), valve);
 
+    }
+
+    private void prepare() throws ENException {
+	// TODO: Como gestionar esto
+	parser.parse(net, null);
+    }
+
+    public void createInpFile(File ofile) throws ENException {
+	prepare();
+	OutputComposer composer = OutputComposer.create(FileType.INP_FILE);
+	composer.composer(net, ofile);
     }
 
 }
