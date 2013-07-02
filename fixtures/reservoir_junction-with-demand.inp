@@ -106,8 +106,8 @@
 
 [COORDINATES]
 ;Node            	X-Coord         	Y-Coord
- 2               	207.01          	8428.87         
- 1               	-1321.66        	8460.72         
+ 2               	200.00          	8500.00         
+ 1               	-800.00	        	8500.00         
 
 [VERTICES]
 ;Link            	X-Coord         	Y-Coord

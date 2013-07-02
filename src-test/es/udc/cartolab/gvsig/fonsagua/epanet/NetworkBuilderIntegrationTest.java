@@ -73,8 +73,8 @@ public class NetworkBuilderIntegrationTest {
     }
 
     private void getReservoirJunctionWithDemand() {
-	nb.getNode("2", 207.01, 8428.87, 50, 1);
-	nb.getReservoir("1", -1321.66, 8460.72, 100);
+	nb.getNode("2", 200.00, 8500.00, 50, 1);
+	nb.getReservoir("1", -800.00, 8500.00, 100);
 	nb.getPipe("1", "1", "2", 1000, 300, 0.1);
     }
 
