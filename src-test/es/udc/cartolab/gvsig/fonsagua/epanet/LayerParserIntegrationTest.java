@@ -16,7 +16,10 @@ import org.junit.rules.TemporaryFolder;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
+
+import es.udc.cartolab.gvsig.shputils.SHPFactory;
 
 public class LayerParserIntegrationTest {
 
@@ -71,12 +74,15 @@ public class LayerParserIntegrationTest {
     @Test
     public void reservoir_junctionWithDemand() throws Exception {
 	getReservoirJunctionWithDemand();
-	layerParser.addJunctions(new File(temp.getRoot().getAbsoluteFile()
-		+ File.separator + "junctions.shp"));
-	layerParser.addReservoirs(new File(temp.getRoot().getAbsoluteFile()
-		+ File.separator + "reservoirs.shp"));
-	layerParser.addPipes(new File(temp.getRoot().getAbsoluteFile()
-		+ File.separator + "pipes.shp"));
+	FLyrVect layer = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
+		.getAbsoluteFile() + File.separator + "junctions.shp"));
+	layerParser.addJunctions(layer);
+	layer = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
+		.getAbsoluteFile() + File.separator + "reservoirs.shp"));
+	layerParser.addReservoirs(layer);
+	layer = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
+		.getAbsoluteFile() + File.separator + "pipes.shp"));
+	layerParser.addPipes(layer);
 
 	executeTest("reservoir_junction-with-demand");
     }

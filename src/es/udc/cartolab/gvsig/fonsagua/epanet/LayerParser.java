@@ -12,8 +12,6 @@ import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-import es.udc.cartolab.gvsig.shputils.SHPFactory;
-
 public class LayerParser {
 
     private NetworkBuilder nb;
@@ -24,8 +22,7 @@ public class LayerParser {
 	nb = new NetworkBuilder();
     }
 
-    public void addPipes(File file) throws Exception {
-	FLyrVect layer = SHPFactory.getFLyrVectFromSHP(file);
+    public void addPipes(FLyrVect layer) throws Exception {
 	ReadableVectorial readableVectorial = layer.getSource();
 
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
@@ -41,8 +38,7 @@ public class LayerParser {
 	}
     }
 
-    public void addJunctions(File file) throws Exception {
-	FLyrVect layer = SHPFactory.getFLyrVectFromSHP(file);
+    public void addJunctions(FLyrVect layer) throws Exception {
 	ReadableVectorial readableVectorial = layer.getSource();
 
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
@@ -57,8 +53,7 @@ public class LayerParser {
 	}
     }
 
-    public void addReservoirs(File file) throws Exception {
-	FLyrVect layer = SHPFactory.getFLyrVectFromSHP(file);
+    public void addReservoirs(FLyrVect layer) throws Exception {
 	ReadableVectorial readableVectorial = layer.getSource();
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
