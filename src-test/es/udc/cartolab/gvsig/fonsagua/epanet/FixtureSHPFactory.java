@@ -79,4 +79,50 @@ public class FixtureSHPFactory {
 	return feat;
     }
 
+    public static IFeature createTankFeature(double x, double y, int elevation,
+	    int initLevel, int minLevel, int maxLevel, double diameter) {
+	Value[] values = new Value[5];
+	values[0] = ValueFactory.createValue(elevation);
+	values[1] = ValueFactory.createValue(initLevel);
+	values[2] = ValueFactory.createValue(minLevel);
+	values[3] = ValueFactory.createValue(maxLevel);
+	values[4] = ValueFactory.createValue(diameter);
+	IGeometry geom = ShapeFactory.createPoint2D(x, y);
+	IFeature feat = new DefaultFeature(geom, values);
+	return feat;
+    }
+
+    protected static void createTankShp(File file, IFeature[] features)
+	    throws Exception {
+	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
+	fdFactory.addInteger("elevation");
+	fdFactory.addInteger("initlevel");
+	fdFactory.addInteger("minlevel");
+	fdFactory.addInteger("maxlevel");
+	fdFactory.addDouble("diameter");
+	FieldDescription[] fieldsDesc = fdFactory.getFields();
+	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
+    }
+
+    protected static IFeature createFCVFeature(double x, double y,
+	    int elevation, double diameter, double flow) {
+	Value[] values = new Value[3];
+	values[0] = ValueFactory.createValue(elevation);
+	values[1] = ValueFactory.createValue(diameter);
+	values[2] = ValueFactory.createValue(flow);
+	IGeometry geom = ShapeFactory.createPoint2D(x, y);
+	IFeature feat = new DefaultFeature(geom, values);
+	return feat;
+    }
+
+    public static void createFCVShp(File file, IFeature[] features)
+	    throws Exception {
+	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
+	fdFactory.addInteger("elevation");
+	fdFactory.addDouble("diameter");
+	fdFactory.addDouble("flow");
+	FieldDescription[] fieldsDesc = fdFactory.getFields();
+	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
+    }
+
 }

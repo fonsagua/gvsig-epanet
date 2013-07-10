@@ -29,4 +29,14 @@ public class IDCreator {
 	linkMap.put(featureID, id);
 	return id;
     }
+
+    public String addValveNode(String featureID) {
+	String id = String.valueOf(++nodeID);
+	return id;
+    }
+
+    public String addValveLink(String featureID) {
+	String id = String.valueOf(++linkID);
+	return id;
+    }
 }

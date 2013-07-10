@@ -1,6 +1,8 @@
 package es.udc.cartolab.gvsig.fonsagua.epanet;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.addition.epanet.network.Network;
@@ -259,32 +261,48 @@ public class NetworkBuilder {
 	valve.setFirst(net.getNode(startNode));
 	valve.setSecond(net.getNode(endNode));
 	valve.setDiameter(diameter);
+	valve.setLenght(0.0d);
+	valve.setRoughness(flow);
+	valve.setKm(0.0);
+	valve.setKb(0.0d);
+	valve.setKw(0.0d);
 	valve.setType(LinkType.FCV);
 	valve.setStatus(StatType.ACTIVE);
-	valve.setRoughness(flow);
 	net.addValve(valve.getId(), valve);
 
     }
 
-    private void prepare() throws ENException {
+    private void prepare() {
 	// TODO: Como gestionar esto
-	parser.parse(net, null);
+	try {
+	    parser.parse(net, null);
+	} catch (ENException e) {
+	    throw new InvalidNetworkError();
+	}
     }
 
-    public void createInpFile(File ofile) throws ENException {
+    public void createInpFile(File ofile) {
 	prepare();
 	OutputComposer composer = OutputComposer.create(FileType.INP_FILE);
-	composer.composer(net, ofile);
+	try {
+	    composer.composer(net, ofile);
+	} catch (ENException e) {
+	    throw new InvalidNetworkError();
+	}
     }
 
-    public Node getNodeAt(Coordinate coordinate) {
+    public List<String> getNodesIdsAt(Coordinate coordinate) {
+	List<String> nodes = new ArrayList<String>(1);
 	for (Node n : net.getNodes()) {
 	    if (coordinate.x == n.getPosition().getX()
 		    && coordinate.y == n.getPosition().getY()) {
-		return n;
+		nodes.add(n.getId());
 	    }
 	}
-	throw new InvalidNetworkError();
+	if ((nodes.size() != 1) && (nodes.size() != 2)) {
+	    throw new InvalidNetworkError();
+	}
+	return nodes;
     }
 
 }

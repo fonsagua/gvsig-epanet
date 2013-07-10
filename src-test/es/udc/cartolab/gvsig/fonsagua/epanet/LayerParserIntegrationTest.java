@@ -1,7 +1,6 @@
 package es.udc.cartolab.gvsig.fonsagua.epanet;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -13,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.hardcode.driverManager.DriverLoadException;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.core.ShapeFactory;
@@ -74,15 +74,7 @@ public class LayerParserIntegrationTest {
     @Test
     public void reservoir_junctionWithDemand() throws Exception {
 	getReservoirJunctionWithDemand();
-	FLyrVect layer = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
-		.getAbsoluteFile() + File.separator + "junctions.shp"));
-	layerParser.addJunctions(layer);
-	layer = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
-		.getAbsoluteFile() + File.separator + "reservoirs.shp"));
-	layerParser.addReservoirs(layer);
-	layer = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
-		.getAbsoluteFile() + File.separator + "pipes.shp"));
-	layerParser.addPipes(layer);
+	parseSHPs();
 
 	executeTest("reservoir_junction-with-demand");
     }
@@ -106,6 +98,107 @@ public class LayerParserIntegrationTest {
 	FixtureSHPFactory.createPipeShp(file, new IFeature[] { pipeFeat });
     }
 
+    @Test
+    public void reservoir_tank_junctionWithDemand() throws Exception {
+	getReservoirTankJunctionWithDemand();
+	parseSHPs();
+	executeTest("reservoir_tank_junction-with-demand");
+    }
+
+    private void getReservoirTankJunctionWithDemand() throws Exception {
+
+	IFeature junctionFeat = FixtureSHPFactory.createJunctionFeature(200,
+		8500, 20, 1);
+	File file = temp.newFile("junctions.shp");
+	FixtureSHPFactory.createJunctionShp(file,
+		new IFeature[] { junctionFeat });
+
+	IFeature reservoirFeat = FixtureSHPFactory.createReservoirFeature(
+		-1000, 8500, 100);
+	file = temp.newFile("reservoirs.shp");
+	FixtureSHPFactory.createReservoirShp(file,
+		new IFeature[] { reservoirFeat });
+
+	IFeature tankFeat = FixtureSHPFactory.createTankFeature(0.0, 8500.0,
+		50, 5, 0, 10, 5);
+	file = temp.newFile("tanks.shp");
+	FixtureSHPFactory.createTankShp(file, new IFeature[] { tankFeat });
+
+	IFeature pipeFeat1 = FixtureSHPFactory.createPipeFeature(junctionFeat,
+		tankFeat, 50, 0.1);
+	IFeature pipeFeat2 = FixtureSHPFactory.createPipeFeature(reservoirFeat,
+		tankFeat, 90, 0.1);
+	file = temp.newFile("pipes.shp");
+	FixtureSHPFactory.createPipeShp(file, new IFeature[] { pipeFeat1,
+		pipeFeat2 });
+
+    }
+
+    @Test
+    public void reservoir_valve_tank_junctionWithDemand() throws Exception {
+	getReservoirValveTankJunctionWithDemand();
+	parseSHPs();
+	executeTest("reservoir_valve_tank_junctionWithDemand");
+    }
+
+    private void getReservoirValveTankJunctionWithDemand() throws Exception {
+	IFeature n1 = FixtureSHPFactory.createReservoirFeature(0, 8500, 100);
+	File file = temp.newFile("reservoirs.shp");
+	FixtureSHPFactory.createReservoirShp(file, new IFeature[] { n1 });
+
+	double x = 100;
+	double y = 8500;
+	IFeature l4 = FixtureSHPFactory.createFCVFeature(x, y, 90, 90, 2);
+	file = temp.newFile("valves.shp");
+	FixtureSHPFactory.createFCVShp(file, new IFeature[] { l4 });
+
+	IFeature n4 = FixtureSHPFactory
+		.createJunctionFeature(1200, 8500, 20, 1);
+	file = temp.newFile("junctions.shp");
+	FixtureSHPFactory.createJunctionShp(file, new IFeature[] { n4 });
+
+	IFeature n5 = FixtureSHPFactory.createTankFeature(1000, 8500.0, 50, 5,
+		0, 10, 5);
+	file = temp.newFile("tanks.shp");
+	FixtureSHPFactory.createTankShp(file, new IFeature[] { n5 });
+
+	IFeature l1 = FixtureSHPFactory.createPipeFeature(l4, n5, 50, 0.1);
+	IFeature l2 = FixtureSHPFactory.createPipeFeature(n5, n4, 50, 0.1);
+	IFeature l3 = FixtureSHPFactory.createPipeFeature(n1, l4, 50, 0.1);
+	file = temp.newFile("pipes.shp");
+	FixtureSHPFactory.createPipeShp(file, new IFeature[] { l1, l2, l3 });
+
+    }
+
+    private void parseSHPs() throws DriverLoadException, Exception {
+	FLyrVect reservoirs = SHPFactory.getFLyrVectFromSHP(new File(temp
+		.getRoot().getAbsoluteFile()
+		+ File.separator
+		+ "reservoirs.shp"));
+	layerParser.addReservoirs(reservoirs);
+
+	FLyrVect valves = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
+		.getAbsoluteFile() + File.separator + "valves.shp"));
+	if (valves != null) {
+	    layerParser.addValves(valves);
+	}
+
+	FLyrVect junctions = SHPFactory
+		.getFLyrVectFromSHP(new File(temp.getRoot().getAbsoluteFile()
+			+ File.separator + "junctions.shp"));
+	layerParser.addJunctions(junctions);
+
+	FLyrVect tanks = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
+		.getAbsoluteFile() + File.separator + "tanks.shp"));
+	if (tanks != null) {
+	    layerParser.addTanks(tanks);
+	}
+	FLyrVect pipes = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
+		.getAbsoluteFile() + File.separator + "pipes.shp"));
+	layerParser.addPipes(pipes);
+
+    }
+
     private void executeTest(String patternName) throws Exception {
 
 	File inp = temp.newFile("foo.inp");
@@ -119,9 +212,9 @@ public class LayerParserIntegrationTest {
 
 	// Baseform
 	String actualRPT2[] = baseform.execute(inp.getAbsolutePath());
-	assertFalse(FileUtils.contentEquals(new File(actualRPT2[0]), new File(
-		"fixtures/" + patternName + ".inp.nodes.out")));
-	assertFalse(FileUtils.contentEquals(new File(actualRPT2[1]), new File(
+	assertTrue(FileUtils.contentEquals(new File(actualRPT2[0]), new File(
 		"fixtures/" + patternName + ".inp.links.out")));
+	assertTrue(FileUtils.contentEquals(new File(actualRPT2[1]), new File(
+		"fixtures/" + patternName + ".inp.nodes.out")));
     }
 }
