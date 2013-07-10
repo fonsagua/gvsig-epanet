@@ -1,6 +1,5 @@
 package es.udc.cartolab.gvsig.fonsagua.epanet;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -43,14 +42,14 @@ public class NetworkBuilderIntegrationTest {
 
     // TODO: check inp
     @Test
-    public void reservoir_tank_juctionWithDemand() throws Exception {
+    public void reservoir_tank_junctionWithDemand() throws Exception {
 	getReservoirTankJuctionWithDemand();
 	executeTest("reservoir_tank_junction-with-demand");
     }
 
     // TODO: check inp
     @Test
-    public void reservoir__valve_tank_juctionWithDemand() throws Exception {
+    public void reservoir__valve_tank_junctionWithDemand() throws Exception {
 	getReservoirValveTankJuctionWithDemand();
 	executeTest("reservoir_valve_tank_junctionWithDemand");
     }
@@ -82,10 +81,10 @@ public class NetworkBuilderIntegrationTest {
 
 	// Baseform
 	String actualRPT2[] = baseform.execute(inp.getAbsolutePath());
-	assertFalse(FileUtils.contentEquals(new File(actualRPT2[0]), new File(
-		"fixtures/" + patternName + ".inp.nodes.out")));
-	assertFalse(FileUtils.contentEquals(new File(actualRPT2[1]), new File(
+	assertTrue(FileUtils.contentEquals(new File(actualRPT2[0]), new File(
 		"fixtures/" + patternName + ".inp.links.out")));
+	assertTrue(FileUtils.contentEquals(new File(actualRPT2[1]), new File(
+		"fixtures/" + patternName + ".inp.nodes.out")));
     }
 
     private void getReservoirJunctionWithDemand() {
