@@ -2,6 +2,7 @@ package es.udc.cartolab.gvsig.fonsagua.epanet;
 
 import java.io.File;
 
+import org.addition.epanet.network.structures.Node;
 import org.addition.epanet.util.ENException;
 
 import com.hardcode.gdbms.engine.values.DoubleValue;
@@ -28,13 +29,16 @@ public class LayerParser {
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
 	    String id = idCreator.addLink(iFeature.getID());
-	    Geometry geom = iFeature.getGeometry().toJTSGeometry();
-	    Coordinate[] coordinates = geom.getCoordinates();
-	    // FIXME
 	    DoubleValue diameter = (DoubleValue) iFeature.getAttribute(0);
 	    DoubleValue roughness = (DoubleValue) iFeature.getAttribute(1);
-	    nb.getPipe(id, "1", "2", geom.getLength(), diameter.intValue(),
-		    roughness.doubleValue());
+
+	    Geometry geom = iFeature.getGeometry().toJTSGeometry();
+	    Coordinate[] coordinates = geom.getCoordinates();
+	    Node n1 = nb.getNodeAt(coordinates[0]);
+	    Node n2 = nb.getNodeAt(coordinates[1]);
+
+	    nb.getPipe(id, n1.getId(), n2.getId(), geom.getLength(),
+		    diameter.intValue(), roughness.doubleValue());
 	}
     }
 

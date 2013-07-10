@@ -28,6 +28,10 @@ import org.addition.epanet.network.structures.Tank;
 import org.addition.epanet.network.structures.Valve;
 import org.addition.epanet.util.ENException;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
+import es.udc.cartolab.gvsig.fonsagua.epanet.exceptions.InvalidNetworkError;
+
 //Los getXX pueden seguir devolviendo el valor para poder referenciar
 //el objeto en lugar del ID
 //
@@ -271,6 +275,16 @@ public class NetworkBuilder {
 	prepare();
 	OutputComposer composer = OutputComposer.create(FileType.INP_FILE);
 	composer.composer(net, ofile);
+    }
+
+    public Node getNodeAt(Coordinate coordinate) {
+	for (Node n : net.getNodes()) {
+	    if (coordinate.x == n.getPosition().getX()
+		    && coordinate.y == n.getPosition().getY()) {
+		return n;
+	    }
+	}
+	throw new InvalidNetworkError();
     }
 
 }
