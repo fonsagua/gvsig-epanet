@@ -39,4 +39,14 @@ public class IDCreator {
 	String id = String.valueOf(++linkID);
 	return id;
     }
+
+    public String addPumpNode(String featureID) {
+	String id = String.valueOf(++nodeID);
+	return id;
+    }
+
+    public String addPumpLink(String featureID) {
+	String id = String.valueOf(++linkID);
+	return id;
+    }
 }

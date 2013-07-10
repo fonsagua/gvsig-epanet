@@ -125,4 +125,25 @@ public class FixtureSHPFactory {
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
 
+    public static IFeature createPumpFeature(double x, double y,
+	    double elevation, String type, String value) {
+	Value[] values = new Value[3];
+	values[0] = ValueFactory.createValue(elevation);
+	values[1] = ValueFactory.createValue(type);
+	values[2] = ValueFactory.createValue(value);
+	IGeometry geom = ShapeFactory.createPoint2D(x, y);
+	IFeature feat = new DefaultFeature(geom, values);
+	return feat;
+    }
+
+    public static void createPumpShp(File file, IFeature[] features)
+	    throws Exception {
+	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
+	fdFactory.addInteger("elevation");
+	fdFactory.addString("type");
+	fdFactory.addString("value");
+	FieldDescription[] fieldsDesc = fdFactory.getFields();
+	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
+    }
+
 }

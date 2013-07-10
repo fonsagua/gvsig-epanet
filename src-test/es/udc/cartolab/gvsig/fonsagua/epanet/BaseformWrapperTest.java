@@ -27,13 +27,13 @@ public class BaseformWrapperTest {
 
     @Test
     public void reportIsGenerated() throws IOException {
-	final String inpPath = "fixtures/one_junction.inp";
+	final String inpPath = "fixtures/Net1.inp";
 	final File copy = copyToTemp(inpPath);
 	final String[] rptPath = epanet.execute(copy.getAbsolutePath());
 	final File links = new File(rptPath[0]);
 	final File nodes = new File(rptPath[1]);
-	assertEquals(links.getName(), "one_junction.inp.links.out");
-	assertEquals(nodes.getName(), "one_junction.inp.nodes.out");
+	assertEquals(links.getName(), "Net1.inp.links.out");
+	assertEquals(nodes.getName(), "Net1.inp.nodes.out");
 	assertTrue(links.exists());
 	assertTrue(nodes.exists());
     }

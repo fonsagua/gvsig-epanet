@@ -107,10 +107,10 @@ public class NetworkBuilderIntegrationTest {
 	nb.getNode("4", 4145.44, 7664.54, 20, 1);
 	nb.getReservoir("1", -1884.29, 7738.85, 100);
 	nb.getTank("5", 1204.88, 8046.71, 50, 5, 0, 10, 5);
-	nb.getPipe("1", "3", "5", 900, 50, 0.1);
-	nb.getPipe("2", "5", "4", 200, 50, 0.1);
-	nb.getPipe("3", "1", "2", 100, 50, 0.1);
-	nb.getFlowControlValve("4", "2", "3", 90, 2);
+	nb.getPipe("2", "3", "5", 900, 50, 0.1);
+	nb.getPipe("3", "5", "4", 200, 50, 0.1);
+	nb.getPipe("4", "1", "2", 100, 50, 0.1);
+	nb.getFlowControlValve("1", "2", "3", 90, 2);
     }
 
     private void getPumpWithPower() {
@@ -119,10 +119,10 @@ public class NetworkBuilderIntegrationTest {
 	nb.getNode("4", 4145.448, 7664.54, 80, 1);
 	nb.getReservoir("1", -1884.29, 7738.85, 100);
 	nb.getTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
-	nb.getPipe("1", "3", "5", 900, 50, 0.1);
-	nb.getPipe("2", "5", "4", 200, 50, 0.1);
-	nb.getPipe("3", "1", "2", 100, 50, 0.1);
-	nb.getPumpWithPower("4", "2", "3", 1);
+	nb.getPipe("2", "3", "5", 900, 50, 0.1);
+	nb.getPipe("3", "5", "4", 200, 50, 0.1);
+	nb.getPipe("4", "1", "2", 100, 50, 0.1);
+	nb.getPumpWithPower("1", "2", "3", 1);
     }
 
     private void getPumpWithCurve() {

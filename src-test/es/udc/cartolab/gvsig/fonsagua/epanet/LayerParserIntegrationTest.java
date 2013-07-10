@@ -167,6 +167,48 @@ public class LayerParserIntegrationTest {
 	IFeature l3 = FixtureSHPFactory.createPipeFeature(n1, l4, 50, 0.1);
 	file = temp.newFile("pipes.shp");
 	FixtureSHPFactory.createPipeShp(file, new IFeature[] { l1, l2, l3 });
+    }
+
+    @Test
+    public void pumpWithPower() throws Exception {
+	getPumpWithPower();
+	parseSHPs();
+	executeTest("pumpWithPower");
+    }
+
+    private void getPumpWithPower() throws Exception {
+	final double yCoord = 8500;
+	IFeature n1 = FixtureSHPFactory.createReservoirFeature(0, yCoord, 100);
+	File file = temp.newFile("reservoirs.shp");
+	FixtureSHPFactory.createReservoirShp(file, new IFeature[] { n1 });
+
+	double elevation = 90;
+	String type = "POWER";
+	String value = "1";
+	IFeature p1 = FixtureSHPFactory.createPumpFeature(100, yCoord,
+		elevation, type, value);
+	file = temp.newFile("pumps.shp");
+	FixtureSHPFactory.createPumpShp(file, new IFeature[] { p1 });
+
+	// IFeature n2 = FixtureSHPFactory.createJunctionFeature(100, yCoord,
+	// 90, 0);
+	// IFeature n3 = FixtureSHPFactory.createJunctionFeature(x, yCoord, 90,
+	// 0);
+	IFeature n4 = FixtureSHPFactory.createJunctionFeature(1200, yCoord, 80,
+		1);
+	file = temp.newFile("junctions.shp");
+	FixtureSHPFactory.createJunctionShp(file, new IFeature[] { n4 });
+
+	IFeature n5 = FixtureSHPFactory.createTankFeature(1000, yCoord, 120, 5,
+		0, 10, 5);
+	file = temp.newFile("tanks.shp");
+	FixtureSHPFactory.createTankShp(file, new IFeature[] { n5 });
+
+	IFeature l1 = FixtureSHPFactory.createPipeFeature(p1, n5, 50, 0.1);
+	IFeature l2 = FixtureSHPFactory.createPipeFeature(n5, n4, 50, 0.1);
+	IFeature l3 = FixtureSHPFactory.createPipeFeature(n1, p1, 50, 0.1);
+	file = temp.newFile("pipes.shp");
+	FixtureSHPFactory.createPipeShp(file, new IFeature[] { l1, l2, l3 });
 
     }
 
@@ -181,6 +223,12 @@ public class LayerParserIntegrationTest {
 		.getAbsoluteFile() + File.separator + "valves.shp"));
 	if (valves != null) {
 	    layerParser.addValves(valves);
+	}
+
+	FLyrVect pumps = SHPFactory.getFLyrVectFromSHP(new File(temp.getRoot()
+		.getAbsoluteFile() + File.separator + "pumps.shp"));
+	if (valves != null) {
+	    layerParser.addPumps(pumps);
 	}
 
 	FLyrVect junctions = SHPFactory

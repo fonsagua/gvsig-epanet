@@ -17,13 +17,13 @@
 
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- 1               	3               	5               	900         	50          	0.1         	0           	Open  	;
- 2               	5               	4               	200         	50          	0.1         	0           	Open  	;
- 3               	1               	2               	100         	50          	0.1         	0           	Open  	;
+ 2               	3               	5               	900         	50          	0.1         	0           	Open  	;
+ 3               	5               	4               	200         	50          	0.1         	0           	Open  	;
+ 4               	1               	2               	100         	50          	0.1         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
- 4               	2               	3               	POWER 1	;
+ 1               	2               	3               	POWER 1	;
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
