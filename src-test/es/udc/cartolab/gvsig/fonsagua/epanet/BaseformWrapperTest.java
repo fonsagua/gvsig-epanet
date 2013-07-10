@@ -13,6 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
+import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
+
 public class BaseformWrapperTest {
 
     private static EpanetWrapper epanet;
@@ -22,7 +25,7 @@ public class BaseformWrapperTest {
 
     @BeforeClass
     public static void setUpBeforeClass() {
-	epanet = new BaseformWrapper("binaries/BaseformEpaNetLib-1.0.jar");
+	epanet = new BaseformWrapper("lib/BaseformEpaNetLib-1.0.jar");
     }
 
     @Test

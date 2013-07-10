@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet.exceptions;
+package es.udc.cartolab.gvsig.epanet.exceptions;
 
 @SuppressWarnings("serial")
 /**

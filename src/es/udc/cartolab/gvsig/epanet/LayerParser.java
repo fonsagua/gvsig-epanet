@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-import es.udc.cartolab.gvsig.fonsagua.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 
 public class LayerParser {
 

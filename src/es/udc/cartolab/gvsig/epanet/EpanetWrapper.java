@@ -1,11 +1,11 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FilenameUtils;
 
-import es.udc.cartolab.gvsig.fonsagua.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 
 public class EpanetWrapper {
 

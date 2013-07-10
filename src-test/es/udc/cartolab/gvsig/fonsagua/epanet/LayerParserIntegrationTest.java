@@ -1,6 +1,5 @@
 package es.udc.cartolab.gvsig.fonsagua.epanet;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -14,11 +13,12 @@ import org.junit.rules.TemporaryFolder;
 
 import com.hardcode.driverManager.DriverLoadException;
 import com.iver.cit.gvsig.fmap.core.IFeature;
-import com.iver.cit.gvsig.fmap.core.IGeometry;
-import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 
+import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
+import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
+import es.udc.cartolab.gvsig.epanet.LayerParser;
 import es.udc.cartolab.gvsig.shputils.SHPFactory;
 
 public class LayerParserIntegrationTest {
@@ -34,7 +34,7 @@ public class LayerParserIntegrationTest {
     public static void setUpBeforeClass() {
 	initgvSIGDrivers();
 	epanet = new EpanetWrapper(TestProperties.epanetPath);
-	baseform = new BaseformWrapper("binaries/BaseformEpaNetLib-1.0.jar");
+	baseform = new BaseformWrapper("lib/BaseformEpaNetLib-1.0.jar");
     }
 
     private static void initgvSIGDrivers() {
@@ -62,13 +62,6 @@ public class LayerParserIntegrationTest {
     @Before
     public void setUp() throws Exception {
 	layerParser = new LayerParser();
-    }
-
-    @Test
-    public void checkDistance() {
-	IGeometry a = ShapeFactory.createPoint2D(200, 8500);
-	IGeometry b = ShapeFactory.createPoint2D(-800, 8500);
-	assertEquals(1000, a.toJTSGeometry().distance(b.toJTSGeometry()), 1);
     }
 
     @Test

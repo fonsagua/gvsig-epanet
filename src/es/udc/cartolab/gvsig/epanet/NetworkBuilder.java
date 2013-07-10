@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import org.addition.epanet.util.ENException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-import es.udc.cartolab.gvsig.fonsagua.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 
 //Los getXX pueden seguir devolviendo el valor para poder referenciar
 //el objeto en lugar del ID

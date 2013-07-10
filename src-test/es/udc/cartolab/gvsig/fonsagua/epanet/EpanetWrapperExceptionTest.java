@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
+
 public class EpanetWrapperExceptionTest {
     protected static EpanetWrapper epanet;
 

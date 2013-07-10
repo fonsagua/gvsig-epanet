@@ -12,6 +12,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
+import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
+import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
+
 public class NetworkBuilderIntegrationTest {
 
     private static EpanetWrapper epanet;
@@ -26,7 +30,7 @@ public class NetworkBuilderIntegrationTest {
     @BeforeClass
     public static void setUpBeforeClass() {
 	epanet = new EpanetWrapper(TestProperties.epanetPath);
-	baseform = new BaseformWrapper("binaries/BaseformEpaNetLib-1.0.jar");
+	baseform = new BaseformWrapper("lib/BaseformEpaNetLib-1.0.jar");
     }
 
     @Before
