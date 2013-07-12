@@ -1,0 +1,59 @@
+<project name="gvsig-epanet" default="batch-build" basedir=".">
+	<property name="src" location="src"/>
+	<property name="build" location="bin"/>
+	<property name="dist"  location="dist"/>
+	<property name="plugin" value="es.udc.cartolab.gvsig.epanet"/>
+	<property name="extensionsDir" location="../_fwAndami/gvSIG/extensiones"/>
+	<import file="../binaries/ant/utilities.xml" />
+
+	<target name="generate-without-source" 
+		depends="init, create-jar, copy-data-files, copy-libs, move-to-andami" >
+	</target>
+	
+	<target name="batch-build" 
+		depends="init, compile, create-jar, copy-data-files, copy-libs, move-to-andami">
+	</target>
+
+	<target name="init">
+    	<tstamp/>
+    	<mkdir dir="${dist}/lib" />
+		<mkdir dir="${build}" />
+  	</target>
+
+	<target name="compile" depends="init">
+		<echo>${compile-classpath}</echo>
+		<loadEclipseClasspath project="${basedir}" />
+		<gvSIG-javac classpath="${eclipseClasspath}" />
+	</target>
+
+	<target name="create-jar" depends="init, compile">
+		<jar jarfile="${dist}/lib/${plugin}.jar" basedir="${build}" />
+	</target>
+
+	<target name="copy-data-files">
+	    <copy file="config/config.xml" todir="${dist}" />
+		<copy todir="${dist}">
+			<fileset dir="config" includes="text*.properties" />
+		</copy>
+		<copy todir="${dist}/images">
+			<fileset dir="images" includes="*" />
+		</copy>
+	</target>
+
+	<target name="copy-libs">
+		<copy todir="${dist}/lib">
+  	    	<fileset dir="lib" includes="*"/>
+  		</copy>
+	</target>
+
+	<target name="move-to-andami">
+	   <move todir="${extensionsDir}/${plugin}/">
+	    	<fileset dir="${dist}" includes="**/**"/>
+	    </move>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${dist}"/>
+		<delete dir="${build}"/>
+	</target>
+</project>

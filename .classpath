@@ -13,5 +13,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/libExceptions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libProjection"/>
 	<classpathentry kind="lib" path="/libFMap/lib/jts-1.12.jar"/>
+	<classpathentry kind="src" path="/_fwAndami"/>
+	<classpathentry kind="src" path="/appgvSIG"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
