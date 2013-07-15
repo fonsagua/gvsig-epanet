@@ -1,10 +1,18 @@
 package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import org.addition.epanet.hydraulic.HydraulicSim;
+import org.addition.epanet.hydraulic.io.AwareStep;
+import org.addition.epanet.hydraulic.io.HydraulicReader;
+import org.addition.epanet.network.FieldsMap;
 import org.addition.epanet.network.Network;
 import org.addition.epanet.network.Network.FileType;
 import org.addition.epanet.network.PropertiesMap;
@@ -32,6 +40,7 @@ import org.addition.epanet.util.ENException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
+import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 
 //Los getXX pueden seguir devolviendo el valor para poder referenciar
@@ -42,8 +51,16 @@ public class NetworkBuilder {
 
     private Network net;
     private InputParser parser;
+    private static Logger log;
+
+    private Map<String, NodeWrapper> nodesWrapper;
+    private Map<String, LinkWrapper> linksWrapper;
 
     public NetworkBuilder() {
+	nodesWrapper = new HashMap<String, NodeWrapper>();
+	linksWrapper = new HashMap<String, LinkWrapper>();
+
+	log = Logger.getLogger(this.getClass().getName());
 	parser = InputParser.create(FileType.NULL_FILE,
 		Logger.getLogger(getClass().getName()));
 
@@ -303,6 +320,60 @@ public class NetworkBuilder {
 	    throw new InvalidNetworkError();
 	}
 	return nodes;
+    }
+
+    public void hydraulicSim() {
+	prepare();
+	try {
+	    File hydFile = File.createTempFile("hydSim", "bin");
+	    HydraulicSim hydSim = new HydraulicSim(net, log);
+	    hydSim.simulate(hydFile);
+	    HydraulicReader hydReader = new HydraulicReader(
+		    new RandomAccessFile(hydFile, "r"));
+
+	    PropertiesMap pMap = net.getPropertiesMap();
+	    FieldsMap fmap = net.getFieldsMap();
+	    AwareStep step = hydReader.getStep(0);
+	    for (Node node : net.getNodes()) {
+		NodeWrapper nw = nodesWrapper.get(node.getId());
+		double demand = step.getNodeDemand(0, node, fmap);
+		double head = step.getNodeHead(0, node, fmap);
+		double pressure = step.getNodePressure(0, node, fmap);
+		nw.setDemand(demand);
+		nw.setHead(head);
+		nw.setPressure(pressure);
+		// base demand
+		// elevation
+
+	    }
+
+	    for (Link link : net.getLinks()) {
+		LinkWrapper lw = linksWrapper.get(link.getId());
+		// lenght
+		// diameter
+		// roughness
+		double flow = Math.abs(step.getLinkFlow(0, link, fmap));
+		double velocity = Math.abs(step.getLinkVelocity(0, link, fmap));
+		double unitheadloss = step.getLinkHeadLoss(0, link, fmap);
+		double frictionFactor = step.getLinkFriction(0, link, fmap);
+		lw.setFlow(flow);
+		lw.setVelocity(velocity);
+		lw.setUnitHeadLoss(unitheadloss);
+		lw.setFrictionFactor(frictionFactor);
+	    }
+	    deleteHydFile(hydFile);
+	} catch (IOException e) {
+	    throw new ExternalError(e);
+
+	} catch (ENException e) {
+	    throw new InvalidNetworkError();
+	}
+    }
+
+    private void deleteHydFile(File hydFile) {
+	if (hydFile != null) {
+	    hydFile.delete();
+	}
     }
 
 }
