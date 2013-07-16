@@ -9,24 +9,21 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.vividsolutions.jts.geom.Coordinate;
 
-import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
-import es.udc.cartolab.gvsig.epanet.structures.NodeFinder;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
-import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.StructureFactory;
+import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
 
 public class LayerParser {
 
     private NetworkBuilder nb;
-    private IDCreator idCreator;
-    private NodeFinder nodeFinder;
     private StructureFactory structureFactory;
+    private IDCreator idCreator;
 
     public LayerParser() {
-	idCreator = new IDCreator();
 	nb = new NetworkBuilder();
-	structureFactory = new StructureFactory(nb.getLinks(), nb.getNodes());
+	structureFactory = new StructureFactory(nb.getLinks(), nb.getNodes(),
+		nb.getAuxNodes());
     }
 
     public void addPipes(FLyrVect layer) throws Exception {
@@ -86,23 +83,8 @@ public class LayerParser {
 	}
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
-	    Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		    .getCoordinate();
-	    IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	    DoubleValue diameter = (DoubleValue) iFeature.getAttribute(1);
-	    DoubleValue flow = (DoubleValue) iFeature.getAttribute(2);
-	    int baseDemand = 0;
-
-	    String startNode = idCreator.addValveNode(iFeature.getID());
-	    nb.addJunction(startNode, coordinate.x, coordinate.y,
-		    elevation.intValue(), baseDemand);
-	    String endNode = idCreator.addValveNode(iFeature.getID());
-	    nb.addJunction(endNode, coordinate.x, coordinate.y,
-		    elevation.intValue(), baseDemand);
-
-	    String id = idCreator.addValveLink(iFeature.getID());
-	    nb.getFlowControlValve(id, startNode, endNode, diameter.intValue(),
-		    flow.intValue());
+	    ValveWrapper valve = structureFactory.getFCV(iFeature);
+	    nb.addFlowControlValve(valve);
 	}
 
     }

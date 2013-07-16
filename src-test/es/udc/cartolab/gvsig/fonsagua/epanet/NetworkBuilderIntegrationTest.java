@@ -106,15 +106,15 @@ public class NetworkBuilderIntegrationTest {
     }
 
     private void getReservoirValveTankJuctionWithDemand() {
-	nb.addJunction("2", -1406.58, 7728.24, 90, 0);
-	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
 	nb.addJunction("4", 4145.44, 7664.54, 20, 1);
+	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
+	nb.addJunction("2", -1406.58, 7728.24, 90, 0);
 	nb.addReservoir("1", -1884.29, 7738.85, 100);
 	nb.addTank("5", 1204.88, 8046.71, 50, 5, 0, 10, 5);
 	nb.addPipe("2", "3", "5", 900, 50, 0.1);
 	nb.addPipe("3", "5", "4", 200, 50, 0.1);
 	nb.addPipe("4", "1", "2", 100, 50, 0.1);
-	nb.getFlowControlValve("1", "2", "3", 90, 2);
+	nb.addFlowControlValve("1", "2", "3", 90, 2);
     }
 
     private void getPumpWithPower() {

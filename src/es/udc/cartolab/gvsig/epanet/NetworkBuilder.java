@@ -27,7 +27,6 @@ import org.addition.epanet.network.structures.Link.LinkType;
 import org.addition.epanet.network.structures.Link.StatType;
 import org.addition.epanet.network.structures.Node;
 import org.addition.epanet.network.structures.Pattern;
-import org.addition.epanet.network.structures.Point;
 import org.addition.epanet.network.structures.Pump;
 import org.addition.epanet.network.structures.Tank;
 import org.addition.epanet.network.structures.Valve;
@@ -41,6 +40,7 @@ import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.TankWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
 
 //Los getXX pueden seguir devolviendo el valor para poder referenciar
 //el objeto en lugar del ID
@@ -55,9 +55,16 @@ public class NetworkBuilder {
     private final Map<String, NodeWrapper> nodesWrapper;
     private final Map<String, LinkWrapper> linksWrapper;
 
+    /**
+     * Used for the nodes that don't exist in the layers, like the nodes that
+     * enclose a pump or a valve
+     **/
+    private final Map<String, NodeWrapper> auxNodes;
+
     public NetworkBuilder() {
 	nodesWrapper = new HashMap<String, NodeWrapper>();
 	linksWrapper = new HashMap<String, LinkWrapper>();
+	auxNodes = new HashMap<String, NodeWrapper>();
 
 	log = Logger.getLogger(this.getClass().getName());
 	parser = InputParser.create(FileType.NULL_FILE,
@@ -253,27 +260,28 @@ public class NetworkBuilder {
 	return pattern;
     }
 
-    public void getFlowControlValve(String id, String startNode,
+    /**
+     * TODO: This method should be avoided. It makes that a new constructor in
+     * pipewrapper is needed We should use a factory, or at least remove the
+     * pipewrapper constructor
+     */
+    public void addFlowControlValve(String id, String startNode,
 	    String endNode, double diameter, double flow) {
-	// TODO: MinorLoss; Checks from InpParser
-	Valve valve = new Valve();
-	valve.setId(id);
-	valve.setFirst(net.getNode(startNode));
-	valve.setSecond(net.getNode(endNode));
-	valve.setDiameter(diameter);
-	valve.setLenght(0.0d);
-	valve.setRoughness(flow);
-	valve.setKm(0.0);
-	valve.setKb(0.0d);
-	valve.setKw(0.0d);
-	valve.setType(LinkType.FCV);
-	valve.setStatus(StatType.ACTIVE);
-	net.addValve(valve.getId(), valve);
+	LinkWrapper fcv = new ValveWrapper(id, nodesWrapper.get(startNode),
+		nodesWrapper.get(endNode), diameter, flow);
+	addFlowControlValve(fcv);
+    }
 
+    public void addFlowControlValve(LinkWrapper fcv) {
+	linksWrapper.put(fcv.getId(), fcv);
+	net.addValve(fcv.getId(), (Valve) fcv.getLink());
     }
 
     private void prepare() {
 	// TODO: Como gestionar esto
+	for (NodeWrapper node : auxNodes.values()) {
+	    net.addJunction(node.getId(), node.getNode());
+	}
 	try {
 	    parser.parse(net, null);
 	} catch (ENException e) {
@@ -351,6 +359,10 @@ public class NetworkBuilder {
 
     public Map<String, NodeWrapper> getNodes() {
 	return nodesWrapper;
+    }
+
+    public Map<String, NodeWrapper> getAuxNodes() {
+	return auxNodes;
     }
 
 }
