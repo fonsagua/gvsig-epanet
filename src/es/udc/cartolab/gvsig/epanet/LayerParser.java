@@ -2,15 +2,13 @@ package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
 
-import com.hardcode.gdbms.engine.values.IntValue;
-import com.hardcode.gdbms.engine.values.StringValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
-import com.vividsolutions.jts.geom.Coordinate;
 
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.PumpWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.StructureFactory;
 import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
 
@@ -98,23 +96,8 @@ public class LayerParser {
 	}
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
-	    Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		    .getCoordinate();
-	    IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	    StringValue type = (StringValue) iFeature.getAttribute(1);
-	    StringValue value = (StringValue) iFeature.getAttribute(2);
-	    int baseDemand = 0;
-
-	    String startNode = idCreator.addPumpNode(iFeature.getID());
-	    nb.addJunction(startNode, coordinate.x, coordinate.y,
-		    elevation.intValue(), baseDemand);
-	    String endNode = idCreator.addPumpNode(iFeature.getID());
-	    nb.addJunction(endNode, coordinate.x, coordinate.y,
-		    elevation.intValue(), baseDemand);
-
-	    String id = idCreator.addPumpLink(iFeature.getID());
-	    double power = Double.parseDouble(value.getValue());
-	    nb.getPumpWithPower(id, startNode, endNode, power);
+	    PumpWrapper pump = structureFactory.getPump(iFeature);
+	    nb.addPump(pump);
 	}
     }
 }

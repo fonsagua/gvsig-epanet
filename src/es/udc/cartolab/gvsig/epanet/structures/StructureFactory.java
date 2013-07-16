@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.hardcode.gdbms.engine.values.DoubleValue;
 import com.hardcode.gdbms.engine.values.IntValue;
+import com.hardcode.gdbms.engine.values.StringValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -48,6 +49,23 @@ public class StructureFactory {
 	reservoir.createReservoir(id, coordinate.x, coordinate.y,
 		totalHead.intValue());
 	return reservoir;
+    }
+
+    public NodeWrapper getTank(IFeature iFeature) {
+	TankWrapper tank = new TankWrapper(iFeature);
+
+	String id = idCreator.addNode(iFeature.getID());
+	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
+		.getCoordinate();
+	IntValue elevation = (IntValue) iFeature.getAttribute(0);
+	IntValue initLevel = (IntValue) iFeature.getAttribute(1);
+	IntValue minLevel = (IntValue) iFeature.getAttribute(2);
+	IntValue maxLevel = (IntValue) iFeature.getAttribute(3);
+	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(4);
+	tank.createTank(id, coordinate.x, coordinate.y, elevation.intValue(),
+		initLevel.intValue(), minLevel.intValue(), maxLevel.intValue(),
+		diameter.doubleValue());
+	return tank;
     }
 
     public LinkWrapper getPipe(IFeature iFeature) {
@@ -103,20 +121,30 @@ public class StructureFactory {
 
     }
 
-    public NodeWrapper getTank(IFeature iFeature) {
-	TankWrapper tank = new TankWrapper(iFeature);
+    public PumpWrapper getPump(IFeature iFeature) {
 
-	String id = idCreator.addNode(iFeature.getID());
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
 	IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	IntValue initLevel = (IntValue) iFeature.getAttribute(1);
-	IntValue minLevel = (IntValue) iFeature.getAttribute(2);
-	IntValue maxLevel = (IntValue) iFeature.getAttribute(3);
-	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(4);
-	tank.createTank(id, coordinate.x, coordinate.y, elevation.intValue(),
-		initLevel.intValue(), minLevel.intValue(), maxLevel.intValue(),
-		diameter.doubleValue());
-	return tank;
+	StringValue type = (StringValue) iFeature.getAttribute(1);
+	StringValue value = (StringValue) iFeature.getAttribute(2);
+	int baseDemand = 0;
+
+	String startNodeId = idCreator.addPumpNode(iFeature.getID());
+	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,
+		coordinate.y, elevation.intValue(), baseDemand);
+	auxNodes.put(startNodeId, startNode);
+
+	String endNodeId = idCreator.addPumpNode(iFeature.getID());
+	NodeWrapper endNode = new JunctionWrapper(endNodeId, coordinate.x,
+		coordinate.y, elevation.intValue(), baseDemand);
+	auxNodes.put(endNodeId, endNode);
+
+	String id = idCreator.addPumpLink(iFeature.getID());
+	double power = Double.parseDouble(value.getValue());
+	PumpWrapper pump = new PumpWrapper(iFeature);
+	pump.createPump(id, startNode, endNode, power);
+
+	return pump;
     }
 }

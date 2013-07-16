@@ -38,6 +38,7 @@ import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.PumpWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.TankWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
@@ -226,11 +227,14 @@ public class NetworkBuilder {
 
     public void getPumpWithPower(String id, String startNode, String endNode,
 	    double power) {
+	LinkWrapper pump = new PumpWrapper(id, nodesWrapper.get(startNode),
+		nodesWrapper.get(endNode), power);
+	addPump(pump);
+    }
 
-	Pump pump = getPump(id, startNode, endNode);
-	pump.setPtype(Pump.Type.CONST_HP);
-	pump.setKm(power);
-	net.addPump(pump.getId(), pump);
+    public void addPump(LinkWrapper pump) {
+	linksWrapper.put(pump.getId(), pump);
+	net.addPump(pump.getId(), (Pump) pump.getLink());
     }
 
     public void getPumpWithCurve(String id, String startNode, String endNode,

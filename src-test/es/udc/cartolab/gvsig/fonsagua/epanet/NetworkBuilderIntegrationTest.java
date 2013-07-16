@@ -118,9 +118,9 @@ public class NetworkBuilderIntegrationTest {
     }
 
     private void getPumpWithPower() {
-	nb.addJunction("2", -1406.58, 7728.24, 90, 0);
-	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
 	nb.addJunction("4", 4145.448, 7664.54, 80, 1);
+	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
+	nb.addJunction("2", -1406.58, 7728.24, 90, 0);
 	nb.addReservoir("1", -1884.29, 7738.85, 100);
 	nb.addTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
 	nb.addPipe("2", "3", "5", 900, 50, 0.1);
