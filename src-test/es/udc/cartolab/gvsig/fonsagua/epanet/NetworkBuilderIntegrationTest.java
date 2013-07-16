@@ -92,52 +92,52 @@ public class NetworkBuilderIntegrationTest {
     }
 
     private void getReservoirJunctionWithDemand() {
-	nb.getNode("2", 200.00, 8500.00, 50, 1);
-	nb.getReservoir("1", -800.00, 8500.00, 100);
-	nb.getPipe("1", "1", "2", 1000, 300, 0.1);
+	nb.addJunction("2", 200.00, 8500.00, 50, 1);
+	nb.addReservoir("1", -800.00, 8500.00, 100);
+	nb.addPipe("1", "1", "2", 1000, 300, 0.1);
     }
 
     private void getReservoirTankJuctionWithDemand() {
-	nb.getNode("2", 207.01, 8428.87, 20, 1);
-	nb.getReservoir("1", -1321.66, 8460.72, 100);
+	nb.addJunction("2", 207.01, 8428.87, 20, 1);
+	nb.addReservoir("1", -1321.66, 8460.72, 100);
 	nb.getTank("3", -557.32, 8704.88, 50, 5, 0, 10, 5);
-	nb.getPipe("1", "2", "3", 200, 50, 0.1);
-	nb.getPipe("2", "1", "3", 1000, 90, 0.1);
+	nb.addPipe("1", "2", "3", 200, 50, 0.1);
+	nb.addPipe("2", "1", "3", 1000, 90, 0.1);
     }
 
     private void getReservoirValveTankJuctionWithDemand() {
-	nb.getNode("2", -1406.58, 7728.24, 90, 0);
-	nb.getNode("3", -1119.96, 7728.24, 90, 0);
-	nb.getNode("4", 4145.44, 7664.54, 20, 1);
-	nb.getReservoir("1", -1884.29, 7738.85, 100);
+	nb.addJunction("2", -1406.58, 7728.24, 90, 0);
+	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
+	nb.addJunction("4", 4145.44, 7664.54, 20, 1);
+	nb.addReservoir("1", -1884.29, 7738.85, 100);
 	nb.getTank("5", 1204.88, 8046.71, 50, 5, 0, 10, 5);
-	nb.getPipe("2", "3", "5", 900, 50, 0.1);
-	nb.getPipe("3", "5", "4", 200, 50, 0.1);
-	nb.getPipe("4", "1", "2", 100, 50, 0.1);
+	nb.addPipe("2", "3", "5", 900, 50, 0.1);
+	nb.addPipe("3", "5", "4", 200, 50, 0.1);
+	nb.addPipe("4", "1", "2", 100, 50, 0.1);
 	nb.getFlowControlValve("1", "2", "3", 90, 2);
     }
 
     private void getPumpWithPower() {
-	nb.getNode("2", -1406.58, 7728.24, 90, 0);
-	nb.getNode("3", -1119.96, 7728.24, 90, 0);
-	nb.getNode("4", 4145.448, 7664.54, 80, 1);
-	nb.getReservoir("1", -1884.29, 7738.85, 100);
+	nb.addJunction("2", -1406.58, 7728.24, 90, 0);
+	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
+	nb.addJunction("4", 4145.448, 7664.54, 80, 1);
+	nb.addReservoir("1", -1884.29, 7738.85, 100);
 	nb.getTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
-	nb.getPipe("2", "3", "5", 900, 50, 0.1);
-	nb.getPipe("3", "5", "4", 200, 50, 0.1);
-	nb.getPipe("4", "1", "2", 100, 50, 0.1);
+	nb.addPipe("2", "3", "5", 900, 50, 0.1);
+	nb.addPipe("3", "5", "4", 200, 50, 0.1);
+	nb.addPipe("4", "1", "2", 100, 50, 0.1);
 	nb.getPumpWithPower("1", "2", "3", 1);
     }
 
     private void getPumpWithCurve() {
-	nb.getNode("2", -1406.58, 7728.24, 90, 0);
-	nb.getNode("3", -1119.96, 7728.24, 90, 0);
-	nb.getNode("4", 4145.448, 7664.54, 80, 1);
-	nb.getReservoir("1", -1884.29, 7738.85, 100);
+	nb.addJunction("2", -1406.58, 7728.24, 90, 0);
+	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
+	nb.addJunction("4", 4145.448, 7664.54, 80, 1);
+	nb.addReservoir("1", -1884.29, 7738.85, 100);
 	nb.getTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
-	nb.getPipe("1", "3", "5", 900, 50, 0.1);
-	nb.getPipe("2", "5", "4", 200, 50, 0.1);
-	nb.getPipe("3", "1", "2", 100, 50, 0.1);
+	nb.addPipe("1", "3", "5", 900, 50, 0.1);
+	nb.addPipe("2", "5", "4", 200, 50, 0.1);
+	nb.addPipe("3", "1", "2", 100, 50, 0.1);
 	nb.getHeadCurve("1", CurveType.H_CURVE, 2.71, 60);
 	nb.getPumpWithCurve("4", "2", "3", "1");
     }

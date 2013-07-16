@@ -1,4 +1,8 @@
-package es.udc.cartolab.gvsig.epanet;
+package es.udc.cartolab.gvsig.epanet.structures;
+
+import org.addition.epanet.network.structures.Link;
+
+import com.iver.cit.gvsig.fmap.core.IFeature;
 
 public class LinkWrapper {
 
@@ -6,6 +10,13 @@ public class LinkWrapper {
     private double velocity;
     private double unitHeadLoss;
     private double frictionFactor;
+
+    private Link link;
+    private IFeature feature;
+
+    public LinkWrapper(IFeature feature) {
+	this.feature = feature;
+    }
 
     public double getFlow() {
 	return flow;
@@ -37,6 +48,18 @@ public class LinkWrapper {
 
     public void setFrictionFactor(double frictionFactor) {
 	this.frictionFactor = frictionFactor;
+    }
+
+    public Link getLink() {
+	return this.link;
+    }
+
+    protected void setLink(Link link) {
+	this.link = link;
+    }
+
+    public String getId() {
+	return link.getId();
     }
 
 }

@@ -1,7 +1,6 @@
 package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
-import java.util.List;
 
 import com.hardcode.gdbms.engine.values.DoubleValue;
 import com.hardcode.gdbms.engine.values.IntValue;
@@ -10,18 +9,25 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 
-import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.NodeFinder;
+import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.StructureFactory;
 
 public class LayerParser {
 
     private NetworkBuilder nb;
     private IDCreator idCreator;
+    private NodeFinder nodeFinder;
+    private StructureFactory structureFactory;
 
     public LayerParser() {
 	idCreator = new IDCreator();
 	nb = new NetworkBuilder();
+	structureFactory = new StructureFactory(nb.getLinks(), nb.getNodes());
     }
 
     public void addPipes(FLyrVect layer) throws Exception {
@@ -29,57 +35,9 @@ public class LayerParser {
 
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
-	    String id = idCreator.addLink(iFeature.getID());
-	    DoubleValue diameter = (DoubleValue) iFeature.getAttribute(0);
-	    DoubleValue roughness = (DoubleValue) iFeature.getAttribute(1);
-
-	    Geometry geom = iFeature.getGeometry().toJTSGeometry();
-	    Coordinate[] coordinates = geom.getCoordinates();
-	    String startNodeId = getNodeIdForInitialPoint(coordinates[0]);
-	    String endNodeId = getNodeIdForEndPoint(coordinates[1]);
-
-	    nb.getPipe(id, startNodeId, endNodeId, geom.getLength(),
-		    diameter.intValue(), roughness.doubleValue());
+	    LinkWrapper pipe = structureFactory.getPipe(iFeature);
+	    nb.addPipe(pipe);
 	}
-    }
-
-    private String getNodeIdForEndPoint(Coordinate coordinate) {
-	List<String> nodes = nb.getNodesIdsAt(coordinate);
-	if (nodes.size() == 1) {
-	    return nodes.get(0);
-	} else if (nodes.size() == 2) {
-	    int a = Integer.parseInt(nodes.get(0));
-	    int b = Integer.parseInt(nodes.get(1));
-	    int biggestID = a < b ? a : b;
-	    return String.valueOf(biggestID);
-	} else {
-	    throw new InvalidNetworkError();
-	}
-
-    }
-
-    /*
-     * Cuando el extremo de la tubería sea una válvula, no habrá un sólo nodo,
-     * si no que habrá dos superpuestos. Si, se trata del extremo inicial de la
-     * tubería tendré que escoger el nodo con el mayor id (una feature del shp
-     * de válvulas, crea automáticamente dos nodos de id's consecutivos). Si se
-     * trata del extremo final de la tubería tendré que escoger el que tenga
-     * menor id Esto asume que las tuberías se digitalizan en el sentido del
-     * agua
-     */
-    private String getNodeIdForInitialPoint(Coordinate coordinate) {
-	List<String> nodes = nb.getNodesIdsAt(coordinate);
-	if (nodes.size() == 1) {
-	    return nodes.get(0);
-	} else if (nodes.size() == 2) {
-	    int a = Integer.parseInt(nodes.get(0));
-	    int b = Integer.parseInt(nodes.get(1));
-	    int biggestID = a > b ? a : b;
-	    return String.valueOf(biggestID);
-	} else {
-	    throw new InvalidNetworkError();
-	}
-
     }
 
     public void addJunctions(FLyrVect layer) throws Exception {
@@ -87,13 +45,9 @@ public class LayerParser {
 
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
+	    NodeWrapper node = new JunctionWrapper(iFeature);
 	    String id = idCreator.addNode(iFeature.getID());
-	    Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		    .getCoordinate();
-	    IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	    IntValue demand = (IntValue) iFeature.getAttribute(1);
-	    nb.getNode(id, coordinate.x, coordinate.y, elevation.intValue(),
-		    demand.intValue());
+	    nb.addJunction(id, node);
 	}
     }
 
@@ -101,12 +55,9 @@ public class LayerParser {
 	ReadableVectorial readableVectorial = layer.getSource();
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
+	    NodeWrapper reservoir = new ReservoirWrapper(iFeature);
 	    String id = idCreator.addNode(iFeature.getID());
-	    Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		    .getCoordinate();
-	    IntValue totalHead = (IntValue) iFeature.getAttribute(0);
-	    nb.getReservoir(id, coordinate.x, coordinate.y,
-		    totalHead.intValue());
+	    nb.addReservoir(id, reservoir);
 	}
     }
 
@@ -156,10 +107,10 @@ public class LayerParser {
 	    int baseDemand = 0;
 
 	    String startNode = idCreator.addValveNode(iFeature.getID());
-	    nb.getNode(startNode, coordinate.x, coordinate.y,
+	    nb.addJunction(startNode, coordinate.x, coordinate.y,
 		    elevation.intValue(), baseDemand);
 	    String endNode = idCreator.addValveNode(iFeature.getID());
-	    nb.getNode(endNode, coordinate.x, coordinate.y,
+	    nb.addJunction(endNode, coordinate.x, coordinate.y,
 		    elevation.intValue(), baseDemand);
 
 	    String id = idCreator.addValveLink(iFeature.getID());
@@ -186,10 +137,10 @@ public class LayerParser {
 	    int baseDemand = 0;
 
 	    String startNode = idCreator.addPumpNode(iFeature.getID());
-	    nb.getNode(startNode, coordinate.x, coordinate.y,
+	    nb.addJunction(startNode, coordinate.x, coordinate.y,
 		    elevation.intValue(), baseDemand);
 	    String endNode = idCreator.addPumpNode(iFeature.getID());
-	    nb.getNode(endNode, coordinate.x, coordinate.y,
+	    nb.addJunction(endNode, coordinate.x, coordinate.y,
 		    elevation.intValue(), baseDemand);
 
 	    String id = idCreator.addPumpLink(iFeature.getID());

@@ -3,9 +3,7 @@ package es.udc.cartolab.gvsig.epanet;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -26,7 +24,6 @@ import org.addition.epanet.network.structures.Control;
 import org.addition.epanet.network.structures.Control.ControlType;
 import org.addition.epanet.network.structures.Curve;
 import org.addition.epanet.network.structures.Curve.CurveType;
-import org.addition.epanet.network.structures.Demand;
 import org.addition.epanet.network.structures.Link;
 import org.addition.epanet.network.structures.Link.LinkType;
 import org.addition.epanet.network.structures.Link.StatType;
@@ -38,10 +35,13 @@ import org.addition.epanet.network.structures.Tank;
 import org.addition.epanet.network.structures.Valve;
 import org.addition.epanet.util.ENException;
 
-import com.vividsolutions.jts.geom.Coordinate;
-
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.PipeWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 
 //Los getXX pueden seguir devolviendo el valor para poder referenciar
 //el objeto en lugar del ID
@@ -53,8 +53,8 @@ public class NetworkBuilder {
     private InputParser parser;
     private static Logger log;
 
-    private Map<String, NodeWrapper> nodesWrapper;
-    private Map<String, LinkWrapper> linksWrapper;
+    private final Map<String, NodeWrapper> nodesWrapper;
+    private final Map<String, LinkWrapper> linksWrapper;
 
     public NetworkBuilder() {
 	nodesWrapper = new HashMap<String, NodeWrapper>();
@@ -142,19 +142,15 @@ public class NetworkBuilder {
 	return net;
     }
 
-    public void getNode(String id, double x, double y, int elevation,
+    public void addJunction(String id, double x, double y, int elevation,
 	    int baseDemand) {
-	// TODO: Probablemente habría que hacer dos métodos, 1 para los nodos
-	// con demanda y otro para los que no tiene demanda. Chequear
-	// parseJunction
-	Node node = new Node();
-	node.setPosition(new Point(x, y));
-	node.setElevation(elevation);
-	Demand demand = new Demand(baseDemand, null);
-	node.getDemand().add(demand);
-	node.setInitDemand(baseDemand);
-	node.setId(id);
-	net.addJunction(node.getId(), node);
+	NodeWrapper node = new JunctionWrapper(id, x, y, elevation, baseDemand);
+	addJunction(id, node);
+    }
+
+    public void addJunction(String id, NodeWrapper node) {
+	nodesWrapper.put(id, node);
+	net.addJunction(id, node.getNode());
     }
 
     public void getTank(String id, double x, double y, int elevation,
@@ -173,27 +169,36 @@ public class NetworkBuilder {
 
     }
 
-    public void getReservoir(String id, double x, double y, int totalHead) {
-	Tank tank = new Tank();
-	tank.setId(id);
-	tank.setPosition(new Point(x, y));
-	tank.setElevation(totalHead);
-	net.addTank(tank.getId(), tank);
+    public void addReservoir(String id, double x, double y, int totalHead) {
+	NodeWrapper reservoir = new ReservoirWrapper(id, x, y, totalHead);
+	addReservoir(id, reservoir);
     }
 
-    public void getPipe(String id, String startNode, String endNode,
+    public void addReservoir(String id, NodeWrapper reservoir) {
+	nodesWrapper.put(id, reservoir);
+	net.addTank(id, (Tank) reservoir.getNode());
+    }
+
+    /**
+     * This method should be avoided. It makes that a new constructor in
+     * pipewrapper is needed We should use a factory, or at least remove the
+     * pipewrapper constructor
+     */
+    public void addPipe(String id, String startNode, String endNode,
 	    double len, double diameter, double roughness) {
-	// TODO: MinorLoss
-	Link link = new Link();
-	link.setId(id);
-	link.setFirst(net.getNode(startNode));
-	link.setSecond(net.getNode(endNode));
-	link.setLenght(len);
-	link.setDiameter(diameter);
-	link.setRoughness(roughness);
-	link.setStatus(StatType.OPEN);
-	link.setType(LinkType.PIPE);
-	net.addPipe(link.getId(), link);
+
+	LinkWrapper pipe = new PipeWrapper(id, nodesWrapper.get(startNode),
+		nodesWrapper.get(endNode), len, diameter, roughness);
+	addPipe(id, pipe);
+    }
+
+    public void addPipe(String id, LinkWrapper pipe) {
+	linksWrapper.put(id, pipe);
+	net.addPipe(id, pipe.getLink());
+    }
+
+    public void addPipe(LinkWrapper pipe) {
+	net.addPipe(pipe.getId(), pipe.getLink());
     }
 
     private Pump getPump(String id, String startNode, String endNode) {
@@ -308,20 +313,6 @@ public class NetworkBuilder {
 	}
     }
 
-    public List<String> getNodesIdsAt(Coordinate coordinate) {
-	List<String> nodes = new ArrayList<String>(1);
-	for (Node n : net.getNodes()) {
-	    if (coordinate.x == n.getPosition().getX()
-		    && coordinate.y == n.getPosition().getY()) {
-		nodes.add(n.getId());
-	    }
-	}
-	if ((nodes.size() != 1) && (nodes.size() != 2)) {
-	    throw new InvalidNetworkError();
-	}
-	return nodes;
-    }
-
     public void hydraulicSim() {
 	prepare();
 	try {
@@ -374,6 +365,14 @@ public class NetworkBuilder {
 	if (hydFile != null) {
 	    hydFile.delete();
 	}
+    }
+
+    public Map<String, LinkWrapper> getLinks() {
+	return linksWrapper;
+    }
+
+    public Map<String, NodeWrapper> getNodes() {
+	return nodesWrapper;
     }
 
 }
