@@ -51,7 +51,8 @@ public class NetworkBuilder {
 
     private Network net;
     private InputParser parser;
-    private static Logger log;
+    private final static Logger log = Logger.getLogger(NetworkBuilder.class
+	    .getName());
 
     private final Map<String, NodeWrapper> nodesWrapper;
     private final Map<String, LinkWrapper> linksWrapper;
@@ -67,7 +68,6 @@ public class NetworkBuilder {
 	linksWrapper = new HashMap<String, LinkWrapper>();
 	auxNodes = new HashMap<String, NodeWrapper>();
 
-	log = Logger.getLogger(this.getClass().getName());
 	parser = InputParser.create(FileType.NULL_FILE,
 		Logger.getLogger(getClass().getName()));
 
@@ -76,39 +76,30 @@ public class NetworkBuilder {
 	try {
 	    // Initialize Units is mandatory
 	    net.updatedUnitsProperty();
-	} catch (ENException e1) {
-	    e1.printStackTrace();
+	    setEnergyOptions();
+	    setReactionsOptions();
+	    setTimesOptions();
+	    setReportOptions();
+	    setOptions();
+	} catch (ENException e) {
+	    throw new InvalidNetworkError(e);
 	}
-	setEnergyOptions();
-	setReactionsOptions();
-	setTimesOptions();
-	setReportOptions();
-	setOptions();
 
     }
 
-    private void setOptions() {
+    private void setOptions() throws ENException {
 	PropertiesMap pMap = net.getPropertiesMap();
-	try {
-	    pMap.setFlowflag(FlowUnitsType.LPS);
-	    pMap.setFormflag(FormType.DW); // Headloss Formula
-	    // TODO: A lot of options
-	} catch (ENException e) {
-	    e.printStackTrace();
-	}
+	pMap.setFlowflag(FlowUnitsType.LPS);
+	pMap.setFormflag(FormType.DW); // Headloss Formula
+	// TODO: A lot of options
     }
 
-    private void setReportOptions() {
-	try {
-	    net.getPropertiesMap().setStatflag(StatFlag.FALSE);
-	    net.getPropertiesMap().setSummaryflag(false);
-	    net.getPropertiesMap().setLinkflag(ReportFlag.TRUE);
-	    net.getPropertiesMap().setNodeflag(ReportFlag.TRUE);
-	    net.getPropertiesMap().setPageSize(0);
-	} catch (ENException e) {
-	    e.printStackTrace();
-	}
-
+    private void setReportOptions() throws ENException {
+	net.getPropertiesMap().setStatflag(StatFlag.FALSE);
+	net.getPropertiesMap().setSummaryflag(false);
+	net.getPropertiesMap().setLinkflag(ReportFlag.TRUE);
+	net.getPropertiesMap().setNodeflag(ReportFlag.TRUE);
+	net.getPropertiesMap().setPageSize(0);
     }
 
     private void setTimesOptions() {
@@ -122,27 +113,19 @@ public class NetworkBuilder {
 	// }
     }
 
-    private void setReactionsOptions() {
-	try {
-	    net.getPropertiesMap().setBulkOrder(1.0);
-	    net.getPropertiesMap().setTankOrder(1.0);
-	    net.getPropertiesMap().setWallOrder(1.0);
-	    net.getPropertiesMap().setRfactor(0.0); // Roughness Correlation
-	    // TODO: Global Bulk; Global Wall; Limiting Potential
-	} catch (ENException e1) {
-	    e1.printStackTrace();
-	}
+    private void setReactionsOptions() throws ENException {
+	net.getPropertiesMap().setBulkOrder(1.0);
+	net.getPropertiesMap().setTankOrder(1.0);
+	net.getPropertiesMap().setWallOrder(1.0);
+	net.getPropertiesMap().setRfactor(0.0); // Roughness Correlation
+	// TODO: Global Bulk; Global Wall; Limiting Potential
     }
 
-    private void setEnergyOptions() {
+    private void setEnergyOptions() throws ENException {
 	// ENERGY
-	try {
-	    net.getPropertiesMap().setEpump(75.0); // Global Efficiency
-	    net.getPropertiesMap().setEcost(0.0); // Global Price
-	    net.getPropertiesMap().setDcost(0.0); // Demand Charge
-	} catch (ENException e1) {
-	    e1.printStackTrace();
-	}
+	net.getPropertiesMap().setEpump(75.0); // Global Efficiency
+	net.getPropertiesMap().setEcost(0.0); // Global Price
+	net.getPropertiesMap().setDcost(0.0); // Demand Charge
     }
 
     public Network getNet() {
@@ -289,7 +272,7 @@ public class NetworkBuilder {
 	try {
 	    parser.parse(net, null);
 	} catch (ENException e) {
-	    throw new InvalidNetworkError();
+	    throw new InvalidNetworkError(e);
 	}
     }
 
@@ -299,7 +282,7 @@ public class NetworkBuilder {
 	try {
 	    composer.composer(net, ofile);
 	} catch (ENException e) {
-	    throw new InvalidNetworkError();
+	    throw new InvalidNetworkError(e);
 	}
     }
 
@@ -347,7 +330,7 @@ public class NetworkBuilder {
 	    throw new ExternalError(e);
 
 	} catch (ENException e) {
-	    throw new InvalidNetworkError();
+	    throw new InvalidNetworkError(e);
 	}
     }
 

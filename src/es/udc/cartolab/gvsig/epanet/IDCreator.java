@@ -7,8 +7,8 @@ public class IDCreator {
 
     private int nodeID;
     private int linkID;
-    private Map<String, String> nodeMap;
-    private Map<String, String> linkMap;
+    private final Map<String, String> nodeMap;
+    private final Map<String, String> linkMap;
 
     public IDCreator() {
 	nodeID = 0;
