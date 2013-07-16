@@ -20,8 +20,6 @@ import org.addition.epanet.network.PropertiesMap.ReportFlag;
 import org.addition.epanet.network.PropertiesMap.StatFlag;
 import org.addition.epanet.network.io.input.InputParser;
 import org.addition.epanet.network.io.output.OutputComposer;
-import org.addition.epanet.network.structures.Control;
-import org.addition.epanet.network.structures.Control.ControlType;
 import org.addition.epanet.network.structures.Curve;
 import org.addition.epanet.network.structures.Curve.CurveType;
 import org.addition.epanet.network.structures.Link;
@@ -189,15 +187,11 @@ public class NetworkBuilder {
 
 	LinkWrapper pipe = new PipeWrapper(id, nodesWrapper.get(startNode),
 		nodesWrapper.get(endNode), len, diameter, roughness);
-	addPipe(id, pipe);
-    }
-
-    public void addPipe(String id, LinkWrapper pipe) {
-	linksWrapper.put(id, pipe);
-	net.addPipe(id, pipe.getLink());
+	addPipe(pipe);
     }
 
     public void addPipe(LinkWrapper pipe) {
+	linksWrapper.put(pipe.getId(), pipe);
 	net.addPipe(pipe.getId(), pipe.getLink());
     }
 
@@ -260,19 +254,6 @@ public class NetworkBuilder {
 	}
 
 	return pattern;
-    }
-
-    public void getPumpControl(String link, String node, ControlType type,
-	    StatType status, double level) {
-	Control control = new Control();
-	control.setLink(net.getLink(link));
-	control.setNode(net.getNode(node));
-	control.setType(type);
-	control.setStatus(status);
-	control.setSetting(1.0);
-	control.setGrade(level);
-	control.setTime(0);
-	net.addControl(control);
     }
 
     public void getFlowControlValve(String id, String startNode,
