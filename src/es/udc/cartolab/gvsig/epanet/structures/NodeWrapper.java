@@ -2,6 +2,8 @@ package es.udc.cartolab.gvsig.epanet.structures;
 
 import org.addition.epanet.network.structures.Node;
 
+import com.iver.cit.gvsig.fmap.core.IFeature;
+
 public abstract class NodeWrapper {
 
     private double demand;
@@ -9,6 +11,11 @@ public abstract class NodeWrapper {
     private double pressure;
 
     private Node node;
+    private IFeature feature;
+
+    public NodeWrapper(IFeature feature) {
+	this.feature = feature;
+    }
 
     public double getDemand() {
 	return demand;

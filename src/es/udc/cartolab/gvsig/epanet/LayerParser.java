@@ -45,9 +45,8 @@ public class LayerParser {
 
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
-	    NodeWrapper node = new JunctionWrapper(iFeature);
-	    String id = idCreator.addNode(iFeature.getID());
-	    nb.addJunction(id, node);
+	    NodeWrapper node = structureFactory.getJunction(iFeature);
+	    nb.addJunction(node);
 	}
     }
 
@@ -55,9 +54,8 @@ public class LayerParser {
 	ReadableVectorial readableVectorial = layer.getSource();
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
-	    NodeWrapper reservoir = new ReservoirWrapper(iFeature);
-	    String id = idCreator.addNode(iFeature.getID());
-	    nb.addReservoir(id, reservoir);
+	    NodeWrapper reservoir = structureFactory.getReservoir(iFeature);
+	    nb.addReservoir(reservoir);
 	}
     }
 

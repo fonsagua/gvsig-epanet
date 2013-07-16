@@ -143,12 +143,12 @@ public class NetworkBuilder {
     public void addJunction(String id, double x, double y, int elevation,
 	    int baseDemand) {
 	NodeWrapper node = new JunctionWrapper(id, x, y, elevation, baseDemand);
-	addJunction(id, node);
+	addJunction(node);
     }
 
-    public void addJunction(String id, NodeWrapper node) {
-	nodesWrapper.put(id, node);
-	net.addJunction(id, node.getNode());
+    public void addJunction(NodeWrapper node) {
+	nodesWrapper.put(node.getId(), node);
+	net.addJunction(node.getId(), node.getNode());
     }
 
     public void getTank(String id, double x, double y, int elevation,
@@ -169,16 +169,16 @@ public class NetworkBuilder {
 
     public void addReservoir(String id, double x, double y, int totalHead) {
 	NodeWrapper reservoir = new ReservoirWrapper(id, x, y, totalHead);
-	addReservoir(id, reservoir);
+	addReservoir(reservoir);
     }
 
-    public void addReservoir(String id, NodeWrapper reservoir) {
-	nodesWrapper.put(id, reservoir);
-	net.addTank(id, (Tank) reservoir.getNode());
+    public void addReservoir(NodeWrapper reservoir) {
+	nodesWrapper.put(reservoir.getId(), reservoir);
+	net.addTank(reservoir.getId(), (Tank) reservoir.getNode());
     }
 
     /**
-     * This method should be avoided. It makes that a new constructor in
+     * TODO: This method should be avoided. It makes that a new constructor in
      * pipewrapper is needed We should use a factory, or at least remove the
      * pipewrapper constructor
      */
