@@ -4,8 +4,8 @@
 [JUNCTIONS]
 ;ID              	Elev        	Demand      	Pattern         
  4               	20          	1           	                	;
- 3               	90          	0           	                	;
  2               	90          	0           	                	;
+ 3               	90          	0           	                	;
 
 [RESERVOIRS]
 ;ID              	Head        	Pattern         

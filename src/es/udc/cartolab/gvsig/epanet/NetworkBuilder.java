@@ -3,7 +3,7 @@ package es.udc.cartolab.gvsig.epanet;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -64,9 +64,9 @@ public class NetworkBuilder {
     private final Map<String, NodeWrapper> auxNodes;
 
     public NetworkBuilder() {
-	nodesWrapper = new HashMap<String, NodeWrapper>();
-	linksWrapper = new HashMap<String, LinkWrapper>();
-	auxNodes = new HashMap<String, NodeWrapper>();
+	nodesWrapper = new LinkedHashMap<String, NodeWrapper>();
+	linksWrapper = new LinkedHashMap<String, LinkWrapper>();
+	auxNodes = new LinkedHashMap<String, NodeWrapper>();
 
 	parser = InputParser.create(FileType.NULL_FILE,
 		Logger.getLogger(getClass().getName()));
@@ -295,35 +295,51 @@ public class NetworkBuilder {
 	    HydraulicReader hydReader = new HydraulicReader(
 		    new RandomAccessFile(hydFile, "r"));
 
-	    PropertiesMap pMap = net.getPropertiesMap();
 	    FieldsMap fmap = net.getFieldsMap();
+
 	    AwareStep step = hydReader.getStep(0);
+	    /*
+	     * WARNING Baseform usa para las listas de nodos, links,... un
+	     * LinkedHashMap, es decir, una colección ordenada por orden de
+	     * inserción. Cuando hace los cálculos hidráulicos, no almacena los
+	     * resultados en los propios objectos si no en elementos tipo
+	     * ArrayList, donde el índice del array se corresponde con el de
+	     * inserción en la colección, y este es el mismo orden que sigue
+	     * cuando vuelca los resultados al fichero binario intermedio.
+	     * 
+	     * El index (i) que se le pasa a AwareStep es el índice del array de
+	     * donde obtendrá el resultado. Por eso esta estructura extraña de
+	     * iterar por los nodos e ir aumentando un índice
+	     */
+	    int i = 0;
 	    for (Node node : net.getNodes()) {
 		NodeWrapper nw = nodesWrapper.get(node.getId());
-		double demand = step.getNodeDemand(0, node, fmap);
-		double head = step.getNodeHead(0, node, fmap);
-		double pressure = step.getNodePressure(0, node, fmap);
+		double demand = step.getNodeDemand(i, node, fmap);
+		double head = step.getNodeHead(i, node, fmap);
+		double pressure = step.getNodePressure(i, node, fmap);
 		nw.setDemand(demand);
 		nw.setHead(head);
 		nw.setPressure(pressure);
 		// base demand
 		// elevation
-
+		i++;
 	    }
 
+	    i = 0;
 	    for (Link link : net.getLinks()) {
 		LinkWrapper lw = linksWrapper.get(link.getId());
 		// lenght
 		// diameter
 		// roughness
-		double flow = Math.abs(step.getLinkFlow(0, link, fmap));
-		double velocity = Math.abs(step.getLinkVelocity(0, link, fmap));
-		double unitheadloss = step.getLinkHeadLoss(0, link, fmap);
-		double frictionFactor = step.getLinkFriction(0, link, fmap);
+		double flow = Math.abs(step.getLinkFlow(i, link, fmap));
+		double velocity = Math.abs(step.getLinkVelocity(i, link, fmap));
+		double unitheadloss = step.getLinkHeadLoss(i, link, fmap);
+		double frictionFactor = step.getLinkFriction(i, link, fmap);
 		lw.setFlow(flow);
 		lw.setVelocity(velocity);
 		lw.setUnitHeadLoss(unitheadloss);
 		lw.setFrictionFactor(frictionFactor);
+		i++;
 	    }
 	    deleteHydFile(hydFile);
 	} catch (IOException e) {
