@@ -13,11 +13,11 @@ import es.udc.cartolab.gvsig.epanet.IDCreator;
 
 public class StructureFactory {
 
-    private Map<String, LinkWrapper> links;
-    private Map<String, NodeWrapper> nodes;
+    private final Map<String, LinkWrapper> links;
+    private final Map<String, NodeWrapper> nodes;
+    private final Map<String, NodeWrapper> auxNodes;
     private IDCreator idCreator;
     private NodeFinder nodeFinder;
-    private Map<String, NodeWrapper> auxNodes;
 
     public StructureFactory(Map<String, LinkWrapper> links,
 	    Map<String, NodeWrapper> nodes, Map<String, NodeWrapper> auxNodes) {
