@@ -12,16 +12,13 @@ public class BaseformWrapper extends EpanetWrapper {
 
     @Override
     public String[] execute(String inpPath) {
-
-	if (fileIsNotReadable(inpPath)) {
-	    throw new IllegalArgumentException();
-	}
+	checker.throwIfFileNotReadable(inpPath);
 
 	String[] baseform = new String[] { "java", "-cp", epanetPath,
 		"org.addition.epanet.EPATool", "", inpPath };
 	try {
-	    Process tr = Runtime.getRuntime().exec(baseform);
-	    tr.waitFor();
+	    Process process = Runtime.getRuntime().exec(baseform);
+	    process.waitFor();
 	} catch (IOException e) {
 	    throw new ExternalError(e);
 	} catch (InterruptedException e) {
