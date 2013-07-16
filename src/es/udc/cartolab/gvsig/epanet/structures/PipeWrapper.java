@@ -19,7 +19,7 @@ public class PipeWrapper extends LinkWrapper {
 
     public PipeWrapper(String id, NodeWrapper startNode, NodeWrapper endNode,
 	    double len, double diameter, double roughness) {
-	super(null);
+	super();
 	createPipe(id, startNode, endNode, len, diameter, roughness);
     }
 

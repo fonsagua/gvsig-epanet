@@ -14,7 +14,7 @@ public class JunctionWrapper extends NodeWrapper {
 
     public JunctionWrapper(String id, double x, double y, int elevation,
 	    int baseDemand) {
-	super(null);
+	super();
 	createJunction(id, x, y, elevation, baseDemand);
     }
 

@@ -14,7 +14,7 @@ public class ValveWrapper extends LinkWrapper {
 
     public ValveWrapper(String id, NodeWrapper startNode, NodeWrapper endNode,
 	    double diameter, double flow) {
-	super(null);
+	super();
 	createValve(id, startNode, endNode, diameter, flow);
     }
 

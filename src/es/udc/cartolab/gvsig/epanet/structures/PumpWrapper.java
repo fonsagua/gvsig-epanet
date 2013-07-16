@@ -14,7 +14,7 @@ public class PumpWrapper extends LinkWrapper {
 
     public PumpWrapper(String id, NodeWrapper startNode, NodeWrapper endNode,
 	    double power) {
-	super(null);
+	super();
 	createPump(id, startNode, endNode, power);
     }
 

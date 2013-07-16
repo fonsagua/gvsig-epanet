@@ -17,6 +17,9 @@ public abstract class NodeWrapper {
 	this.feature = feature;
     }
 
+    public NodeWrapper() {
+    }
+
     public double getDemand() {
 	return demand;
     }

@@ -13,7 +13,7 @@ public class TankWrapper extends NodeWrapper {
 
     public TankWrapper(String id, double x, double y, int elevation,
 	    int initLevel, int minLevel, int maxLevel, double diameter) {
-	super(null);
+	super();
 	createTank(id, x, y, elevation, initLevel, minLevel, maxLevel, diameter);
     }
 

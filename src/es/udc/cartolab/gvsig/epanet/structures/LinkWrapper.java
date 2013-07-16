@@ -18,6 +18,9 @@ public class LinkWrapper {
 	this.feature = feature;
     }
 
+    public LinkWrapper() {
+    }
+
     public double getFlow() {
 	return flow;
     }

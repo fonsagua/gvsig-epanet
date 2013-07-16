@@ -12,7 +12,7 @@ public class ReservoirWrapper extends NodeWrapper {
     }
 
     public ReservoirWrapper(String id, double x, double y, int totalHead) {
-	super(null);
+	super();
 	createReservoir(id, x, y, totalHead);
     }
 
