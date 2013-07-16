@@ -208,7 +208,7 @@ public class NetworkBuilder {
 	return pump;
     }
 
-    public void getPumpWithPower(String id, String startNode, String endNode,
+    public void addPump(String id, String startNode, String endNode,
 	    double power) {
 	LinkWrapper pump = new PumpWrapper(id, nodesWrapper.get(startNode),
 		nodesWrapper.get(endNode), power);
