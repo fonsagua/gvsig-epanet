@@ -1,7 +1,7 @@
 package es.udc.cartolab.gvsig.epanet;
 
 
-public class Run extends BasicExtension {
+public class Run extends AbstractExtension {
 
     @Override
     public void initialize() {
