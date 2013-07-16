@@ -100,7 +100,7 @@ public class NetworkBuilderIntegrationTest {
     private void getReservoirTankJuctionWithDemand() {
 	nb.addJunction("2", 207.01, 8428.87, 20, 1);
 	nb.addReservoir("1", -1321.66, 8460.72, 100);
-	nb.getTank("3", -557.32, 8704.88, 50, 5, 0, 10, 5);
+	nb.addTank("3", -557.32, 8704.88, 50, 5, 0, 10, 5);
 	nb.addPipe("1", "2", "3", 200, 50, 0.1);
 	nb.addPipe("2", "1", "3", 1000, 90, 0.1);
     }
@@ -110,7 +110,7 @@ public class NetworkBuilderIntegrationTest {
 	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
 	nb.addJunction("4", 4145.44, 7664.54, 20, 1);
 	nb.addReservoir("1", -1884.29, 7738.85, 100);
-	nb.getTank("5", 1204.88, 8046.71, 50, 5, 0, 10, 5);
+	nb.addTank("5", 1204.88, 8046.71, 50, 5, 0, 10, 5);
 	nb.addPipe("2", "3", "5", 900, 50, 0.1);
 	nb.addPipe("3", "5", "4", 200, 50, 0.1);
 	nb.addPipe("4", "1", "2", 100, 50, 0.1);
@@ -122,7 +122,7 @@ public class NetworkBuilderIntegrationTest {
 	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
 	nb.addJunction("4", 4145.448, 7664.54, 80, 1);
 	nb.addReservoir("1", -1884.29, 7738.85, 100);
-	nb.getTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
+	nb.addTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
 	nb.addPipe("2", "3", "5", 900, 50, 0.1);
 	nb.addPipe("3", "5", "4", 200, 50, 0.1);
 	nb.addPipe("4", "1", "2", 100, 50, 0.1);
@@ -134,7 +134,7 @@ public class NetworkBuilderIntegrationTest {
 	nb.addJunction("3", -1119.96, 7728.24, 90, 0);
 	nb.addJunction("4", 4145.448, 7664.54, 80, 1);
 	nb.addReservoir("1", -1884.29, 7738.85, 100);
-	nb.getTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
+	nb.addTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5);
 	nb.addPipe("1", "3", "5", 900, 50, 0.1);
 	nb.addPipe("2", "5", "4", 200, 50, 0.1);
 	nb.addPipe("3", "1", "2", 100, 50, 0.1);

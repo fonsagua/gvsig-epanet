@@ -2,7 +2,6 @@ package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
 
-import com.hardcode.gdbms.engine.values.DoubleValue;
 import com.hardcode.gdbms.engine.values.IntValue;
 import com.hardcode.gdbms.engine.values.StringValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
@@ -72,18 +71,8 @@ public class LayerParser {
 	}
 	for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
 	    IFeature iFeature = readableVectorial.getFeature(i);
-	    String id = idCreator.addNode(iFeature.getID());
-	    Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		    .getCoordinate();
-	    IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	    IntValue initLevel = (IntValue) iFeature.getAttribute(1);
-	    IntValue minLevel = (IntValue) iFeature.getAttribute(2);
-	    IntValue maxLevel = (IntValue) iFeature.getAttribute(3);
-	    DoubleValue diameter = (DoubleValue) iFeature.getAttribute(4);
-
-	    nb.getTank(id, coordinate.x, coordinate.y, elevation.intValue(),
-		    initLevel.intValue(), minLevel.intValue(),
-		    maxLevel.intValue(), diameter.doubleValue());
+	    NodeWrapper tank = structureFactory.getTank(iFeature);
+	    nb.addTank(tank);
 	}
 
     }

@@ -74,4 +74,22 @@ public class StructureFactory {
 		diameter, roughness);
 	return pipe;
     }
+
+
+    public NodeWrapper getTank(IFeature iFeature) {
+	TankWrapper tank = new TankWrapper(iFeature);
+
+	String id = idCreator.addNode(iFeature.getID());
+	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
+		.getCoordinate();
+	IntValue elevation = (IntValue) iFeature.getAttribute(0);
+	IntValue initLevel = (IntValue) iFeature.getAttribute(1);
+	IntValue minLevel = (IntValue) iFeature.getAttribute(2);
+	IntValue maxLevel = (IntValue) iFeature.getAttribute(3);
+	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(4);
+	tank.createTank(id, coordinate.x, coordinate.y, elevation.intValue(),
+		initLevel.intValue(), minLevel.intValue(), maxLevel.intValue(),
+		diameter.doubleValue());
+	return tank;
+    }
 }

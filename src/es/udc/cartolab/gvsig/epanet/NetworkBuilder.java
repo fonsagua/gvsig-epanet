@@ -40,6 +40,7 @@ import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.TankWrapper;
 
 //Los getXX pueden seguir devolviendo el valor para poder referenciar
 //el objeto en lugar del ID
@@ -151,20 +152,16 @@ public class NetworkBuilder {
 	net.addJunction(node.getId(), node.getNode());
     }
 
-    public void getTank(String id, double x, double y, int elevation,
+    public void addTank(String id, double x, double y, int elevation,
 	    int initLevel, int minLevel, int maxLevel, double diameter) {
-	// TODO: MinVol
-	Tank tank = new Tank();
-	tank.setId(id);
-	tank.setPosition(new Point(x, y));
-	tank.setElevation(elevation);
-	tank.setH0(initLevel);
-	tank.setHmin(minLevel);
-	tank.setHmax(maxLevel);
-	tank.setArea(diameter);
-	tank.setMixModel(Tank.MixType.MIX1); // debería estar en initTanks
-	net.addTank(tank.getId(), tank);
+	NodeWrapper tank = new TankWrapper(id, x, y, elevation, initLevel,
+		minLevel, maxLevel, diameter);
+	addTank(tank);
+    }
 
+    public void addTank(NodeWrapper tank) {
+	nodesWrapper.put(tank.getId(), tank);
+	net.addTank(tank.getId(), (Tank) tank.getNode());
     }
 
     public void addReservoir(String id, double x, double y, int totalHead) {
