@@ -11,13 +11,13 @@ public class TankWrapper extends NodeWrapper {
 	super(feature);
     }
 
-    public TankWrapper(String id, double x, double y, int elevation,
+    public TankWrapper(String id, double x, double y, double elevation,
 	    int initLevel, int minLevel, int maxLevel, double diameter) {
 	super();
 	createTank(id, x, y, elevation, initLevel, minLevel, maxLevel, diameter);
     }
 
-    protected void createTank(String id, double x, double y, int elevation,
+    protected void createTank(String id, double x, double y, double elevation,
 	    int initLevel, int minLevel, int maxLevel, double diameter) {
 	// TODO: MinVol
 	Tank tank = new Tank();

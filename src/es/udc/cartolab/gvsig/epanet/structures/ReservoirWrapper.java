@@ -11,12 +11,13 @@ public class ReservoirWrapper extends NodeWrapper {
 	super(iFeature);
     }
 
-    public ReservoirWrapper(String id, double x, double y, int totalHead) {
+    public ReservoirWrapper(String id, double x, double y, double totalHead) {
 	super();
 	createReservoir(id, x, y, totalHead);
     }
 
-    protected void createReservoir(String id, double x, double y, int totalHead) {
+    protected void createReservoir(String id, double x, double y,
+	    double totalHead) {
 	Tank tank = new Tank();
 	tank.setId(id);
 	tank.setPosition(new Point(x, y));

@@ -132,8 +132,8 @@ public class NetworkBuilder {
 	return net;
     }
 
-    public void addJunction(String id, double x, double y, int elevation,
-	    int baseDemand) {
+    public void addJunction(String id, double x, double y, double elevation,
+	    double baseDemand) {
 	NodeWrapper node = new JunctionWrapper(id, x, y, elevation, baseDemand);
 	addJunction(node);
     }
@@ -143,7 +143,7 @@ public class NetworkBuilder {
 	net.addJunction(node.getId(), node.getNode());
     }
 
-    public void addTank(String id, double x, double y, int elevation,
+    public void addTank(String id, double x, double y, double elevation,
 	    int initLevel, int minLevel, int maxLevel, double diameter) {
 	NodeWrapper tank = new TankWrapper(id, x, y, elevation, initLevel,
 		minLevel, maxLevel, diameter);
@@ -155,7 +155,7 @@ public class NetworkBuilder {
 	net.addTank(tank.getId(), (Tank) tank.getNode());
     }
 
-    public void addReservoir(String id, double x, double y, int totalHead) {
+    public void addReservoir(String id, double x, double y, double totalHead) {
 	NodeWrapper reservoir = new ReservoirWrapper(id, x, y, totalHead);
 	addReservoir(reservoir);
     }
