@@ -10,6 +10,7 @@ import org.junit.Test;
 import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureNetworkFactory;
 
 public class NetworkSimulationIntegrationTest {
 

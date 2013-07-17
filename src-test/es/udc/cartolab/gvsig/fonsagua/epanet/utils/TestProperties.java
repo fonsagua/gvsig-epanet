@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.fonsagua.epanet.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;

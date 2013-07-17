@@ -14,6 +14,9 @@ import org.junit.rules.TemporaryFolder;
 import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
 import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
 import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureNetworkFactory;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
 
 public class NetworkBuilderIntegrationTest {
 

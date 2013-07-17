@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
 
 public class EpanetWrapperExceptionTest {
     protected static EpanetWrapper epanet;

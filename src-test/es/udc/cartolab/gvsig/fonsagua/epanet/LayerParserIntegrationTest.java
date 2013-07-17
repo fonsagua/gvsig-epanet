@@ -19,6 +19,9 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
 import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
 import es.udc.cartolab.gvsig.epanet.LayerParser;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureSHPFactory;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
 import es.udc.cartolab.gvsig.shputils.SHPFactory;
 
 public class LayerParserIntegrationTest {
