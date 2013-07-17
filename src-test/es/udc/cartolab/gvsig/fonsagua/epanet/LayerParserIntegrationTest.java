@@ -14,52 +14,31 @@ import org.junit.rules.TemporaryFolder;
 import com.hardcode.driverManager.DriverLoadException;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 
 import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
 import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
 import es.udc.cartolab.gvsig.epanet.LayerParser;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureLayerFactory;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureSHPFactory;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
+import es.udc.cartolab.gvsig.shputils.Drivers;
 import es.udc.cartolab.gvsig.shputils.SHPFactory;
 
 public class LayerParserIntegrationTest {
 
-    private static EpanetWrapper epanet;
-    private static BaseformWrapper baseform;
     @Rule
     public TemporaryFolder temp = new TemporaryFolder();
 
+    private static EpanetWrapper epanet;
+    private static BaseformWrapper baseform;
     private LayerParser layerParser;
 
     @BeforeClass
     public static void setUpBeforeClass() {
-	initgvSIGDrivers();
+	Drivers.initgvSIGDrivers(TestProperties.driversPath);
 	epanet = new EpanetWrapper(TestProperties.epanetPath);
 	baseform = new BaseformWrapper("lib/BaseformEpaNetLib-1.0.jar");
-    }
-
-    private static void initgvSIGDrivers() {
-
-	final String fwAndamiDriverPath = TestProperties.driversPath;
-
-	final File baseDriversPath = new File(fwAndamiDriverPath);
-	if (!baseDriversPath.exists()) {
-	    throw new RuntimeException("Can't find drivers path: "
-		    + fwAndamiDriverPath);
-	}
-
-	LayerFactory.setDriversPath(baseDriversPath.getAbsolutePath());
-	if (LayerFactory.getDM().getDriverNames().length < 1) {
-	    throw new RuntimeException("Can't find drivers in path: "
-		    + fwAndamiDriverPath);
-	}
-	LayerFactory.setWritersPath(baseDriversPath.getAbsolutePath());
-	if (LayerFactory.getWM().getWriterNames().length < 1) {
-	    throw new RuntimeException("Can't find writers in path: "
-		    + fwAndamiDriverPath);
-	}
     }
 
     @Before
