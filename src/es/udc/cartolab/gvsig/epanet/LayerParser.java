@@ -22,6 +22,7 @@ public class LayerParser {
 
     public LayerParser() {
 	nb = new NetworkBuilder();
+	IDCreator.reset();
 	structureFactory = new StructureFactory(nb.getLinks(), nb.getNodes(),
 		nb.getAuxNodes());
     }

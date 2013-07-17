@@ -5,12 +5,12 @@ import java.util.Map;
 
 public class IDCreator {
 
-    private int nodeID;
-    private int linkID;
-    private final Map<String, String> nodeMap;
-    private final Map<String, String> linkMap;
+    private static int nodeID;
+    private static int linkID;
+    private static Map<String, String> nodeMap;
+    private static Map<String, String> linkMap;
 
-    public IDCreator() {
+    public static void reset() {
 	nodeID = 0;
 	nodeMap = new HashMap<String, String>();
 
@@ -18,34 +18,34 @@ public class IDCreator {
 	linkMap = new HashMap<String, String>();
     }
 
-    public String addNode(String featureID) {
+    public static String addNode(String featureID) {
 	String id = String.valueOf(++nodeID);
 	nodeMap.put(featureID, id);
 	return id;
     }
 
-    public String addLink(String featureID) {
+    public static String addLink(String featureID) {
 	String id = String.valueOf(++linkID);
 	linkMap.put(featureID, id);
 	return id;
     }
 
-    public String addValveNode(String featureID) {
+    public static String addValveNode(String featureID) {
 	String id = String.valueOf(++nodeID);
 	return id;
     }
 
-    public String addValveLink(String featureID) {
+    public static String addValveLink(String featureID) {
 	String id = String.valueOf(++linkID);
 	return id;
     }
 
-    public String addPumpNode(String featureID) {
+    public static String addPumpNode(String featureID) {
 	String id = String.valueOf(++nodeID);
 	return id;
     }
 
-    public String addPumpLink(String featureID) {
+    public static String addPumpLink(String featureID) {
 	String id = String.valueOf(++linkID);
 	return id;
     }

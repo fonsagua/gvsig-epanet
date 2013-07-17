@@ -16,7 +16,6 @@ public class StructureFactory {
     private final Map<String, LinkWrapper> links;
     private final Map<String, NodeWrapper> nodes;
     private final Map<String, NodeWrapper> auxNodes;
-    private IDCreator idCreator;
     private NodeFinder nodeFinder;
 
     public StructureFactory(Map<String, LinkWrapper> links,
@@ -24,7 +23,6 @@ public class StructureFactory {
 	this.links = links;
 	this.nodes = nodes;
 	this.auxNodes = auxNodes;
-	idCreator = new IDCreator();
 	nodeFinder = new NodeFinder(nodes, auxNodes);
     }
 
@@ -45,7 +43,7 @@ public class StructureFactory {
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
 	IntValue totalHead = (IntValue) iFeature.getAttribute(0);
-	String id = idCreator.addNode(iFeature.getID());
+	String id = IDCreator.addNode(iFeature.getID());
 	reservoir.createReservoir(id, coordinate.x, coordinate.y,
 		totalHead.intValue());
 	return reservoir;
@@ -54,7 +52,7 @@ public class StructureFactory {
     public NodeWrapper getTank(IFeature iFeature) {
 	TankWrapper tank = new TankWrapper(iFeature);
 
-	String id = idCreator.addNode(iFeature.getID());
+	String id = IDCreator.addNode(iFeature.getID());
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
 	IntValue elevation = (IntValue) iFeature.getAttribute(0);
@@ -69,7 +67,7 @@ public class StructureFactory {
     }
 
     public LinkWrapper getPipe(IFeature iFeature) {
-	String id = idCreator.addLink(iFeature.getID());
+	String id = IDCreator.addLink(iFeature.getID());
 	PipeWrapper pipe = new PipeWrapper(iFeature);
 	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(0);
 	DoubleValue roughness = (DoubleValue) iFeature.getAttribute(1);
@@ -103,17 +101,17 @@ public class StructureFactory {
 	DoubleValue flow = (DoubleValue) iFeature.getAttribute(2);
 	int baseDemand = 0;
 
-	String startNodeId = idCreator.addValveNode(iFeature.getID());
+	String startNodeId = IDCreator.addValveNode(iFeature.getID());
 	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,
 		coordinate.y, elevation.intValue(), baseDemand);
 	auxNodes.put(startNodeId, startNode);
 
-	String endNodeId = idCreator.addValveNode(iFeature.getID());
+	String endNodeId = IDCreator.addValveNode(iFeature.getID());
 	NodeWrapper endNode = new JunctionWrapper(endNodeId, coordinate.x,
 		coordinate.y, elevation.intValue(), baseDemand);
 	auxNodes.put(endNodeId, endNode);
 
-	String id = idCreator.addValveLink(iFeature.getID());
+	String id = IDCreator.addValveLink(iFeature.getID());
 	ValveWrapper valve = new ValveWrapper(iFeature);
 	valve.createValve(id, startNode, endNode, diameter.intValue(),
 		flow.intValue());
@@ -130,17 +128,17 @@ public class StructureFactory {
 	StringValue value = (StringValue) iFeature.getAttribute(2);
 	int baseDemand = 0;
 
-	String startNodeId = idCreator.addPumpNode(iFeature.getID());
+	String startNodeId = IDCreator.addPumpNode(iFeature.getID());
 	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,
 		coordinate.y, elevation.intValue(), baseDemand);
 	auxNodes.put(startNodeId, startNode);
 
-	String endNodeId = idCreator.addPumpNode(iFeature.getID());
+	String endNodeId = IDCreator.addPumpNode(iFeature.getID());
 	NodeWrapper endNode = new JunctionWrapper(endNodeId, coordinate.x,
 		coordinate.y, elevation.intValue(), baseDemand);
 	auxNodes.put(endNodeId, endNode);
 
-	String id = idCreator.addPumpLink(iFeature.getID());
+	String id = IDCreator.addPumpLink(iFeature.getID());
 	double power = Double.parseDouble(value.getValue());
 	PumpWrapper pump = new PumpWrapper(iFeature);
 	pump.createPump(id, startNode, endNode, power);
