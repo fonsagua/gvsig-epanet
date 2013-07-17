@@ -2,32 +2,24 @@ package es.udc.cartolab.gvsig.epanet;
 
 import java.io.File;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
-import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 
-import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionLayer;
-import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.LinkLayer;
 import es.udc.cartolab.gvsig.epanet.structures.NodeLayer;
-import es.udc.cartolab.gvsig.epanet.structures.PumpWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.PipeLayer;
+import es.udc.cartolab.gvsig.epanet.structures.PumpLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirLayer;
-import es.udc.cartolab.gvsig.epanet.structures.StructureFactory;
 import es.udc.cartolab.gvsig.epanet.structures.TankLayer;
-import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.ValveLayer;
 
 public class LayerParser {
 
     private NetworkBuilder nb;
-    private StructureFactory structureFactory;
 
     public LayerParser() {
 	nb = new NetworkBuilder();
 	IDCreator.reset();
-	structureFactory = new StructureFactory(nb.getLinks(), nb.getNodes(),
-		nb.getAuxNodes());
     }
 
     public void addJunctions(FLyrVect layer) {
@@ -46,61 +38,18 @@ public class LayerParser {
     }
 
     public void addPipes(FLyrVect layer) {
-	ReadableVectorial readableVectorial = layer.getSource();
-
-	try {
-	    for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
-		IFeature iFeature = readableVectorial.getFeature(i);
-		LinkWrapper pipe = structureFactory.getPipe(iFeature);
-		nb.addPipe(pipe);
-	    }
-	} catch (ExpansionFileReadException e) {
-	    throw new ExternalError(e);
-	} catch (ReadDriverException e) {
-	    throw new ExternalError(e);
-	}
+	LinkLayer pipeLayer = new PipeLayer(layer);
+	pipeLayer.addToNetwork(nb);
     }
 
     public void addValves(FLyrVect layer) {
-	ReadableVectorial readableVectorial = layer.getSource();
-
-	// FIXME
-	if (readableVectorial == null) {
-	    return;
-	}
-	try {
-	    for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
-		IFeature iFeature = readableVectorial.getFeature(i);
-		ValveWrapper valve = structureFactory.getFCV(iFeature);
-		nb.addFlowControlValve(valve);
-	    }
-	} catch (ExpansionFileReadException e) {
-	    throw new ExternalError(e);
-	} catch (ReadDriverException e) {
-	    throw new ExternalError(e);
-	}
-
+	LinkLayer valveLayer = new ValveLayer(layer);
+	valveLayer.addToNetwork(nb);
     }
 
     public void addPumps(FLyrVect layer) {
-	ReadableVectorial readableVectorial = layer.getSource();
-
-	// FIXME
-	if (readableVectorial == null) {
-	    return;
-	}
-	try {
-	    for (int i = 0; i < readableVectorial.getShapeCount(); i++) {
-		IFeature iFeature = readableVectorial.getFeature(i);
-
-		PumpWrapper pump = structureFactory.getPump(iFeature);
-		nb.addPump(pump);
-	    }
-	} catch (ExpansionFileReadException e) {
-	    throw new ExternalError(e);
-	} catch (ReadDriverException e) {
-	    throw new ExternalError(e);
-	}
+	LinkLayer pumpLayer = new PumpLayer(layer);
+	pumpLayer.addToNetwork(nb);
     }
 
     public void createInpFile(File inp) {
