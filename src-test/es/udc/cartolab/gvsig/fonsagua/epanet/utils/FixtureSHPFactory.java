@@ -17,6 +17,17 @@ import es.udc.cartolab.gvsig.shputils.SHPFactory;
 
 public class FixtureSHPFactory {
 
+    public static void createJunctionShp(File file, IFeature[] features)
+	    throws Exception {
+	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
+	fdFactory.addInteger("elevation");
+	fdFactory.addInteger("basedemand");
+	fdFactory.addDouble("preassure");
+	addNodeResultFields(fdFactory);
+	FieldDescription[] fieldsDesc = fdFactory.getFields();
+	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
+    }
+
     public static IFeature createJunctionFeature(double x, double y,
 	    int elevation, int demand) {
 	Value[] values = new Value[3];
@@ -28,12 +39,11 @@ public class FixtureSHPFactory {
 	return feat;
     }
 
-    public static void createJunctionShp(File file, IFeature[] features)
+    public static void createReservoirShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("elevation");
-	fdFactory.addInteger("demand");
-	fdFactory.addDouble("preassure");
+	fdFactory.addInteger("totalHead");
+	addNodeResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
@@ -47,12 +57,30 @@ public class FixtureSHPFactory {
 	return feat;
     }
 
-    public static void createReservoirShp(File file, IFeature[] features)
+    public static void createTankShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("totalHead");
+	fdFactory.addInteger("elevation");
+	fdFactory.addInteger("initlevel");
+	fdFactory.addInteger("minlevel");
+	fdFactory.addInteger("maxlevel");
+	fdFactory.addDouble("diameter");
+	addNodeResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
+    }
+
+    public static IFeature createTankFeature(double x, double y, int elevation,
+	    int initLevel, int minLevel, int maxLevel, double diameter) {
+	Value[] values = new Value[5];
+	values[0] = ValueFactory.createValue(elevation);
+	values[1] = ValueFactory.createValue(initLevel);
+	values[2] = ValueFactory.createValue(minLevel);
+	values[3] = ValueFactory.createValue(maxLevel);
+	values[4] = ValueFactory.createValue(diameter);
+	IGeometry geom = ShapeFactory.createPoint2D(x, y);
+	IFeature feat = new DefaultFeature(geom, values);
+	return feat;
     }
 
     public static void createPipeShp(File file, IFeature[] features)
@@ -60,6 +88,7 @@ public class FixtureSHPFactory {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
 	fdFactory.addDouble("diameter");
 	fdFactory.addDouble("roughness");
+	addLinkResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.LINE, features);
     }
@@ -79,27 +108,13 @@ public class FixtureSHPFactory {
 	return feat;
     }
 
-    public static IFeature createTankFeature(double x, double y, int elevation,
-	    int initLevel, int minLevel, int maxLevel, double diameter) {
-	Value[] values = new Value[5];
-	values[0] = ValueFactory.createValue(elevation);
-	values[1] = ValueFactory.createValue(initLevel);
-	values[2] = ValueFactory.createValue(minLevel);
-	values[3] = ValueFactory.createValue(maxLevel);
-	values[4] = ValueFactory.createValue(diameter);
-	IGeometry geom = ShapeFactory.createPoint2D(x, y);
-	IFeature feat = new DefaultFeature(geom, values);
-	return feat;
-    }
-
-    public static void createTankShp(File file, IFeature[] features)
+    public static void createFCVShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
 	fdFactory.addInteger("elevation");
-	fdFactory.addInteger("initlevel");
-	fdFactory.addInteger("minlevel");
-	fdFactory.addInteger("maxlevel");
 	fdFactory.addDouble("diameter");
+	fdFactory.addDouble("flow");
+	addLinkResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
@@ -115,12 +130,13 @@ public class FixtureSHPFactory {
 	return feat;
     }
 
-    public static void createFCVShp(File file, IFeature[] features)
+    public static void createPumpShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
 	fdFactory.addInteger("elevation");
-	fdFactory.addDouble("diameter");
-	fdFactory.addDouble("flow");
+	fdFactory.addString("type");
+	fdFactory.addString("value");
+	addLinkResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
@@ -136,14 +152,17 @@ public class FixtureSHPFactory {
 	return feat;
     }
 
-    public static void createPumpShp(File file, IFeature[] features)
-	    throws Exception {
-	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("elevation");
-	fdFactory.addString("type");
-	fdFactory.addString("value");
-	FieldDescription[] fieldsDesc = fdFactory.getFields();
-	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
+    private static void addNodeResultFields(FieldDescriptionFactory fdFactory) {
+	fdFactory.addDouble("pressure");
+	fdFactory.addDouble("head");
+	fdFactory.addDouble("demand");
+    }
+
+    private static void addLinkResultFields(FieldDescriptionFactory fdFactory) {
+	fdFactory.addDouble("flow");
+	fdFactory.addDouble("velocity");
+	fdFactory.addDouble("unitheadloss");
+	fdFactory.addDouble("frictionfactor");
     }
 
 }
