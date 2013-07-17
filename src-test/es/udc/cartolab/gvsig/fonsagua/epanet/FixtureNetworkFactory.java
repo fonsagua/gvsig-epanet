@@ -40,7 +40,7 @@ public class FixtureNetworkFactory {
 
     private void addJunction(String id, double x, double y, double elevation,
 	    double baseDemand, double pressure, double head, double demand) {
-	JunctionWrapper node = new JunctionWrapper("2", 200.00, 8500.00, 50, 1);
+	JunctionWrapper node = new JunctionWrapper(id, 200.00, 8500.00, 50, 1);
 	setResults(pressure, head, demand, node);
 	nodesWrapper.put(node.getId(), node);
 	nb.addJunction(id, x, y, elevation, baseDemand);
@@ -144,9 +144,9 @@ public class FixtureNetworkFactory {
 	addJunction("3", -1119.96, 7728.24, 90, 0, 59.43, 149.43, 0);
 	addReservoir("1", -1884.29, 7738.85, 100, 0, 100, -1.96);
 	addTank("5", 1204.88, 8046.71, 120, 5, 0, 10, 5, 5, 125, 0.96);
-	addPipe("2", "3", "5", 900, 50, 0.1, 2, 1.02, 28.31, 0.03);
+	addPipe("2", "3", "5", 900, 50, 0.1, 1.96, 1, 27.15, 0.03);
 	addPipe("3", "5", "4", 200, 50, 0.1, 1, 0.51, 7.70, 0.03);
-	addPipe("4", "1", "2", 100, 50, 0.1, 2, 1.02, 28.31, 0.03);
+	addPipe("4", "1", "2", 100, 50, 0.1, 1.96, 1, 27.15, 0.03);
 	addPump("1", "2", "3", 1, 1.96, 0, -52.15, 0);
     }
 

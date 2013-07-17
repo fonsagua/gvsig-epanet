@@ -28,8 +28,25 @@ public class NetworkSimulationIntegrationTest {
 	executeTest("reservoir_junction-with-demand");
     }
 
-    private void executeTest(String patternName) throws Exception {
+    @Test
+    public void reservoir_tank_junctionWithDemand() throws Exception {
+	fixtureFactory.getReservoirTankJuctionWithDemand();
+	executeTest("reservoir_tank_junction-with-demand");
+    }
 
+    @Test
+    public void reservoir__valve_tank_junctionWithDemand() throws Exception {
+	fixtureFactory.getReservoirValveTankJuctionWithDemand();
+	executeTest("reservoir_valve_tank_junctionWithDemand");
+    }
+
+    @Test
+    public void pumpWithPower() throws Exception {
+	fixtureFactory.getPumpWithPower();
+	executeTest("pumpWithPower");
+    }
+
+    private void executeTest(String patternName) throws Exception {
 	nb.hydraulicSim();
 	Map<String, NodeWrapper> nodes = nb.getNodes();
 	Map<String, LinkWrapper> links = nb.getLinks();
