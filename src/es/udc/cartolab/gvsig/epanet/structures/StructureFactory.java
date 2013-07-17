@@ -26,46 +26,6 @@ public class StructureFactory {
 	nodeFinder = new NodeFinder(nodes, auxNodes);
     }
 
-    public NodeWrapper getJunction(IFeature iFeature) {
-	JunctionWrapper junction = new JunctionWrapper(iFeature);
-	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		.getCoordinate();
-	IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	IntValue demand = (IntValue) iFeature.getAttribute(1);
-	String id = idCreator.addNode(iFeature.getID());
-	junction.createJunction(id, coordinate.x, coordinate.y,
-		elevation.intValue(), demand.intValue());
-	return junction;
-    }
-
-    public NodeWrapper getReservoir(IFeature iFeature) {
-	ReservoirWrapper reservoir = new ReservoirWrapper(iFeature);
-	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		.getCoordinate();
-	IntValue totalHead = (IntValue) iFeature.getAttribute(0);
-	String id = IDCreator.addNode(iFeature.getID());
-	reservoir.createReservoir(id, coordinate.x, coordinate.y,
-		totalHead.intValue());
-	return reservoir;
-    }
-
-    public NodeWrapper getTank(IFeature iFeature) {
-	TankWrapper tank = new TankWrapper(iFeature);
-
-	String id = IDCreator.addNode(iFeature.getID());
-	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
-		.getCoordinate();
-	IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	IntValue initLevel = (IntValue) iFeature.getAttribute(1);
-	IntValue minLevel = (IntValue) iFeature.getAttribute(2);
-	IntValue maxLevel = (IntValue) iFeature.getAttribute(3);
-	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(4);
-	tank.createTank(id, coordinate.x, coordinate.y, elevation.intValue(),
-		initLevel.intValue(), minLevel.intValue(), maxLevel.intValue(),
-		diameter.doubleValue());
-	return tank;
-    }
-
     public LinkWrapper getPipe(IFeature iFeature) {
 	String id = IDCreator.addLink(iFeature.getID());
 	PipeWrapper pipe = new PipeWrapper(iFeature);
