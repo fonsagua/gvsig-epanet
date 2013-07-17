@@ -62,16 +62,35 @@ public class NetworkSimulationIntegrationTest {
     }
 
     private void checkLinks(LinkWrapper expected, LinkWrapper actual) {
-	assertEquals(expected.getFlow(), actual.getFlow(), 0.1);
-	assertEquals(expected.getVelocity(), actual.getVelocity(), 0.1);
-	assertEquals(expected.getUnitHeadLoss(), actual.getUnitHeadLoss(), 0.01);
-	assertEquals(expected.getFrictionFactor(), actual.getFrictionFactor(),
-		0.01);
+	double expValue = round(expected.getFlow());
+	assertEquals(expValue, actual.getFlow(), delta(expValue));
+
+	expValue = round(expected.getVelocity());
+	assertEquals(expValue, actual.getVelocity(), delta(expValue));
+
+	expValue = round(expected.getUnitHeadLoss());
+	assertEquals(expValue, actual.getUnitHeadLoss(), delta(expValue));
+
+	expValue = round(expected.getFrictionFactor());
+	assertEquals(expValue, actual.getFrictionFactor(), delta(expValue));
     }
 
     private void checkNodes(NodeWrapper expected, NodeWrapper actual) {
-	assertEquals(expected.getPressure(), actual.getPressure(), 1);
-	assertEquals(expected.getHead(), actual.getHead(), 1);
-	assertEquals(expected.getDemand(), actual.getDemand(), 0.1);
+	double value = round(expected.getPressure());
+	assertEquals(value, actual.getPressure(), delta(value));
+
+	value = round(expected.getHead());
+	assertEquals(value, actual.getHead(), delta(value));
+
+	value = round(expected.getDemand());
+	assertEquals(value, actual.getDemand(), delta(value));
+    }
+
+    private double round(double value) {
+	return Math.round(value * 100) / 100d;
+    }
+
+    private double delta(double value) {
+	return Math.abs(0.01 * value);
     }
 }

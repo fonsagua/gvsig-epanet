@@ -317,9 +317,9 @@ public class NetworkBuilder {
 		double demand = step.getNodeDemand(i, node, fmap);
 		double head = step.getNodeHead(i, node, fmap);
 		double pressure = step.getNodePressure(i, node, fmap);
-		nw.setDemand(demand);
-		nw.setHead(head);
-		nw.setPressure(pressure);
+		nw.setDemand(round(demand));
+		nw.setHead(round(head));
+		nw.setPressure(round(pressure));
 		// base demand
 		// elevation
 		i++;
@@ -335,10 +335,10 @@ public class NetworkBuilder {
 		double velocity = Math.abs(step.getLinkVelocity(i, link, fmap));
 		double unitheadloss = step.getLinkHeadLoss(i, link, fmap);
 		double frictionFactor = step.getLinkFriction(i, link, fmap);
-		lw.setFlow(flow);
-		lw.setVelocity(velocity);
-		lw.setUnitHeadLoss(unitheadloss);
-		lw.setFrictionFactor(frictionFactor);
+		lw.setFlow(round(flow));
+		lw.setVelocity(round(velocity));
+		lw.setUnitHeadLoss(round(unitheadloss));
+		lw.setFrictionFactor(round(frictionFactor));
 		i++;
 	    }
 	    deleteHydFile(hydFile);
@@ -348,6 +348,10 @@ public class NetworkBuilder {
 	} catch (ENException e) {
 	    throw new InvalidNetworkError(e);
 	}
+    }
+
+    private double round(double value) {
+	return Math.round(value * 100) / 100d;
     }
 
     private void deleteHydFile(File hydFile) {
