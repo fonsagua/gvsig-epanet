@@ -34,7 +34,8 @@ public class NodeFinder {
 	}
 
 	if ((finded.size() != 1) && (finded.size() != 2)) {
-	    throw new InvalidNetworkError();
+	    throw new InvalidNetworkError(
+		    "More than two nodes in the same point");
 	}
 	return finded;
     }
@@ -60,7 +61,8 @@ public class NodeFinder {
 	    return a > b ? startNode : endNode;
 
 	} else {
-	    throw new InvalidNetworkError();
+	    throw new InvalidNetworkError(
+		    "More than two nodes in the same point");
 	}
 
     }
@@ -77,7 +79,8 @@ public class NodeFinder {
 	    return a < b ? startNode : endNode;
 
 	} else {
-	    throw new InvalidNetworkError();
+	    throw new InvalidNetworkError(
+		    "More than two nodes in the same point");
 	}
 
     }

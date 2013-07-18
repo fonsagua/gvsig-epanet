@@ -7,6 +7,10 @@ package es.udc.cartolab.gvsig.epanet.exceptions;
  */
 public class ExternalError extends RuntimeException {
 
+    public ExternalError(String msg) {
+	super(msg);
+    }
+
     public ExternalError(Throwable cause) {
 	super(cause);
     }
