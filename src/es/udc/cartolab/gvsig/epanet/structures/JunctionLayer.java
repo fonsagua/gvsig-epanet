@@ -1,14 +1,25 @@
 package es.udc.cartolab.gvsig.epanet.structures;
 
-import com.hardcode.gdbms.engine.values.IntValue;
+import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.hardcode.gdbms.engine.values.DoubleValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import es.udc.cartolab.gvsig.epanet.IDCreator;
 import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
+import es.udc.cartolab.gvsig.epanet.config.JunctionFieldNames;
+import es.udc.cartolab.gvsig.epanet.config.Preferences;
+import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 
 public class JunctionLayer extends NodeLayer {
+
+    private int elevationIdx;
+    private int bdemandIdx;
+    private int demandIdx;
+    private int headIdx;
+    private int pressureIdx;
 
     public JunctionLayer(FLyrVect layer) {
 	super(layer);
@@ -19,13 +30,36 @@ public class JunctionLayer extends NodeLayer {
 	JunctionWrapper junction = new JunctionWrapper(iFeature);
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	IntValue elevation = (IntValue) iFeature.getAttribute(0);
-	IntValue demand = (IntValue) iFeature.getAttribute(1);
+	DoubleValue elevation = (DoubleValue) iFeature
+		.getAttribute(elevationIdx);
+	DoubleValue bdemand = (DoubleValue) iFeature.getAttribute(bdemandIdx);
 	String id = IDCreator.addNode(iFeature.getID());
 	junction.createJunction(id, coordinate.x, coordinate.y,
-		elevation.intValue(), demand.intValue());
+		elevation.doubleValue(), bdemand.doubleValue());
 	nb.addJunction(junction);
 	return junction;
     }
 
+    @Override
+    protected int[] getIndexes() {
+	JunctionFieldNames fieldNames = Preferences.getJunctionFieldNames();
+
+	SelectableDataSource recordset;
+	try {
+	    recordset = layer.getRecordset();
+	    elevationIdx = recordset.getFieldIndexByName(fieldNames
+		    .getElevation());
+	    bdemandIdx = recordset.getFieldIndexByName(fieldNames
+		    .getBaseDemand());
+	    pressureIdx = recordset.getFieldIndexByName(fieldNames
+		    .getPressure());
+	    headIdx = recordset.getFieldIndexByName(fieldNames.getHead());
+	    demandIdx = recordset.getFieldIndexByName(fieldNames.getDemand());
+	} catch (ReadDriverException e) {
+	    throw new ExternalError(e);
+	}
+
+	return new int[] { pressureIdx, headIdx, demandIdx };
+
+    }
 }
