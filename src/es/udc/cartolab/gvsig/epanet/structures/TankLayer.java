@@ -34,4 +34,10 @@ public class TankLayer extends NodeLayer {
 	return tank;
     }
 
+    @Override
+    protected int[] getIndexes() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
 }

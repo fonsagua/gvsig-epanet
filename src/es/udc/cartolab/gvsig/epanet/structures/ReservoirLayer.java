@@ -27,4 +27,10 @@ public class ReservoirLayer extends NodeLayer {
 	return reservoir;
     }
 
+    @Override
+    protected int[] getIndexes() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
 }

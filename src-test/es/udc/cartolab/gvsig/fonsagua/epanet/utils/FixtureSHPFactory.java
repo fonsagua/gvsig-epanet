@@ -20,20 +20,18 @@ public class FixtureSHPFactory {
     public static void createJunctionShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("elevation");
-	fdFactory.addInteger("basedemand");
-	fdFactory.addDouble("preassure");
+	fdFactory.addDouble("elevation");
+	fdFactory.addDouble("basedemand");
 	addNodeResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
 
     public static IFeature createJunctionFeature(double x, double y,
-	    int elevation, int demand) {
-	Value[] values = new Value[3];
+	    double elevation, double demand) {
+	Value[] values = new Value[2];
 	values[0] = ValueFactory.createValue(elevation);
 	values[1] = ValueFactory.createValue(demand);
-	values[2] = ValueFactory.createValue(0.0);
 	IGeometry geom = ShapeFactory.createPoint2D(x, y);
 	IFeature feat = new DefaultFeature(geom, values);
 	return feat;

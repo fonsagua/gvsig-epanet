@@ -26,8 +26,8 @@ public class LayerParserIntegrationTest {
 
     private static EpanetWrapper epanet;
     private static BaseformWrapper baseform;
-    private LayerParser layerParser;
 
+    private LayerParser layerParser;
     private FixtureLayerFactory fixtureFactory;
 
     @BeforeClass
@@ -51,7 +51,7 @@ public class LayerParserIntegrationTest {
 
     @Test
     public void reservoir_tank_junctionWithDemand() throws Exception {
-	fixtureFactory.getReservoirTankJunctionWithDemand(this);
+	fixtureFactory.getReservoirTankJunctionWithDemand();
 	executeTest("reservoir_tank_junction-with-demand");
     }
 

@@ -19,7 +19,6 @@ import es.udc.cartolab.gvsig.epanet.structures.PumpWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.TankWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
-import es.udc.cartolab.gvsig.fonsagua.epanet.LayerParserIntegrationTest;
 import es.udc.cartolab.gvsig.shputils.SHPFactory;
 
 public class FixtureLayerFactory {
@@ -70,28 +69,26 @@ public class FixtureLayerFactory {
 	FixtureSHPFactory.createPipeShp(file, new IFeature[] { pipeFeat });
     }
 
-    public void getReservoirTankJunctionWithDemand(
-	    LayerParserIntegrationTest layerParserIntegrationTest)
-	    throws Exception {
+    public void getReservoirTankJunctionWithDemand() throws Exception {
 
 	IFeature junctionFeat = FixtureSHPFactory.createJunctionFeature(200,
 		8500, 20, 1);
 	storeJunction(junctionFeat, 33.46, 53.46, 1);
-	File file = layerParserIntegrationTest.temp.newFile("junctions.shp");
+	File file = temp.newFile("junctions.shp");
 	FixtureSHPFactory.createJunctionShp(file,
 		new IFeature[] { junctionFeat });
 
 	IFeature reservoirFeat = FixtureSHPFactory.createReservoirFeature(
 		-1000, 8500, 100);
 	storeReservoir(reservoirFeat, 0, 100, -12.14);
-	file = layerParserIntegrationTest.temp.newFile("reservoirs.shp");
+	file = temp.newFile("reservoirs.shp");
 	FixtureSHPFactory.createReservoirShp(file,
 		new IFeature[] { reservoirFeat });
 
 	IFeature tankFeat = FixtureSHPFactory.createTankFeature(0.0, 8500.0,
 		50, 5, 0, 10, 5);
 	storeTanks(tankFeat, 5, 55, 11.14);
-	file = layerParserIntegrationTest.temp.newFile("tanks.shp");
+	file = temp.newFile("tanks.shp");
 	FixtureSHPFactory.createTankShp(file, new IFeature[] { tankFeat });
 
 	IFeature pipeFeat1 = FixtureSHPFactory.createPipeFeature(junctionFeat,
@@ -100,7 +97,7 @@ public class FixtureLayerFactory {
 	IFeature pipeFeat2 = FixtureSHPFactory.createPipeFeature(reservoirFeat,
 		tankFeat, 90, 0.1);
 	storePipe(pipeFeat2, 12.14, 1.91, 45, 0.02);
-	file = layerParserIntegrationTest.temp.newFile("pipes.shp");
+	file = temp.newFile("pipes.shp");
 	FixtureSHPFactory.createPipeShp(file, new IFeature[] { pipeFeat1,
 		pipeFeat2 });
     }

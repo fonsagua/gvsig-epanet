@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="/libFMap/lib/jts-1.12.jar"/>
 	<classpathentry kind="src" path="/_fwAndami"/>
 	<classpathentry kind="src" path="/appgvSIG"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/extNavTable"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
