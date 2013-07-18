@@ -7,11 +7,11 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.vividsolutions.jts.geom.Coordinate;
 
-import es.udc.cartolab.gvsig.epanet.IDCreator;
-import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
 import es.udc.cartolab.gvsig.epanet.config.JunctionFieldNames;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.network.IDCreator;
+import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
 public class JunctionLayer extends NodeLayer {
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.addition.epanet.network.structures.Curve.CurveType;
 
-import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
+import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;

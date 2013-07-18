@@ -13,8 +13,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
-import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
+import es.udc.cartolab.gvsig.epanet.network.BaseformWrapper;
+import es.udc.cartolab.gvsig.epanet.network.EpanetWrapper;
 
 public class BaseformWrapperTest {
 

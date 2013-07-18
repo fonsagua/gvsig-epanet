@@ -10,7 +10,7 @@ import com.hardcode.driverManager.DriverLoadException;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
-import es.udc.cartolab.gvsig.epanet.LayerParser;
+import es.udc.cartolab.gvsig.epanet.network.LayerParser;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;

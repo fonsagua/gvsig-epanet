@@ -6,8 +6,8 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.vividsolutions.jts.geom.Coordinate;
 
-import es.udc.cartolab.gvsig.epanet.IDCreator;
-import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
+import es.udc.cartolab.gvsig.epanet.network.IDCreator;
+import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
 public class TankLayer extends NodeLayer {
 

@@ -2,7 +2,7 @@ package es.udc.cartolab.gvsig.fonsagua.epanet;
 
 import org.junit.BeforeClass;
 
-import es.udc.cartolab.gvsig.epanet.BaseformWrapper;
+import es.udc.cartolab.gvsig.epanet.network.BaseformWrapper;
 
 public class BaseformWrapperExceptionTest extends EpanetWrapperExceptionTest {
 

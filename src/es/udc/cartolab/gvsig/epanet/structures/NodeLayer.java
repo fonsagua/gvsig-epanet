@@ -10,8 +10,8 @@ import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 
-import es.udc.cartolab.gvsig.epanet.NetworkBuilder;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 import es.udc.cartolab.gvsig.navtable.ToggleEditing;
 
 public abstract class NodeLayer {

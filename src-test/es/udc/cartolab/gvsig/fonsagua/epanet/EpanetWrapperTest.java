@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import es.udc.cartolab.gvsig.epanet.EpanetWrapper;
+import es.udc.cartolab.gvsig.epanet.network.EpanetWrapper;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
 

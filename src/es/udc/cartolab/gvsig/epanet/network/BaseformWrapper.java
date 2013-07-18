@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.epanet;
+package es.udc.cartolab.gvsig.epanet.network;
 
 import java.io.IOException;
 
