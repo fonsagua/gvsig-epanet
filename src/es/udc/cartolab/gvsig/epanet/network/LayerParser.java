@@ -62,6 +62,23 @@ public class LayerParser {
 
     public void hydraulicSim() {
 	nb.hydraulicSim();
-	junctionLayer.update();
+	if (junctionLayer != null) {
+	    junctionLayer.update();
+	}
+	if (tankLayer != null) {
+	    tankLayer.update();
+	}
+	if (reservoirLayer != null) {
+	    reservoirLayer.update();
+	}
+	if (pipeLayer != null) {
+	    pipeLayer.update();
+	}
+	if (valveLayer != null) {
+	    valveLayer.update();
+	}
+	if (pumpLayer != null) {
+	    pumpLayer.update();
+	}
     }
 }

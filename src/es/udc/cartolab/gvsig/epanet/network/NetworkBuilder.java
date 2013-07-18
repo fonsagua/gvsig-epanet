@@ -314,23 +314,25 @@ public class NetworkBuilder {
 	    int i = 0;
 	    for (Node node : net.getNodes()) {
 		NodeWrapper nw = nodesWrapper.get(node.getId());
+		if (nw == null) {
+		    if (auxNodes.get(node.getId()) == null) {
+			throw new InvalidNetworkError(
+				"Una conexión de la red no encontrada entre nuestros nodos");
+		    }
+		    continue;
+		}
 		double demand = step.getNodeDemand(i, node, fmap);
 		double head = step.getNodeHead(i, node, fmap);
 		double pressure = step.getNodePressure(i, node, fmap);
 		nw.setDemand(round(demand));
 		nw.setHead(round(head));
 		nw.setPressure(round(pressure));
-		// base demand
-		// elevation
 		i++;
 	    }
 
 	    i = 0;
 	    for (Link link : net.getLinks()) {
 		LinkWrapper lw = linksWrapper.get(link.getId());
-		// lenght
-		// diameter
-		// roughness
 		double flow = Math.abs(step.getLinkFlow(i, link, fmap));
 		double velocity = Math.abs(step.getLinkVelocity(i, link, fmap));
 		double unitheadloss = step.getLinkHeadLoss(i, link, fmap);
