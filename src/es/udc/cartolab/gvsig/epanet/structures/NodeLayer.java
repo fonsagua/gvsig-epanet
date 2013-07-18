@@ -68,4 +68,11 @@ public abstract class NodeLayer {
     }
 
     protected abstract int[] getIndexes();
+
+    protected void throwIfFieldNotFound(int index, String field) {
+	if (index == -1) {
+	    throw new ExternalError("Field not found: " + field + ", "
+		    + layer.getName());
+	}
+    }
 }

@@ -40,7 +40,7 @@ public class FixtureSHPFactory {
     public static void createReservoirShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("totalHead");
+	fdFactory.addInteger("totalhead");
 	addNodeResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
@@ -58,7 +58,7 @@ public class FixtureSHPFactory {
     public static void createTankShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("elevation");
+	fdFactory.addDouble("elevation");
 	fdFactory.addInteger("initlevel");
 	fdFactory.addInteger("minlevel");
 	fdFactory.addInteger("maxlevel");
@@ -68,8 +68,9 @@ public class FixtureSHPFactory {
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
 
-    public static IFeature createTankFeature(double x, double y, int elevation,
-	    int initLevel, int minLevel, int maxLevel, double diameter) {
+    public static IFeature createTankFeature(double x, double y,
+	    double elevation, int initLevel, int minLevel, int maxLevel,
+	    double diameter) {
 	Value[] values = new Value[5];
 	values[0] = ValueFactory.createValue(elevation);
 	values[1] = ValueFactory.createValue(initLevel);
@@ -159,8 +160,8 @@ public class FixtureSHPFactory {
     private static void addLinkResultFields(FieldDescriptionFactory fdFactory) {
 	fdFactory.addDouble("flow");
 	fdFactory.addDouble("velocity");
-	fdFactory.addDouble("unitheadloss");
-	fdFactory.addDouble("frictionfactor");
+	fdFactory.addDouble("uhloss");
+	fdFactory.addDouble("fricfactor");
     }
 
 }

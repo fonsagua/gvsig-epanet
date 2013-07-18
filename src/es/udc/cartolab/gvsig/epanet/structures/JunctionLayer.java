@@ -59,7 +59,14 @@ public class JunctionLayer extends NodeLayer {
 	    throw new ExternalError(e);
 	}
 
+	throwIfFieldNotFound(elevationIdx, fieldNames.getElevation());
+	throwIfFieldNotFound(bdemandIdx, fieldNames.getBaseDemand());
+	throwIfFieldNotFound(pressureIdx, fieldNames.getPressure());
+	throwIfFieldNotFound(headIdx, fieldNames.getHead());
+	throwIfFieldNotFound(demandIdx, fieldNames.getDemand());
+
 	return new int[] { pressureIdx, headIdx, demandIdx };
 
     }
+
 }
