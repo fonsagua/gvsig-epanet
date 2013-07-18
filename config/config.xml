@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <plugin-config>
 	<depends plugin-name="com.iver.cit.gvsig"/>
+	<depends plugin-name="com.iver.cit.gvsig.cad"/>
+	<depends plugin-name="es.udc.cartolab.gvsig.navtable" />
 	<libraries library-dir="lib"/>
 	<resourceBundle name="text"/>
 	<extensions>
 		
-		<extension class-name="es.udc.cartolab.gvsig.epanet.Run" active="true">
+		<extension class-name="es.udc.cartolab.gvsig.epanet.RunExtension" active="true">
 			<tool-bar name="epanet">
 				<action-tool icon="run_epanet" tooltip="run_epanet"
 					action-command="" position="0"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="es.udc.cartolab.gvsig.epanet.ReservoirExtension" active="true">
+			<tool-bar name="epanet">
+				<action-tool icon="reservoir" tooltip="reservoir"
+					action-command="" position="1"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="es.udc.cartolab.gvsig.epanet.JunctionExtension" active="true">
+			<tool-bar name="epanet">
+				<action-tool icon="junction" tooltip="junction"
+					action-command="" position="2"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="es.udc.cartolab.gvsig.epanet.TankExtension" active="true">
+			<tool-bar name="epanet">
+				<action-tool icon="tank" tooltip="tank"
+					action-command="" position="3"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="es.udc.cartolab.gvsig.epanet.PipeExtension" active="true">
+			<tool-bar name="epanet">
+				<action-tool icon="pipe" tooltip="pipe"
+					action-command="" position="4"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="es.udc.cartolab.gvsig.epanet.ValveExtension" active="true">
+			<tool-bar name="epanet">
+				<action-tool icon="valve" tooltip="valve"
+					action-command="" position="5"/>
+			</tool-bar>
+		</extension>
+		
+		<extension class-name="es.udc.cartolab.gvsig.epanet.PumpExtension" active="true">
+			<tool-bar name="epanet">
+				<action-tool icon="pump" tooltip="pump"
+					action-command="" position="6"/>
 			</tool-bar>
 		</extension>
 		
