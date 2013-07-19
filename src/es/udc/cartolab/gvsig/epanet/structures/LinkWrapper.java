@@ -65,4 +65,11 @@ public class LinkWrapper {
 	return link.getId();
     }
 
+    public void cloneResults(LinkWrapper results) {
+	setFlow(results.getFlow());
+	setVelocity(results.getVelocity());
+	setUnitHeadLoss(results.getUnitHeadLoss());
+	setFrictionFactor(results.getFrictionFactor());
+    }
+
 }

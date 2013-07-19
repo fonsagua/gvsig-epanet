@@ -30,7 +30,7 @@ public class PumpLayer extends LinkLayer {
     }
 
     @Override
-    public LinkWrapper processFeature(IFeature iFeature, NetworkBuilder nb) {
+    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
 	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();

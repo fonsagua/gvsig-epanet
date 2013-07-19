@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
+import com.hardcode.gdbms.engine.values.DoubleValue;
+import com.hardcode.gdbms.engine.values.Value;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.core.IFeature;
@@ -43,7 +45,23 @@ public abstract class NodeLayer {
 	}
     }
 
-    public abstract NodeWrapper processFeature(IFeature iFeature,
+    public NodeWrapper processFeature(IFeature iFeature, NetworkBuilder nb) {
+	NodeWrapper node = processSpecific(iFeature, nb);
+	Value[] attr = iFeature.getAttributes();
+
+	double pressure = ((DoubleValue) attr[indexes[0]]).doubleValue();
+	node.setPressure(pressure);
+
+	double head = ((DoubleValue) attr[indexes[1]]).doubleValue();
+	node.setHead(head);
+
+	double demand = ((DoubleValue) attr[indexes[2]]).doubleValue();
+	node.setDemand(demand);
+
+	return node;
+    }
+
+    protected abstract NodeWrapper processSpecific(IFeature iFeature,
 	    NetworkBuilder nb);
 
     public void update() {

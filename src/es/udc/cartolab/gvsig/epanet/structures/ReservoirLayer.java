@@ -25,7 +25,7 @@ public class ReservoirLayer extends NodeLayer {
     }
 
     @Override
-    public NodeWrapper processFeature(IFeature iFeature, NetworkBuilder nb) {
+    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
 	ReservoirWrapper reservoir = new ReservoirWrapper(iFeature);
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();

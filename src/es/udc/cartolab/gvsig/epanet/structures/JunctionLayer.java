@@ -26,7 +26,7 @@ public class JunctionLayer extends NodeLayer {
     }
 
     @Override
-    public NodeWrapper processFeature(IFeature iFeature, NetworkBuilder nb) {
+    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
 	JunctionWrapper junction = new JunctionWrapper(iFeature);
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();

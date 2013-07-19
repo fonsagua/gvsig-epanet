@@ -30,7 +30,7 @@ public class TankLayer extends NodeLayer {
     }
 
     @Override
-    public NodeWrapper processFeature(IFeature iFeature, NetworkBuilder nb) {
+    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
 	TankWrapper tank = new TankWrapper(iFeature);
 
 	String id = IDCreator.addNode(iFeature.getID());

@@ -28,7 +28,7 @@ public class PipeLayer extends LinkLayer {
     }
 
     @Override
-    public LinkWrapper processFeature(IFeature iFeature, NetworkBuilder nb) {
+    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
 	NodeFinder nodeFinder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
 	String id = IDCreator.addLink(iFeature.getID());
 	PipeWrapper pipe = new PipeWrapper(iFeature);

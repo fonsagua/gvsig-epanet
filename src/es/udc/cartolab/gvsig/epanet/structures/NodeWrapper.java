@@ -64,4 +64,9 @@ public abstract class NodeWrapper {
 	return node.getPosition().getY();
     }
 
+    public void cloneResults(NodeWrapper results) {
+	setPressure(results.getPressure());
+	setHead(results.getHead());
+	setDemand(results.getDemand());
+    }
 }
