@@ -33,7 +33,6 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.core.FGeometryCollection;
@@ -66,7 +65,6 @@ public class PipeCADTool extends InsertionCADTool {
     protected Point2D antCenter;
     protected Point2D antInter;
     private ArrayList list = new ArrayList();
-    private boolean close = false;
 
     private ArrayList points = new ArrayList();
 
@@ -112,14 +110,6 @@ public class PipeCADTool extends InsertionCADTool {
     }
 
     public void endGeometry() {
-	try {
-	    if (getVLE().getVEA().getShapeType() == FShape.POLYGON && !close) {
-		closeGeometry();
-	    }
-	} catch (ReadDriverException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
 	IGeometry[] geoms = (IGeometry[]) list.toArray(new IGeometry[0]);
 	FGeometryCollection fgc = new FGeometryCollection(geoms);
 
@@ -134,43 +124,10 @@ public class PipeCADTool extends InsertionCADTool {
 	    newGeom = ShapeFactory.createPolyline2D(gp);
 	}
 
-	// if (gp.isClosed())
-	// {
-	// gp.ensureOrientation(false); // Poligono exterior.
-	// // Voy a testear que se puede convertir a JTS:
-	// IGeometry gAux = ShapeFactory.createPolygon2D(gp);
-	// Geometry jtsG = gAux.toJTSGeometry();
-	// logger.debug("A punto de escribir " + jtsG.toText());
-	// try {
-	// int shapeType = getVLE().getVEA().getShapeType();
-	// if ((shapeType ==FShape.POLYGON) || (shapeType == FShape.MULTI)) {
-	// newGeom = gAux;
-	// }
-	// } catch (DriverIOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// return;
-	// }
-
-	// }
-
 	addGeometry(newGeom);
 	_fsm = new PipeCADToolContext(this);
 	list.clear();
-	close = false;
 	antantPoint = antCenter = antInter = antPoint = firstPoint = null;
-    }
-
-    public void closeGeometry() {
-	close = true;
-	GeneralPathX elShape = new GeneralPathX(GeneralPathX.WIND_EVEN_ODD, 2);
-	elShape.moveTo(antPoint.getX(), antPoint.getY());
-	elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-
-	list.add(ShapeFactory.createPolyline2D(elShape));
-
-	// list.add(ShapeFactory.createPolyline2D(elShape));
-
     }
 
     @Override
@@ -213,8 +170,9 @@ public class PipeCADTool extends InsertionCADTool {
 	// firstPoint = (Point2D) antPoint.clone();
 	// }
 	// } else
-	if (status.equals("Polyline.NextPointOrArcOrClose")
-		|| status.equals("Polyline.FirstPoint")) {
+	if (status.equals("Polyline.NextPointOrArc")
+		|| status.equals("Polyline.FirstPoint")
+		|| status.equals("Polyline.SecondPoint")) {
 
 	    if (firstPoint == null) {
 		firstPoint = new Point2D.Double(x, y);
@@ -238,7 +196,7 @@ public class PipeCADTool extends InsertionCADTool {
 	    }
 	    antPoint = point;
 
-	} else if (status.equals("Polyline.NextPointOrLineOrClose")) {
+	} else if (status.equals("Polyline.NextPointOrLine")) {
 	    point = new Point2D.Double(x, y);
 	    Point2D lastp = antPoint; // (Point2D)points.get(i-1);
 
@@ -361,8 +319,9 @@ public class PipeCADTool extends InsertionCADTool {
 	    cancel();
 	    // prueba para actualizar el ultimo punto pulsado
 	    getCadToolAdapter().setPreviousPoint((double[]) null);
-	} else if (status.equals("Polyline.NextPointOrLineOrClose")
-		|| status.equals("Polyline.NextPointOrArcOrClose")) {
+	} else if (status.equals("Polyline.NextPointOrLine")
+		|| status.equals("Polyline.NextPointOrArc")
+		|| status.equals("Polyline.SecondPoint")) {
 	    System.out.println("Numero de coordenadas antes de borrar: "
 		    + points.size());
 	    if (points.size() == 1) {
@@ -400,8 +359,9 @@ public class PipeCADTool extends InsertionCADTool {
 	PipeCADToolState actualState = _fsm.getState();
 	String status = actualState.getName();
 
-	if (status.equals("Polyline.NextPointOrArcOrClose")
-		|| status.equals("Polyline.FirstPoint")) {
+	if (status.equals("Polyline.NextPointOrArc")
+		|| status.equals("Polyline.FirstPoint")
+		|| status.equals("Polyline.SecondPoint")) {
 	    for (int i = 0; i < list.size(); i++) {
 		((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
 			getCadToolAdapter().getMapControl().getViewPort(),
@@ -412,7 +372,7 @@ public class PipeCADTool extends InsertionCADTool {
 			DefaultCADTool.geometrySelectSymbol);
 	    }
 
-	} else if ((status.equals("Polyline.NextPointOrLineOrClose"))) {
+	} else if ((status.equals("Polyline.NextPointOrLine"))) {
 	    for (int i = 0; i < list.size(); i++) {
 		((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
 			getCadToolAdapter().getMapControl().getViewPort(),
@@ -595,29 +555,15 @@ public class PipeCADTool extends InsertionCADTool {
 		.getPreviousState();
 	String status = actualState.getName();
 
-	if (status.equals("Polyline.NextPointOrArcOrClose")) {
+	if (status.equals("Polyline.NextPointOrArc")) {
 	    if (s.equals("A") || s.equals("a")
 		    || s.equals(PluginServices.getText(this, "inter_arc"))) {
 		// Arco
-	    } else if (s.equals("C") || s.equals("c")) {
-		GeneralPathX elShape = new GeneralPathX(
-			GeneralPathX.WIND_EVEN_ODD, 2);
-		elShape.moveTo(antPoint.getX(), antPoint.getY());
-		elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-		list.add(ShapeFactory.createPolyline2D(elShape));
-		// closeGeometry();
 	    }
-	} else if (status.equals("Polyline.NextPointOrLineOrClose")) {
+	} else if (status.equals("Polyline.NextPointOrLine")) {
 	    if (s.equals("N") || s.equals("n")
 		    || s.equals(PluginServices.getText(this, "inter_line"))) {
 		// Línea
-	    } else if (s.equals("C") || s.equals("c")) {
-		GeneralPathX elShape = new GeneralPathX(
-			GeneralPathX.WIND_EVEN_ODD, 2);
-		elShape.moveTo(antPoint.getX(), antPoint.getY());
-		elShape.lineTo(firstPoint.getX(), firstPoint.getY());
-		list.add(ShapeFactory.createPolyline2D(elShape));
-		// closeGeometry();
 	    }
 	}
 

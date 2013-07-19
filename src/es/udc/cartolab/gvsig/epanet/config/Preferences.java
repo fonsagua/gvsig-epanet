@@ -1,6 +1,18 @@
 package es.udc.cartolab.gvsig.epanet.config;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
+
 public class Preferences {
+
+    static String[] pointLayerNames = { "junctions", "pumps", "reservoirs",
+	    "tanks", "valves" };
 
     public static JunctionFieldNames getJunctionFieldNames() {
 	JunctionFieldNames names = new JunctionFieldNames();
@@ -66,6 +78,20 @@ public class Preferences {
 	names.setUnitHeadLoss("uhloss");
 	names.setFrictionFactor("fricfactor");
 	return names;
+    }
+
+    public static Set<FLyrVect> getPointLayers() {
+	Set<FLyrVect> pointLayers = new HashSet<FLyrVect>();
+	FLayers layers = ((View) PluginServices.getMDIManager()
+		.getActiveWindow()).getMapControl().getMapContext().getLayers();
+	FLayer layer;
+	for (String name : pointLayerNames) {
+	    layer = layers.getLayer(name);
+	    if (layer instanceof FLyrVect) {
+		pointLayers.add((FLyrVect) layers.getLayer(name));
+	    }
+	}
+	return pointLayers;
     }
 
 }

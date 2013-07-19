@@ -26,9 +26,16 @@
 package es.udc.cartolab.gvsig.epanet.cad;
 
 import java.awt.event.InputEvent;
+import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.drivers.IFeatureIterator;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
+
+import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 /**
  * @author Vicente Caballero Navarro
@@ -39,10 +46,12 @@ public final class PipeCADToolContext extends statemap.FSMContext {
     // ---------------------------------------------------------------
     // Member methods.
     //
+    private static Set<FLyrVect> pointLayers;
 
     public PipeCADToolContext(PipeCADTool owner) {
 	super();
 
+	pointLayers = Preferences.getPointLayers();
 	_owner = owner;
 	setState(Polyline.FirstPoint);
 	Polyline.FirstPoint.Entry(this);
@@ -156,17 +165,20 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 	// Statics.
 	//
 	/* package */static Polyline_Default.Polyline_FirstPoint FirstPoint;
-	/* package */static Polyline_Default.Polyline_NextPointOrArcOrClose NextPointOrArcOrClose;
-	/* package */static Polyline_Default.Polyline_NextPointOrLineOrClose NextPointOrLineOrClose;
+	/* package */static Polyline_Default.Polyline_SecondPoint SecondPoint;
+	/* package */static Polyline_Default.Polyline_NextPointOrArc NextPointOrArc;
+	/* package */static Polyline_Default.Polyline_NextPointOrLine NextPointOrLine;
 	private static Polyline_Default Default;
 
 	static {
 	    FirstPoint = new Polyline_Default.Polyline_FirstPoint(
 		    "Polyline.FirstPoint", 0);
-	    NextPointOrArcOrClose = new Polyline_Default.Polyline_NextPointOrArcOrClose(
-		    "Polyline.NextPointOrArcOrClose", 1);
-	    NextPointOrLineOrClose = new Polyline_Default.Polyline_NextPointOrLineOrClose(
-		    "Polyline.NextPointOrLineOrClose", 2);
+	    SecondPoint = new Polyline_Default.Polyline_SecondPoint(
+		    "Polyline.SecondPoint", 1);
+	    NextPointOrArc = new Polyline_Default.Polyline_NextPointOrArc(
+		    "Polyline.NextPointOrArc", 2);
+	    NextPointOrLine = new Polyline_Default.Polyline_NextPointOrLine(
+		    "Polyline.NextPointOrLine", 3);
 	    Default = new Polyline_Default("Polyline.Default", -1);
 	}
 
@@ -317,6 +329,23 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 	    return;
 	}
 
+	protected boolean validStartEnd(double x, double y) {
+	    try {
+		IFeatureIterator iterator;
+		for (FLyrVect layer : pointLayers) {
+		    iterator = layer.getSource().getFeatureIterator();
+		    while (iterator.hasNext()) {
+			if (iterator.next().getGeometry().contains(x, y)) {
+			    return true;
+			}
+		    }
+		}
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	    return false;
+	}
+
 	// -----------------------------------------------------------
 	// Inner classse.
 	//
@@ -350,13 +379,20 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		    double pointY, InputEvent event) {
 		PipeCADTool ctxt = context.getOwner();
 
-		(context.getState()).Exit(context);
-		context.clearState();
-		try {
-		    ctxt.addPoint(pointX, pointY, event);
-		} finally {
-		    context.setState(Polyline.NextPointOrArcOrClose);
-		    (context.getState()).Entry(context);
+		if (validStartEnd(pointX, pointY)) {
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.addPoint(pointX, pointY, event);
+		    } finally {
+			context.setState(Polyline.SecondPoint);
+			(context.getState()).Entry(context);
+		    }
+		} else {
+		    JOptionPane.showMessageDialog(null,
+			    PluginServices.getText(this, "invalid_line_start"),
+			    PluginServices.getText(this, "error_title"),
+			    JOptionPane.ERROR_MESSAGE);
 		}
 		return;
 	    }
@@ -366,20 +402,23 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 	    //
 	}
 
-	private static final class Polyline_NextPointOrArcOrClose extends
+	// -----------------------------------------------------------
+	// Inner classse.
+	//
+
+	private static final class Polyline_SecondPoint extends
 		Polyline_Default {
 	    // -------------------------------------------------------
 	    // Member methods.
 	    //
 
-	    private Polyline_NextPointOrArcOrClose(String name, int id) {
+	    private Polyline_SecondPoint(String name, int id) {
 		super(name, id);
 	    }
 
 	    @Override
 	    protected String[] getDescription() {
-		return new String[] { "inter_arc", "close_polyline",
-			"terminate", "cancel", "removePoint" };
+		return new String[] { "inter_arc", "cancel", "removePoint" };
 	    }
 
 	    @Override
@@ -389,10 +428,10 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 			.isDeleteButtonActivated();
 		if (deleteButton3) {
 		    ctxt.setQuestion(PluginServices.getText(this,
-			    "insert_next_point_arc_or_close_del"));
+			    "insert_next_point_arc_or_del"));
 		} else {
 		    ctxt.setQuestion(PluginServices.getText(this,
-			    "insert_next_point_arc_or_close"));
+			    "insert_next_point_arc"));
 		}
 		ctxt.setDescription(getDescription());
 		return;
@@ -410,41 +449,126 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		    try {
 			ctxt.addOption(s);
 		    } finally {
-			context.setState(Polyline.NextPointOrLineOrClose);
+			context.setState(Polyline.NextPointOrLine);
 			(context.getState()).Entry(context);
 		    }
-		} else if (s.equals("C")
-			|| s.equals("c")
-			|| s.equals(PluginServices.getText(this,
-				"close_polyline"))) {
+		} else {
+		    super.addOption(context, s);
+		}
+
+		return;
+	    }
+
+	    @Override
+	    protected void addPoint(PipeCADToolContext context, double pointX,
+		    double pointY, InputEvent event) {
+		PipeCADTool ctxt = context.getOwner();
+
+		context.clearState();
+		try {
+		    ctxt.addPoint(pointX, pointY, event);
+		} finally {
+		    context.setState(Polyline.NextPointOrArc);
+		    (context.getState()).Entry(context);
+		}
+		return;
+	    }
+
+	    @Override
+	    protected void removePoint(PipeCADToolContext context,
+		    InputEvent event, int numPoints) {
+		PipeCADTool ctxt = context.getOwner();
+
+		if (numPoints == 1) {
+
+		    (context.getState()).Exit(context);
+		    context.clearState();
+		    try {
+			ctxt.removePoint(event);
+		    } finally {
+			context.setState(Polyline.FirstPoint);
+			(context.getState()).Entry(context);
+		    }
+		} else {
+		    super.removePoint(context, event, numPoints);
+		}
+
+		return;
+	    }
+
+	    // -------------------------------------------------------
+	    // Member data.
+	    //
+	}
+
+	private static final class Polyline_NextPointOrArc extends
+		Polyline_Default {
+	    // -------------------------------------------------------
+	    // Member methods.
+	    //
+
+	    private Polyline_NextPointOrArc(String name, int id) {
+		super(name, id);
+	    }
+
+	    @Override
+	    protected String[] getDescription() {
+		return new String[] { "inter_arc", "terminate", "cancel",
+			"removePoint" };
+	    }
+
+	    @Override
+	    protected void Entry(PipeCADToolContext context) {
+		PipeCADTool ctxt = context.getOwner();
+		boolean deleteButton3 = CADStatus.getCADStatus()
+			.isDeleteButtonActivated();
+		if (deleteButton3) {
+		    ctxt.setQuestion(PluginServices.getText(this,
+			    "insert_next_point_arc_del_or_end"));
+		} else {
+		    ctxt.setQuestion(PluginServices.getText(this,
+			    "insert_next_point_arc_or_end"));
+		}
+		ctxt.setDescription(getDescription());
+		return;
+	    }
+
+	    @Override
+	    protected void addOption(PipeCADToolContext context, String s) {
+		PipeCADTool ctxt = context.getOwner();
+
+		if (s.equals("A") || s.equals("a")
+			|| s.equals(PluginServices.getText(this, "inter_arc"))) {
 
 		    (context.getState()).Exit(context);
 		    context.clearState();
 		    try {
 			ctxt.addOption(s);
-			ctxt.closeGeometry();
-			ctxt.endGeometry();
-			ctxt.end();
 		    } finally {
-			context.setState(Polyline.FirstPoint);
+			context.setState(Polyline.NextPointOrLine);
 			(context.getState()).Entry(context);
 		    }
-		}
-		// [NachoV] else if (s.equals("T") || s.equals("t") ||
-		// s.equals(PluginServices.getText(this,"terminate")))
-		else if (s.equals("espacio")
+		} else if (s.equals("espacio")
 			|| s.equals(PluginServices.getText(this, "terminate"))) {
 
-		    (context.getState()).Exit(context);
-		    context.clearState();
-		    try {
-			ctxt.addOption(s);
-			ctxt.endGeometry();
-			ctxt.end();
-			ctxt.fireEndGeometry();
-		    } finally {
-			context.setState(Polyline.FirstPoint);
-			(context.getState()).Entry(context);
+		    if (validStartEnd(ctxt.antPoint.getX(),
+			    ctxt.antPoint.getY())) {
+			(context.getState()).Exit(context);
+			context.clearState();
+			try {
+			    ctxt.addOption(s);
+			    ctxt.endGeometry();
+			    ctxt.end();
+			    ctxt.fireEndGeometry();
+			} finally {
+			    context.setState(Polyline.NextPointOrArc);
+			    (context.getState()).Entry(context);
+			}
+		    } else {
+			JOptionPane.showMessageDialog(null, PluginServices
+				.getText(this, "invalid_line_end"),
+				PluginServices.getText(this, "error_title"),
+				JOptionPane.ERROR_MESSAGE);
 		    }
 		} else {
 		    super.addOption(context, s);
@@ -475,7 +599,7 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		    InputEvent event, int numPoints) {
 		PipeCADTool ctxt = context.getOwner();
 
-		if (numPoints > 1) {
+		if (numPoints > 2) {
 		    PipeCADToolState endState = context.getState();
 		    context.clearState();
 		    try {
@@ -484,15 +608,14 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 			context.setState(endState);
 			(context.getState()).Entry(context);
 		    }
-		} else if (numPoints == 1) {
+		} else if (numPoints == 2) {
 
 		    (context.getState()).Exit(context);
 		    context.clearState();
 		    try {
 			ctxt.removePoint(event);
-
 		    } finally {
-			context.setState(Polyline.FirstPoint);
+			context.setState(Polyline.SecondPoint);
 			(context.getState()).Entry(context);
 		    }
 		} else {
@@ -507,27 +630,27 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 	    //
 	}
 
-	private static final class Polyline_NextPointOrLineOrClose extends
+	private static final class Polyline_NextPointOrLine extends
 		Polyline_Default {
 	    // -------------------------------------------------------
 	    // Member methods.
 	    //
 
-	    private Polyline_NextPointOrLineOrClose(String name, int id) {
+	    private Polyline_NextPointOrLine(String name, int id) {
 		super(name, id);
 	    }
 
 	    @Override
 	    protected String[] getDescription() {
-		return new String[] { "inter_arc", "close_polyline",
-			"terminate", "cancel", "removePoint" };
+		return new String[] { "inter_arc", "terminate", "cancel",
+			"removePoint" };
 	    }
 
 	    @Override
 	    protected void Entry(PipeCADToolContext context) {
 		PipeCADTool ctxt = context.getOwner();
 		ctxt.setQuestion(PluginServices.getText(this,
-			"insert_next_point_line_or_close"));
+			"insert_next_point_line"));
 		ctxt.setDescription(getDescription());
 		return;
 	    }
@@ -544,41 +667,31 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		    try {
 			ctxt.addOption(s);
 		    } finally {
-			context.setState(Polyline.NextPointOrArcOrClose);
-			(context.getState()).Entry(context);
-		    }
-		} else if (s.equals("C")
-			|| s.equals("c")
-			|| s.equals(PluginServices.getText(this,
-				"close_polyline"))) {
-
-		    (context.getState()).Exit(context);
-		    context.clearState();
-		    try {
-			ctxt.addOption(s);
-			ctxt.closeGeometry();
-			ctxt.endGeometry();
-			ctxt.end();
-		    } finally {
-			context.setState(Polyline.FirstPoint);
+			context.setState(Polyline.NextPointOrArc);
 			(context.getState()).Entry(context);
 		    }
 		} else if (s.equals("espacio")
 			|| s.equals(PluginServices.getText(this, "terminate")))
-		// else if (s.equals("T") || s.equals("t") ||
-		// s.equals(PluginServices.getText(this,"terminate")))
 		{
 
-		    (context.getState()).Exit(context);
-		    context.clearState();
-		    try {
-			ctxt.addOption(s);
-			ctxt.endGeometry();
-			ctxt.end();
-			ctxt.fireEndGeometry();
-		    } finally {
-			context.setState(Polyline.FirstPoint);
-			(context.getState()).Entry(context);
+		    if (validStartEnd(ctxt.antPoint.getX(),
+			    ctxt.antPoint.getY())) {
+			(context.getState()).Exit(context);
+			context.clearState();
+			try {
+			    ctxt.addOption(s);
+			    ctxt.endGeometry();
+			    ctxt.end();
+			    ctxt.fireEndGeometry();
+			} finally {
+			    context.setState(Polyline.FirstPoint);
+			    (context.getState()).Entry(context);
+			}
+		    } else {
+			JOptionPane.showMessageDialog(null, PluginServices
+				.getText(this, "invalid_line_end"),
+				PluginServices.getText(this, "error_title"),
+				JOptionPane.ERROR_MESSAGE);
 		    }
 		} else {
 		    super.addOption(context, s);
