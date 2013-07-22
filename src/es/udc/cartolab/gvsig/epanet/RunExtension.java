@@ -25,17 +25,7 @@ public class RunExtension extends AbstractExtension {
     @Override
     public void execute(String actionCommand) {
 	Run foo = new Run();
-	foo.execute();
-    }
-
-    @Override
-    public boolean isEnabled() {
-	return true;
-    }
-
-    @Override
-    public boolean isVisible() {
-	return true;
+	foo.execute(getView().getMapControl().getMapContext().getLayers());
     }
 
 }

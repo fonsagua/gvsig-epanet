@@ -1,14 +1,9 @@
 package es.udc.cartolab.gvsig.epanet;
 
-import com.iver.andami.PluginServices;
-import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.CADExtension;
-import com.iver.cit.gvsig.fmap.MapControl;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
-import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.InsertionCADTool;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 import es.udc.cartolab.gvsig.navtable.ToggleEditing;
 
@@ -18,8 +13,7 @@ public abstract class AbstractCADExtension extends AbstractExtension {
     private String customTool;
     protected String iconName;
     protected InsertionCADTool tool;
-
-    protected MapControl mapControl;
+    private FLayer layer;
 
     @Override
     public void initialize() {
@@ -34,22 +28,16 @@ public abstract class AbstractCADExtension extends AbstractExtension {
 	activeOnly(layername);
 	CADExtension.initFocus();
 	ToggleEditing te = new ToggleEditing();
-	te.startEditing(getLayerByName(layername));
+	te.startEditing(layer);
 
 	CADExtension.setCADTool(customTool, true);
 
     }
 
-    protected FLyrVect getLayerByName(String layerName) {
-	View view = (View) PluginServices.getMDIManager().getActiveWindow();
-	FLayer layer = view.getMapControl().getMapContext().getLayers()
-		.getLayer(layerName);
-	return (FLyrVect) layer;
     }
 
     protected void activeOnly(String layername) {
-	View view = (View) PluginServices.getMDIManager().getActiveWindow();
-	FLayers layers = view.getMapControl().getMapContext().getLayers();
+	FLayers layers = getView().getMapControl().getMapContext().getLayers();
 
 	FLayer layer;
 	for (int i = 0; i < layers.getLayersCount(); i++) {
@@ -64,19 +52,12 @@ public abstract class AbstractCADExtension extends AbstractExtension {
 
     @Override
     public boolean isEnabled() {
-	IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
-
-	if (iWindow instanceof View) {
-	    mapControl = ((View) iWindow).getMapControl();
-	    return true;
+	layer = null;
+	if (super.isEnabled()) {
+	    layer = getView().getMapControl().getMapContext().getLayers()
+		    .getLayer(layername);
 	}
-
-	return false;
-    }
-
-    @Override
-    public boolean isVisible() {
-	return true;
+	return layer != null;
     }
 
 }
