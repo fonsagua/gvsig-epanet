@@ -54,7 +54,7 @@ public class FixtureNetworkFactory {
 	nb.addReservoir(id, x, y, totalHead);
     }
 
-    public void addTank(String id, double x, double y, double elevation,
+    private void addTank(String id, double x, double y, double elevation,
 	    int initLevel, int minLevel, int maxLevel, double diameter,
 	    double pressure, double head, double demand) {
 	TankWrapper node = new TankWrapper(id, x, y, elevation, initLevel,
@@ -82,7 +82,7 @@ public class FixtureNetworkFactory {
 	nb.addPipe(id, startNode, endNode, len, diameter, roughness);
     }
 
-    public void addFlowControlValve(String id, String startNode,
+    private void addFlowControlValve(String id, String startNode,
 	    String endNode, double diameter, double flow, double expFlow,
 	    double velocity, double unitheadloss, double frictionfactor) {
 	LinkWrapper link = new ValveWrapper(id, nb.getNodes().get(startNode),
@@ -92,7 +92,7 @@ public class FixtureNetworkFactory {
 	nb.addFlowControlValve(id, startNode, endNode, diameter, flow);
     }
 
-    public void addPump(String id, String startNode, String endNode,
+    private void addPump(String id, String startNode, String endNode,
 	    double power, double flow, double velocity, double unitheadloss,
 	    double frictionfactor) {
 	PumpWrapper link = new PumpWrapper(id, nb.getNodes().get(startNode), nb

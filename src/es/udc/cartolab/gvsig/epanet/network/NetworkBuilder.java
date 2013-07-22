@@ -289,7 +289,7 @@ public class NetworkBuilder {
     public void hydraulicSim() {
 	prepare();
 	try {
-	    File hydFile = File.createTempFile("hydSim", "bin");
+	    File hydFile = File.createTempFile("hydSim", ".bin");
 	    HydraulicSim hydSim = new HydraulicSim(net, log);
 	    hydSim.simulate(hydFile);
 	    HydraulicReader hydReader = new HydraulicReader(
