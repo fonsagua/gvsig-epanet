@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
@@ -30,6 +31,23 @@ public class LayerParser {
     public LayerParser() {
 	nb = new NetworkBuilder();
 	IDCreator.reset();
+    }
+
+    public void add(FLayers fLayers) {
+
+	addReservoirs((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getReservoirs()));
+	addValves((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getValves()));
+	addPumps((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getPumps()));
+	addJunctions((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getJunctions()));
+	addTanks((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getTanks()));
+	addPipes((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getPipes()));
+
     }
 
     public void addJunctions(FLyrVect layer) {
@@ -99,6 +117,7 @@ public class LayerParser {
 	    if ((inp != null) && (inp.exists())) {
 		inp.delete();
 	    }
+	    // TODO: delete output files
 	}
 
     }
