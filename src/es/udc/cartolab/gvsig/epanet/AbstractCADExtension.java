@@ -15,7 +15,7 @@ import es.udc.cartolab.gvsig.navtable.ToggleEditing;
 public abstract class AbstractCADExtension extends AbstractExtension {
 
     protected String layername;
-    protected String customTool;
+    private String customTool;
     protected String iconName;
     protected InsertionCADTool tool;
 
@@ -24,6 +24,7 @@ public abstract class AbstractCADExtension extends AbstractExtension {
     @Override
     public void initialize() {
 	registerIcon(iconName);
+	customTool = "_epanet_cadtool_" + layername;
 	CADExtension.addCADTool(customTool, tool);
     }
 

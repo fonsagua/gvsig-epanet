@@ -8,7 +8,6 @@ public class ReservoirExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	customTool = "_reservoirCad";
 	layername = Preferences.getLayerNames().getReservoirs();
 	iconName = "reservoir";
 	tool = new PointCADTool();

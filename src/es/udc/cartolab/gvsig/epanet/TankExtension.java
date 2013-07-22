@@ -8,7 +8,6 @@ public class TankExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	customTool = "_tankCad";
 	layername = Preferences.getLayerNames().getTanks();
 	iconName = "tank";
 	tool = new PointCADTool();

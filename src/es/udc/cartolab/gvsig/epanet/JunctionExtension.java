@@ -13,7 +13,6 @@ public class JunctionExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	customTool = "_junctionCad";
 	layername = Preferences.getLayerNames().getJunctions();
 	iconName = "junction";
 	tool = new PointCADTool();

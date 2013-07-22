@@ -8,7 +8,6 @@ public class PumpExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	customTool = "_pumpCad";
 	layername = Preferences.getLayerNames().getPumps();
 	iconName = "pump";
 	tool = new PointCADTool();

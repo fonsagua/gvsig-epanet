@@ -8,7 +8,6 @@ public class ValveExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	customTool = "_valveCad";
 	layername = Preferences.getLayerNames().getValves();
 	iconName = "valve";
 	tool = new PointCADTool();
