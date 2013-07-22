@@ -6,15 +6,15 @@ import java.util.List;
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.DoubleValue;
 import com.hardcode.gdbms.engine.values.Value;
+import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
-import com.iver.cit.gvsig.exceptions.visitors.StopWriterVisitorException;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 
+import es.udc.cartolab.gvsig.epanet.cad.ModifyValues;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
-import es.udc.cartolab.gvsig.navtable.ToggleEditing;
 
 public abstract class NodeLayer {
 
@@ -65,24 +65,21 @@ public abstract class NodeLayer {
 	    NetworkBuilder nb);
 
     public void update() {
-	ToggleEditing te = new ToggleEditing();
-	te.startEditing(layer);
+
+	ModifyValues te = new ModifyValues(layer);
+	te.startEditing();
+
 	for (int i = 0; i < nodes.size(); i++) {
 	    NodeWrapper node = nodes.get(i);
-	    String[] values = new String[] {
-		    String.valueOf(node.getPressure()),
-		    String.valueOf(node.getHead()),
-		    String.valueOf(node.getDemand()) };
-
-	    te.modifyValues(layer, i, indexes, values);
+	    Value[] values = new Value[] {
+		    ValueFactory.createValue(node.getPressure()),
+		    ValueFactory.createValue(node.getHead()),
+		    ValueFactory.createValue(node.getDemand()) };
+	    te.modifyValues(i, indexes, values);
 	}
 
-	try {
-	    te.stopEditing(layer, false);
-	} catch (StopWriterVisitorException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+	te.stopEditing();
+
     }
 
     protected abstract int[] getIndexes();
