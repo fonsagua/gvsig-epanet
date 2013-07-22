@@ -4,7 +4,10 @@ import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.gui.cad.tools.InsertionCADTool;
+import com.iver.cit.gvsig.layers.VectorialLayerEdited;
 
+import es.udc.cartolab.gvsig.epanet.cad.SnapUtils;
+import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.navtable.ToggleEditing;
 
 public abstract class AbstractCADExtension extends AbstractExtension {
@@ -14,6 +17,7 @@ public abstract class AbstractCADExtension extends AbstractExtension {
     protected String iconName;
     protected InsertionCADTool tool;
     private FLayer layer;
+    private boolean snapping = false;;
 
     @Override
     public void initialize() {
@@ -32,7 +36,13 @@ public abstract class AbstractCADExtension extends AbstractExtension {
 
 	CADExtension.setCADTool(customTool, true);
 
-    }
+	if (!snapping) {
+	    SnapUtils snapUtils = new SnapUtils(Preferences.getPointLayers());
+	    VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		    .getEditionManager().getActiveLayerEdited();
+	    snapUtils.enableSnappersFor(vle);
+	    snapping = true;
+	}
 
     }
 
