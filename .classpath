@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="src-test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Epanet"/>
 	<classpathentry kind="lib" path="lib-test/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="lib-test/commons-io-2.4.jar"/>
 	<classpathentry kind="src" path="/libDriverManager"/>
@@ -18,5 +17,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/extNavTable"/>
 	<classpathentry kind="src" path="/extCAD"/>
 	<classpathentry kind="lib" path="/extCAD/lib/Smc.jar"/>
+	<classpathentry kind="lib" path="lib/BaseformEpaNetLib-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
