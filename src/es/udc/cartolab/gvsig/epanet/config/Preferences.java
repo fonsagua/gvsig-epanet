@@ -11,10 +11,12 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 public class Preferences {
 
-    static String[] pointLayerNames = { "junctions", "pumps", "reservoirs",
-	    "tanks", "valves" };
     private static String baseformpath;
 
+    public static LayerNames getLayerNames() {
+	LayerNames layerNames = new LayerNames();
+	return layerNames;
+    }
 
     public static JunctionFieldNames getJunctionFieldNames() {
 	JunctionFieldNames names = new JunctionFieldNames();
@@ -87,6 +89,12 @@ public class Preferences {
 	FLayers layers = ((View) PluginServices.getMDIManager()
 		.getActiveWindow()).getMapControl().getMapContext().getLayers();
 	FLayer layer;
+
+	LayerNames layerNames = getLayerNames();
+	String[] pointLayerNames = { layerNames.getJunctions(),
+		layerNames.getTanks(), layerNames.getReservoirs(),
+		layerNames.getPumps(), layerNames.getValves() };
+
 	for (String name : pointLayerNames) {
 	    layer = layers.getLayer(name);
 	    if (layer instanceof FLyrVect) {

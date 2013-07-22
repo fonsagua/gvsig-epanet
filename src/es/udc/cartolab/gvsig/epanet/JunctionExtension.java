@@ -6,6 +6,7 @@ import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 import com.iver.cit.gvsig.listeners.CADListenerManager;
 import com.iver.cit.gvsig.listeners.EndGeometryListener;
 
+import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.navtable.ToggleEditing;
 
 public class JunctionExtension extends AbstractCADExtension {
@@ -13,7 +14,7 @@ public class JunctionExtension extends AbstractCADExtension {
     @Override
     public void initialize() {
 	customTool = "_junctionCad";
-	layername = "junctions";
+	layername = Preferences.getLayerNames().getJunctions();
 	iconName = "junction";
 	tool = new PointCADTool();
 	super.initialize();
