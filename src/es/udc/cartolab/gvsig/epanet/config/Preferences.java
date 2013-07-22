@@ -13,6 +13,8 @@ public class Preferences {
 
     static String[] pointLayerNames = { "junctions", "pumps", "reservoirs",
 	    "tanks", "valves" };
+    private static String baseformpath;
+
 
     public static JunctionFieldNames getJunctionFieldNames() {
 	JunctionFieldNames names = new JunctionFieldNames();
@@ -94,4 +96,11 @@ public class Preferences {
 	return pointLayers;
     }
 
+    public static String getBaseformPath() {
+	return baseformpath;
+    }
+
+    public static void setBaseformPath(String path) {
+	baseformpath = path;
+    }
 }

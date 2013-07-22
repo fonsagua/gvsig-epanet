@@ -1,10 +1,16 @@
 package es.udc.cartolab.gvsig.epanet.network;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
+import es.udc.cartolab.gvsig.epanet.config.Preferences;
+import es.udc.cartolab.gvsig.epanet.exceptions.SimulationError;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionLayer;
+import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeLayer;
 import es.udc.cartolab.gvsig.epanet.structures.PumpLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirLayer;
@@ -61,7 +67,83 @@ public class LayerParser {
     }
 
     public void hydraulicSim() {
-	nb.hydraulicSim();
+
+	File inp = null;
+	try {
+	    inp = File.createTempFile("epanet", ".inp");
+
+	    nb.createInpFile(inp);
+	    BaseformWrapper epanet = new BaseformWrapper(
+		    Preferences.getBaseformPath());
+	    String[] output = epanet.execute(inp.getAbsolutePath());
+	    BaseformOuptutParser outputParser = new BaseformOuptutParser(
+		    output[1], output[0]);
+
+	    updateNodes(outputParser.getNodes());
+	    updateAuxNodes(outputParser.getNodes());
+	    updateLinks(outputParser.getLinks());
+
+	    if (outputParser.getNodes().size() != 0) {
+		throw new SimulationError(
+			"El resultado del cálculo tiene más nodos de los esperados");
+	    }
+	    if (outputParser.getLinks().size() != 0) {
+		throw new SimulationError(
+			"El resultado del cálculo tiene más links de los esperados");
+	    }
+	    updateLayers();
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} finally {
+	    if ((inp != null) && (inp.exists())) {
+		inp.delete();
+	    }
+	}
+
+    }
+
+    private void updateNodes(Map<String, NodeWrapper> simulated) {
+	for (NodeWrapper node : nb.getNodes().values()) {
+	    String id = node.getId();
+
+	    NodeWrapper s = simulated.get(id);
+	    if (s == null) {
+		throw new SimulationError(
+			"Un nodo de la red no está entre los resultados");
+	    }
+	    node.cloneResults(s);
+	    simulated.remove(id);
+	}
+    }
+
+    private void updateAuxNodes(Map<String, NodeWrapper> simulated) {
+	for (NodeWrapper node : nb.getAuxNodes().values()) {
+	    String id = node.getId();
+	    NodeWrapper s = simulated.get(id);
+	    if (s == null) {
+		throw new SimulationError(
+			"Un nodo auxiliar de la red no está entre los resultados");
+	    }
+	    node.cloneResults(s);
+	    simulated.remove(id);
+	}
+    }
+
+    private void updateLinks(Map<String, LinkWrapper> simulated) {
+	for (LinkWrapper link : nb.getLinks().values()) {
+	    String id = link.getId();
+	    LinkWrapper s = simulated.get(id);
+	    if (s == null) {
+		throw new SimulationError(
+			"Un link de la red no está entre los resultados");
+	    }
+	    link.cloneResults(s);
+	    simulated.remove(id);
+	}
+    }
+
+    private void updateLayers() {
 	if (junctionLayer != null) {
 	    junctionLayer.update();
 	}
@@ -81,4 +163,13 @@ public class LayerParser {
 	    pumpLayer.update();
 	}
     }
+
+    public Map<String, NodeWrapper> getNodes() {
+	return nb.getNodes();
+    }
+
+    public Map<String, LinkWrapper> getLinks() {
+	return nb.getLinks();
+    }
+
 }

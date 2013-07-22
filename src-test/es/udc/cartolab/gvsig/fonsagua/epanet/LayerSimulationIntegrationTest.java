@@ -1,12 +1,19 @@
 package es.udc.cartolab.gvsig.fonsagua.epanet;
 
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.hardcode.driverManager.DriverLoadException;
+
 import es.udc.cartolab.gvsig.epanet.network.LayerParser;
+import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
+import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureLayerFactory;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
 import es.udc.cartolab.gvsig.shputils.Drivers;
@@ -28,6 +35,7 @@ public class LayerSimulationIntegrationTest {
     public void setUp() throws Exception {
 	layerParser = new LayerParser();
 	fixtureFactory = new FixtureLayerFactory(temp, layerParser);
+
     }
 
     @Test
@@ -57,5 +65,37 @@ public class LayerSimulationIntegrationTest {
     private void executeTest(String patternName) throws Exception {
 	fixtureFactory.parseSHPs();
 	layerParser.hydraulicSim();
+
+	Object[] actual = parseSHPAfterSimulation();
+
+	checkNodes(actual[0]);
+	checkLinks(actual[1]);
+
+    }
+
+    private Object[] parseSHPAfterSimulation() throws DriverLoadException,
+	    Exception {
+	LayerParser lp = new LayerParser();
+	FixtureLayerFactory flf = new FixtureLayerFactory(temp, lp);
+	flf.parseSHPs();
+
+	return new Object[] { lp.getNodes(), lp.getLinks() };
+    }
+
+    private void checkLinks(Object object) {
+	Map<String, LinkWrapper> actuals = (Map<String, LinkWrapper>) object;
+	for (LinkWrapper expected : layerParser.getLinks().values()) {
+	    LinkWrapper actual = actuals.get(expected.getId());
+	    ComparatorUtils.checkLinks(expected, actual);
+	}
+
+    }
+
+    private void checkNodes(Object object) {
+	Map<String, NodeWrapper> actuals = (Map<String, NodeWrapper>) object;
+	for (NodeWrapper expected : layerParser.getNodes().values()) {
+	    NodeWrapper actual = actuals.get(expected.getId());
+	    ComparatorUtils.checkNodes(expected, actual);
+	}
     }
 }
