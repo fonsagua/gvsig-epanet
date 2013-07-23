@@ -24,8 +24,10 @@ public class RunExtension extends AbstractExtension {
 
     @Override
     public void execute(String actionCommand) {
+	PluginServices.getMDIManager().setWaitCursor();
 	Run foo = new Run();
 	foo.execute(getView().getMapControl().getMapContext().getLayers());
+	PluginServices.getMDIManager().restoreCursor();
     }
 
 }
