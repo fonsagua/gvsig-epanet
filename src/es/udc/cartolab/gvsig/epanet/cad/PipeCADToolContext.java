@@ -165,7 +165,6 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 	// Statics.
 	//
 	/* package */static Polyline_Default.Polyline_FirstPoint FirstPoint;
-	/* package */static Polyline_Default.Polyline_SecondPoint SecondPoint;
 	/* package */static Polyline_Default.Polyline_NextPointOrArc NextPointOrArc;
 	/* package */static Polyline_Default.Polyline_NextPointOrLine NextPointOrLine;
 	private static Polyline_Default Default;
@@ -173,12 +172,10 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 	static {
 	    FirstPoint = new Polyline_Default.Polyline_FirstPoint(
 		    "Polyline.FirstPoint", 0);
-	    SecondPoint = new Polyline_Default.Polyline_SecondPoint(
-		    "Polyline.SecondPoint", 1);
 	    NextPointOrArc = new Polyline_Default.Polyline_NextPointOrArc(
-		    "Polyline.NextPointOrArc", 2);
+		    "Polyline.NextPointOrArc", 1);
 	    NextPointOrLine = new Polyline_Default.Polyline_NextPointOrLine(
-		    "Polyline.NextPointOrLine", 3);
+		    "Polyline.NextPointOrLine", 2);
 	    Default = new Polyline_Default("Polyline.Default", -1);
 	}
 
@@ -385,7 +382,7 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		    try {
 			ctxt.addPoint(pointX, pointY, event);
 		    } finally {
-			context.setState(Polyline.SecondPoint);
+			context.setState(Polyline.NextPointOrArc);
 			(context.getState()).Entry(context);
 		    }
 		} else {
@@ -394,105 +391,6 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 			    PluginServices.getText(this, "error_title"),
 			    JOptionPane.ERROR_MESSAGE);
 		}
-		return;
-	    }
-
-	    // -------------------------------------------------------
-	    // Member data.
-	    //
-	}
-
-	// -----------------------------------------------------------
-	// Inner classse.
-	//
-
-	private static final class Polyline_SecondPoint extends
-		Polyline_Default {
-	    // -------------------------------------------------------
-	    // Member methods.
-	    //
-
-	    private Polyline_SecondPoint(String name, int id) {
-		super(name, id);
-	    }
-
-	    @Override
-	    protected String[] getDescription() {
-		return new String[] { "inter_arc", "cancel", "removePoint" };
-	    }
-
-	    @Override
-	    protected void Entry(PipeCADToolContext context) {
-		PipeCADTool ctxt = context.getOwner();
-		boolean deleteButton3 = CADStatus.getCADStatus()
-			.isDeleteButtonActivated();
-		if (deleteButton3) {
-		    ctxt.setQuestion(PluginServices.getText(this,
-			    "insert_next_point_arc_or_del"));
-		} else {
-		    ctxt.setQuestion(PluginServices.getText(this,
-			    "insert_next_point_arc"));
-		}
-		ctxt.setDescription(getDescription());
-		return;
-	    }
-
-	    @Override
-	    protected void addOption(PipeCADToolContext context, String s) {
-		PipeCADTool ctxt = context.getOwner();
-
-		if (s.equals("A") || s.equals("a")
-			|| s.equals(PluginServices.getText(this, "inter_arc"))) {
-
-		    (context.getState()).Exit(context);
-		    context.clearState();
-		    try {
-			ctxt.addOption(s);
-		    } finally {
-			context.setState(Polyline.NextPointOrLine);
-			(context.getState()).Entry(context);
-		    }
-		} else {
-		    super.addOption(context, s);
-		}
-
-		return;
-	    }
-
-	    @Override
-	    protected void addPoint(PipeCADToolContext context, double pointX,
-		    double pointY, InputEvent event) {
-		PipeCADTool ctxt = context.getOwner();
-
-		context.clearState();
-		try {
-		    ctxt.addPoint(pointX, pointY, event);
-		} finally {
-		    context.setState(Polyline.NextPointOrArc);
-		    (context.getState()).Entry(context);
-		}
-		return;
-	    }
-
-	    @Override
-	    protected void removePoint(PipeCADToolContext context,
-		    InputEvent event, int numPoints) {
-		PipeCADTool ctxt = context.getOwner();
-
-		if (numPoints == 1) {
-
-		    (context.getState()).Exit(context);
-		    context.clearState();
-		    try {
-			ctxt.removePoint(event);
-		    } finally {
-			context.setState(Polyline.FirstPoint);
-			(context.getState()).Entry(context);
-		    }
-		} else {
-		    super.removePoint(context, event, numPoints);
-		}
-
 		return;
 	    }
 
@@ -513,8 +411,7 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 
 	    @Override
 	    protected String[] getDescription() {
-		return new String[] { "inter_arc", "terminate", "cancel",
-			"removePoint" };
+		return new String[] { "inter_arc", "cancel", "removePoint" };
 	    }
 
 	    @Override
@@ -524,10 +421,10 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 			.isDeleteButtonActivated();
 		if (deleteButton3) {
 		    ctxt.setQuestion(PluginServices.getText(this,
-			    "insert_next_point_arc_del_or_end"));
+			    "insert_next_point_arc_or_del"));
 		} else {
 		    ctxt.setQuestion(PluginServices.getText(this,
-			    "insert_next_point_arc_or_end"));
+			    "insert_next_point_or_arc"));
 		}
 		ctxt.setDescription(getDescription());
 		return;
@@ -548,28 +445,6 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 			context.setState(Polyline.NextPointOrLine);
 			(context.getState()).Entry(context);
 		    }
-		} else if (s.equals("espacio")
-			|| s.equals(PluginServices.getText(this, "terminate"))) {
-
-		    if (validStartEnd(ctxt.antPoint.getX(),
-			    ctxt.antPoint.getY())) {
-			(context.getState()).Exit(context);
-			context.clearState();
-			try {
-			    ctxt.addOption(s);
-			    ctxt.endGeometry();
-			    ctxt.end();
-			    ctxt.fireEndGeometry();
-			} finally {
-			    context.setState(Polyline.NextPointOrArc);
-			    (context.getState()).Entry(context);
-			}
-		    } else {
-			JOptionPane.showMessageDialog(null, PluginServices
-				.getText(this, "invalid_line_end"),
-				PluginServices.getText(this, "error_title"),
-				JOptionPane.ERROR_MESSAGE);
-		    }
 		} else {
 		    super.addOption(context, s);
 		}
@@ -588,8 +463,19 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		try {
 		    ctxt.addPoint(pointX, pointY, event);
 		} finally {
-		    context.setState(endState);
-		    (context.getState()).Entry(context);
+		    if (validStartEnd(pointX, pointY)) {
+			try {
+			    ctxt.endGeometry();
+			    ctxt.end();
+			    ctxt.fireEndGeometry();
+			} finally {
+			    context.setState(Polyline.FirstPoint);
+			    (context.getState()).Entry(context);
+			}
+		    } else {
+			context.setState(endState);
+			(context.getState()).Entry(context);
+		    }
 		}
 		return;
 	    }
@@ -599,7 +485,7 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		    InputEvent event, int numPoints) {
 		PipeCADTool ctxt = context.getOwner();
 
-		if (numPoints > 2) {
+		if (numPoints > 1) {
 		    PipeCADToolState endState = context.getState();
 		    context.clearState();
 		    try {
@@ -608,14 +494,14 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 			context.setState(endState);
 			(context.getState()).Entry(context);
 		    }
-		} else if (numPoints == 2) {
+		} else if (numPoints == 1) {
 
 		    (context.getState()).Exit(context);
 		    context.clearState();
 		    try {
 			ctxt.removePoint(event);
 		    } finally {
-			context.setState(Polyline.SecondPoint);
+			context.setState(Polyline.FirstPoint);
 			(context.getState()).Entry(context);
 		    }
 		} else {
@@ -642,15 +528,14 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 
 	    @Override
 	    protected String[] getDescription() {
-		return new String[] { "inter_arc", "terminate", "cancel",
-			"removePoint" };
+		return new String[] { "inter_line", "cancel", "removePoint" };
 	    }
 
 	    @Override
 	    protected void Entry(PipeCADToolContext context) {
 		PipeCADTool ctxt = context.getOwner();
 		ctxt.setQuestion(PluginServices.getText(this,
-			"insert_next_point_line"));
+			"insert_next_point_or_line"));
 		ctxt.setDescription(getDescription());
 		return;
 	    }
@@ -670,29 +555,6 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 			context.setState(Polyline.NextPointOrArc);
 			(context.getState()).Entry(context);
 		    }
-		} else if (s.equals("espacio")
-			|| s.equals(PluginServices.getText(this, "terminate")))
-		{
-
-		    if (validStartEnd(ctxt.antPoint.getX(),
-			    ctxt.antPoint.getY())) {
-			(context.getState()).Exit(context);
-			context.clearState();
-			try {
-			    ctxt.addOption(s);
-			    ctxt.endGeometry();
-			    ctxt.end();
-			    ctxt.fireEndGeometry();
-			} finally {
-			    context.setState(Polyline.FirstPoint);
-			    (context.getState()).Entry(context);
-			}
-		    } else {
-			JOptionPane.showMessageDialog(null, PluginServices
-				.getText(this, "invalid_line_end"),
-				PluginServices.getText(this, "error_title"),
-				JOptionPane.ERROR_MESSAGE);
-		    }
 		} else {
 		    super.addOption(context, s);
 		}
@@ -711,8 +573,19 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 		try {
 		    ctxt.addPoint(pointX, pointY, event);
 		} finally {
-		    context.setState(endState);
-		    (context.getState()).Entry(context);
+		    if (validStartEnd(pointX, pointY)) {
+			try {
+			    ctxt.endGeometry();
+			    ctxt.end();
+			    ctxt.fireEndGeometry();
+			} finally {
+			    context.setState(Polyline.FirstPoint);
+			    (context.getState()).Entry(context);
+			}
+		    } else {
+			context.setState(endState);
+			(context.getState()).Entry(context);
+		    }
 		}
 		return;
 	    }

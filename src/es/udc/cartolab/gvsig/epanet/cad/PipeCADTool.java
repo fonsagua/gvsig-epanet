@@ -171,8 +171,7 @@ public class PipeCADTool extends InsertionCADTool {
 	// }
 	// } else
 	if (status.equals("Polyline.NextPointOrArc")
-		|| status.equals("Polyline.FirstPoint")
-		|| status.equals("Polyline.SecondPoint")) {
+		|| status.equals("Polyline.FirstPoint")) {
 
 	    if (firstPoint == null) {
 		firstPoint = new Point2D.Double(x, y);
@@ -320,8 +319,7 @@ public class PipeCADTool extends InsertionCADTool {
 	    // prueba para actualizar el ultimo punto pulsado
 	    getCadToolAdapter().setPreviousPoint((double[]) null);
 	} else if (status.equals("Polyline.NextPointOrLine")
-		|| status.equals("Polyline.NextPointOrArc")
-		|| status.equals("Polyline.SecondPoint")) {
+		|| status.equals("Polyline.NextPointOrArc")) {
 	    System.out.println("Numero de coordenadas antes de borrar: "
 		    + points.size());
 	    if (points.size() == 1) {
@@ -360,8 +358,7 @@ public class PipeCADTool extends InsertionCADTool {
 	String status = actualState.getName();
 
 	if (status.equals("Polyline.NextPointOrArc")
-		|| status.equals("Polyline.FirstPoint")
-		|| status.equals("Polyline.SecondPoint")) {
+		|| status.equals("Polyline.FirstPoint")) {
 	    for (int i = 0; i < list.size(); i++) {
 		((IGeometry) list.get(i)).cloneGeometry().draw((Graphics2D) g,
 			getCadToolAdapter().getMapControl().getViewPort(),
