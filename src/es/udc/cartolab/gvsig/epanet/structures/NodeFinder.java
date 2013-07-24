@@ -7,6 +7,7 @@ import java.util.Map;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 
 public class NodeFinder {
 
@@ -19,7 +20,7 @@ public class NodeFinder {
 	this.auxNodes = auxNodes;
     }
 
-    public List<NodeWrapper> getNodessAt(Coordinate coordinate) {
+    public List<NodeWrapper> getNodesAt(Coordinate coordinate) {
 	List<NodeWrapper> finded = new ArrayList<NodeWrapper>(1);
 
 	for (NodeWrapper n : nodes.values()) {
@@ -33,10 +34,11 @@ public class NodeFinder {
 	    }
 	}
 
-	if ((finded.size() != 1) && (finded.size() != 2)) {
+	if (!MathUtils.inClosedInterval(0, finded.size(), 2)) {
 	    throw new InvalidNetworkError(
 		    "More than two nodes in the same point");
 	}
+
 	return finded;
     }
 
@@ -50,7 +52,7 @@ public class NodeFinder {
      * agua
      */
     public NodeWrapper getNodeForInitialPoint(Coordinate coordinate) {
-	List<NodeWrapper> overlapped = getNodessAt(coordinate);
+	List<NodeWrapper> overlapped = getNodesAt(coordinate);
 	if (overlapped.size() == 1) {
 	    return overlapped.get(0);
 	} else if (overlapped.size() == 2) {
@@ -61,14 +63,14 @@ public class NodeFinder {
 	    return a > b ? startNode : endNode;
 
 	} else {
-	    throw new InvalidNetworkError(
-		    "More than two nodes in the same point");
+	    throw new InvalidNetworkError(overlapped.size()
+		    + " nodes at this point. Should be 1 or 2.");
 	}
 
     }
 
     public NodeWrapper getNodeForEndPoint(Coordinate coordinate) {
-	List<NodeWrapper> overlapped = getNodessAt(coordinate);
+	List<NodeWrapper> overlapped = getNodesAt(coordinate);
 	if (overlapped.size() == 1) {
 	    return overlapped.get(0);
 	} else if (overlapped.size() == 2) {
