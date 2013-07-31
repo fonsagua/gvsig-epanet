@@ -1,7 +1,7 @@
 package es.udc.cartolab.gvsig.epanet.structures;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.values.DoubleValue;
+import com.hardcode.gdbms.engine.values.NumericValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
@@ -32,8 +32,9 @@ public class PipeLayer extends LinkLayer {
 	NodeFinder nodeFinder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
 	String id = IDCreator.addLink(iFeature.getID());
 	PipeWrapper pipe = new PipeWrapper(iFeature);
-	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(diameterIdx);
-	DoubleValue roughness = (DoubleValue) iFeature
+	NumericValue diameter = (NumericValue) iFeature
+		.getAttribute(diameterIdx);
+	NumericValue roughness = (NumericValue) iFeature
 		.getAttribute(roughnessIdx);
 
 	Geometry geom = iFeature.getGeometry().toJTSGeometry();

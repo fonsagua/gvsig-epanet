@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.values.DoubleValue;
+import com.hardcode.gdbms.engine.values.NumericValue;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
@@ -49,13 +49,13 @@ public abstract class NodeLayer {
 	NodeWrapper node = processSpecific(iFeature, nb);
 	Value[] attr = iFeature.getAttributes();
 
-	double pressure = ((DoubleValue) attr[indexes[0]]).doubleValue();
+	double pressure = ((NumericValue) attr[indexes[0]]).doubleValue();
 	node.setPressure(pressure);
 
-	double head = ((DoubleValue) attr[indexes[1]]).doubleValue();
+	double head = ((NumericValue) attr[indexes[1]]).doubleValue();
 	node.setHead(head);
 
-	double demand = ((DoubleValue) attr[indexes[2]]).doubleValue();
+	double demand = ((NumericValue) attr[indexes[2]]).doubleValue();
 	node.setDemand(demand);
 
 	return node;

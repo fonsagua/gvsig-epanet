@@ -3,7 +3,7 @@ package es.udc.cartolab.gvsig.epanet.structures;
 import java.util.Map;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.values.DoubleValue;
+import com.hardcode.gdbms.engine.values.NumericValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
@@ -34,10 +34,11 @@ public class ValveLayer extends LinkLayer {
 	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	DoubleValue elevation = (DoubleValue) iFeature
+	NumericValue elevation = (NumericValue) iFeature
 		.getAttribute(elevationIdx);
-	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(diameterIdx);
-	DoubleValue flow = (DoubleValue) iFeature.getAttribute(flowIdx);
+	NumericValue diameter = (NumericValue) iFeature
+		.getAttribute(diameterIdx);
+	NumericValue flow = (NumericValue) iFeature.getAttribute(flowIdx);
 
 	String startNodeId = IDCreator.addValveNode(iFeature.getID());
 	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,

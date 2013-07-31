@@ -3,7 +3,7 @@ package es.udc.cartolab.gvsig.epanet.structures;
 import java.util.Map;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.values.IntValue;
+import com.hardcode.gdbms.engine.values.NumericValue;
 import com.hardcode.gdbms.engine.values.StringValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -34,7 +34,8 @@ public class PumpLayer extends LinkLayer {
 	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	IntValue elevation = (IntValue) iFeature.getAttribute(elevationIdx);
+	NumericValue elevation = (NumericValue) iFeature
+		.getAttribute(elevationIdx);
 	// StringValue type = (StringValue) iFeature.getAttribute(1);
 	StringValue value = (StringValue) iFeature.getAttribute(valueIdx);
 	int baseDemand = 0;

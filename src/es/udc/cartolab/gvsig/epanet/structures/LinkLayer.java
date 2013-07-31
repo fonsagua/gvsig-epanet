@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.values.DoubleValue;
+import com.hardcode.gdbms.engine.values.NumericValue;
 import com.hardcode.gdbms.engine.values.Value;
 import com.hardcode.gdbms.engine.values.ValueFactory;
 import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
@@ -48,16 +48,16 @@ public abstract class LinkLayer {
 	LinkWrapper link = processSpecific(iFeature, nb);
 	Value[] attr = iFeature.getAttributes();
 
-	double flow = ((DoubleValue) attr[indexes[0]]).doubleValue();
+	double flow = ((NumericValue) attr[indexes[0]]).doubleValue();
 	link.setFlow(flow);
 
-	double velocity = ((DoubleValue) attr[indexes[1]]).doubleValue();
+	double velocity = ((NumericValue) attr[indexes[1]]).doubleValue();
 	link.setVelocity(velocity);
 
-	double uhloss = ((DoubleValue) attr[indexes[2]]).doubleValue();
+	double uhloss = ((NumericValue) attr[indexes[2]]).doubleValue();
 	link.setUnitHeadLoss(uhloss);
 
-	double ffactor = ((DoubleValue) attr[indexes[3]]).doubleValue();
+	double ffactor = ((NumericValue) attr[indexes[3]]).doubleValue();
 	link.setFrictionFactor(ffactor);
 
 	return link;

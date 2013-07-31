@@ -1,7 +1,7 @@
 package es.udc.cartolab.gvsig.epanet.structures;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.values.DoubleValue;
+import com.hardcode.gdbms.engine.values.NumericValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
@@ -30,9 +30,9 @@ public class JunctionLayer extends NodeLayer {
 	JunctionWrapper junction = new JunctionWrapper(iFeature);
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	DoubleValue elevation = (DoubleValue) iFeature
+	NumericValue elevation = (NumericValue) iFeature
 		.getAttribute(elevationIdx);
-	DoubleValue bdemand = (DoubleValue) iFeature.getAttribute(bdemandIdx);
+	NumericValue bdemand = (NumericValue) iFeature.getAttribute(bdemandIdx);
 	String id = IDCreator.addNode(iFeature.getID());
 	junction.createJunction(id, coordinate.x, coordinate.y,
 		elevation.doubleValue(), bdemand.doubleValue());
