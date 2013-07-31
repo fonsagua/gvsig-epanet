@@ -3,6 +3,7 @@ package es.udc.cartolab.gvsig.epanet.network;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -32,6 +33,7 @@ import org.addition.epanet.network.structures.Tank;
 import org.addition.epanet.network.structures.Valve;
 import org.addition.epanet.util.ENException;
 
+import es.udc.cartolab.gvsig.epanet.exceptions.EpanetLoggerHandler;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
@@ -62,14 +64,17 @@ public class NetworkBuilder {
      * enclose a pump or a valve
      **/
     private final Map<String, NodeWrapper> auxNodes;
+    private EpanetLoggerHandler handler;
 
     public NetworkBuilder() {
 	nodesWrapper = new LinkedHashMap<String, NodeWrapper>();
 	linksWrapper = new LinkedHashMap<String, LinkWrapper>();
 	auxNodes = new LinkedHashMap<String, NodeWrapper>();
 
-	parser = InputParser.create(FileType.NULL_FILE,
-		Logger.getLogger(getClass().getName()));
+	handler = new EpanetLoggerHandler();
+	Logger errorlogger = Logger.getLogger("baseformlogger");
+	errorlogger.addHandler(handler);
+	parser = InputParser.create(FileType.NULL_FILE, errorlogger);
 
 	net = new Network();
 
@@ -273,6 +278,10 @@ public class NetworkBuilder {
 	    parser.parse(net, null);
 	} catch (ENException e) {
 	    throw new InvalidNetworkError(e);
+	}
+	ArrayList<Throwable> stack = handler.getStack();
+	if (!stack.isEmpty()) {
+	    throw new InvalidNetworkError(stack.get(0));
 	}
     }
 
