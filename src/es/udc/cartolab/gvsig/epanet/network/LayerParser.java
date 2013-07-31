@@ -8,6 +8,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
+import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.SimulationError;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionLayer;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
@@ -87,13 +88,14 @@ public class LayerParser {
     public void hydraulicSim() {
 
 	File inp = null;
+	String[] output = null;
 	try {
 	    inp = File.createTempFile("epanet", ".inp");
 
 	    nb.createInpFile(inp);
 	    BaseformWrapper epanet = new BaseformWrapper(
 		    Preferences.getBaseformPath());
-	    String[] output = epanet.execute(inp.getAbsolutePath());
+	    output = epanet.execute(inp.getAbsolutePath());
 	    BaseformOuptutParser outputParser = new BaseformOuptutParser(
 		    output[1], output[0]);
 
@@ -111,15 +113,23 @@ public class LayerParser {
 	    }
 	    updateLayers();
 	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    throw new ExternalError(e);
 	} finally {
-	    if ((inp != null) && (inp.exists())) {
-		inp.delete();
-	    }
-	    // TODO: delete output files
+	    delete(inp);
+	    delete(output[0]);
+	    delete(output[1]);
 	}
 
+    }
+
+    private void delete(String path) {
+	delete(new File(path));
+    }
+
+    private void delete(File file) {
+	if ((file != null) && (file.exists())) {
+	    file.delete();
+	}
     }
 
     private void updateNodes(Map<String, NodeWrapper> simulated) {
