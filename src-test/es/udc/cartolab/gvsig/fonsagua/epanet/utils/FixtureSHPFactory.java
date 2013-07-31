@@ -110,7 +110,7 @@ public class FixtureSHPFactory {
     public static void createFCVShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("elevation");
+	fdFactory.addDouble("elevation");
 	fdFactory.addDouble("diameter");
 	fdFactory.addDouble("flow");
 	addLinkResultFields(fdFactory);
@@ -118,8 +118,8 @@ public class FixtureSHPFactory {
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
 
-    public static IFeature createFCVFeature(double x, double y, int elevation,
-	    double diameter, double flow) {
+    public static IFeature createFCVFeature(double x, double y,
+	    double elevation, double diameter, double flow) {
 	Value[] values = new Value[3];
 	values[0] = ValueFactory.createValue(elevation);
 	values[1] = ValueFactory.createValue(diameter);

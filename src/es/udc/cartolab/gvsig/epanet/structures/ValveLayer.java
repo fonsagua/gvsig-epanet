@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.DoubleValue;
-import com.hardcode.gdbms.engine.values.IntValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
@@ -35,19 +34,19 @@ public class ValveLayer extends LinkLayer {
 	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	IntValue elevation = (IntValue) iFeature.getAttribute(elevationIdx);
+	DoubleValue elevation = (DoubleValue) iFeature
+		.getAttribute(elevationIdx);
 	DoubleValue diameter = (DoubleValue) iFeature.getAttribute(diameterIdx);
 	DoubleValue flow = (DoubleValue) iFeature.getAttribute(flowIdx);
-	int baseDemand = 0;
 
 	String startNodeId = IDCreator.addValveNode(iFeature.getID());
 	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,
-		coordinate.y, elevation.intValue(), baseDemand);
+		coordinate.y, elevation.intValue(), 0);
 	auxNodes.put(startNodeId, startNode);
 
 	String endNodeId = IDCreator.addValveNode(iFeature.getID());
 	NodeWrapper endNode = new JunctionWrapper(endNodeId, coordinate.x,
-		coordinate.y, elevation.intValue(), baseDemand);
+		coordinate.y, elevation.intValue(), 0);
 	auxNodes.put(endNodeId, endNode);
 
 	String id = IDCreator.addValveLink(iFeature.getID());
