@@ -36,13 +36,10 @@ public abstract class AbstractCADExtension extends AbstractExtension {
 
 	CADExtension.setCADTool(customTool, true);
 
-	if (!snapping) {
-	    SnapUtils snapUtils = new SnapUtils(Preferences.getPointLayers());
-	    VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
-		    .getEditionManager().getActiveLayerEdited();
-	    snapUtils.enableSnappersFor(vle);
-	    snapping = true;
-	}
+	SnapUtils snapUtils = new SnapUtils(Preferences.getPointLayers());
+	VectorialLayerEdited vle = (VectorialLayerEdited) CADExtension
+		.getEditionManager().getActiveLayerEdited();
+	snapUtils.enableSnappersFor(vle);
 
     }
 
