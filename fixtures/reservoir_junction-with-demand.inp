@@ -2,12 +2,12 @@
 
 
 [JUNCTIONS]
-;ID              	Elev        	Demand      	Pattern         
- 2               	50          	1           	                	;
+;ID              	Elev        	Demand      	Pattern
+ 1               	50          	1           	                	;
 
 [RESERVOIRS]
-;ID              	Head        	Pattern         
- 1               	100         	                	;
+;ID              	Head        	Pattern
+ 2               	100         	                	;
 
 [TANKS]
 ;ID              	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
@@ -20,7 +20,7 @@
 ;ID              	Node1           	Node2           	Parameters
 
 [VALVES]
-;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss
 
 [TAGS]
 
@@ -106,8 +106,8 @@
 
 [COORDINATES]
 ;Node            	X-Coord         	Y-Coord
- 2               	200.00          	8500.00         
- 1               	-800.00	        	8500.00         
+ 1               	200.00          	8500.00
+ 2               	-800.00	        	8500.00
 
 [VERTICES]
 ;Link            	X-Coord         	Y-Coord
@@ -116,9 +116,9 @@
 ;X-Coord           Y-Coord          Label & Anchor Node
 
 [BACKDROP]
- DIMENSIONS     	0.00            	0.00            	10000.00        	10000.00        
+ DIMENSIONS     	0.00            	0.00            	10000.00        	10000.00
  UNITS          	Ninguno
- FILE           	
- OFFSET         	0.00            	0.00            
+ FILE
+ OFFSET         	0.00            	0.00
 
 [END]

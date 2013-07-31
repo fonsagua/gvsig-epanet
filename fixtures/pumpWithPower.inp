@@ -2,31 +2,31 @@
 
 
 [JUNCTIONS]
-;ID              	Elev        	Demand      	Pattern         
- 4               	80          	1           	                	;
- 2               	90          	0           	                	;
- 3               	90          	0           	                	;
+;ID              	Elev        	Demand      	Pattern
+ 1               	80          	1           	                	;
+ 4               	90          	0           	                	;
+ 5               	90          	0           	                	;
 
 [RESERVOIRS]
-;ID              	Head        	Pattern         
- 1               	100         	                	;
+;ID              	Head        	Pattern
+ 2               	100         	                	;
 
 [TANKS]
 ;ID              	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
- 5               	120         	5           	0           	10          	5           	0           	                	;
+ 3               	120         	5           	0           	10          	5           	0           	                	;
 
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- 2               	3               	5               	900         	50          	0.1         	0           	Open  	;
- 3               	5               	4               	200         	50          	0.1         	0           	Open  	;
- 4               	1               	2               	100         	50          	0.1         	0           	Open  	;
+ 2               	5               	3               	900         	50          	0.1         	0           	Open  	;
+ 3               	3               	1               	200         	50          	0.1         	0           	Open  	;
+ 4               	2               	4               	100         	50          	0.1         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
- 1               	2               	3               	POWER 1	;
+ 1               	4               	5               	POWER 1	;
 
 [VALVES]
-;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss
 
 [TAGS]
 
@@ -112,11 +112,11 @@
 
 [COORDINATES]
 ;Node            	X-Coord         	Y-Coord
- 2               	-1406.58        	7728.24         
- 3               	-1119.96        	7728.24         
- 4               	4145.44         	7664.54         
- 1               	-1884.29        	7738.85         
- 5               	1204.88         	8046.71         
+ 4               	-1406.58        	7728.24
+ 5               	-1119.96        	7728.24
+ 1               	4145.44         	7664.54
+ 2               	-1884.29        	7738.85
+ 3               	1204.88         	8046.71
 
 [VERTICES]
 ;Link            	X-Coord         	Y-Coord
@@ -125,9 +125,9 @@
 ;X-Coord           Y-Coord          Label & Anchor Node
 
 [BACKDROP]
- DIMENSIONS     	0.00            	0.00            	10000.00        	10000.00        
+ DIMENSIONS     	0.00            	0.00            	10000.00        	10000.00
  UNITS          	Ninguno
- FILE           	
- OFFSET         	0.00            	0.00            
+ FILE
+ OFFSET         	0.00            	0.00
 
 [END]

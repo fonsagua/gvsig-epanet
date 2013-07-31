@@ -10,6 +10,7 @@ import org.junit.rules.TemporaryFolder;
 
 import com.hardcode.driverManager.DriverLoadException;
 
+import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.network.LayerParser;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
@@ -29,6 +30,7 @@ public class LayerSimulationIntegrationTest {
     @BeforeClass
     public static void setUpBeforeClass() {
 	Drivers.initgvSIGDrivers(TestProperties.driversPath);
+	Preferences.setBaseformPath("lib/BaseformEpaNetLib-1.0.jar");
     }
 
     @Before

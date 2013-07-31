@@ -34,21 +34,26 @@ public class LayerParser {
 	IDCreator.reset();
     }
 
+    /**
+     * This is the preferred method to parse the layers that constitute a
+     * network. Take into account that the order in which the layers are parse
+     * is important: 1 - junctions 2 - reservoirs 3 - tanks 4 - valves 5 - pumps
+     * 6 - pipes
+     */
     public void add(FLayers fLayers) {
 
+	addJunctions((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getJunctions()));
 	addReservoirs((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
 		.getReservoirs()));
+	addTanks((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getTanks()));
 	addValves((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
 		.getValves()));
 	addPumps((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
 		.getPumps()));
-	addJunctions((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getJunctions()));
-	addTanks((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getTanks()));
 	addPipes((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
 		.getPipes()));
-
     }
 
     public void addJunctions(FLyrVect layer) {

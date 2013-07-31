@@ -236,10 +236,24 @@ public class FixtureLayerFactory {
     public void parseSHPs() throws DriverLoadException, Exception {
 
 	File file = new File(temp.getRoot().getAbsoluteFile() + File.separator
+		+ "junctions.shp");
+	if (file.exists()) {
+	    FLyrVect junctions = SHPFactory.getFLyrVectFromSHP(file);
+	    layerParser.addJunctions(junctions);
+	}
+
+	file = new File(temp.getRoot().getAbsoluteFile() + File.separator
 		+ "reservoirs.shp");
 	if (file.exists()) {
 	    FLyrVect reservoirs = SHPFactory.getFLyrVectFromSHP(file);
 	    layerParser.addReservoirs(reservoirs);
+	}
+
+	file = new File(temp.getRoot().getAbsoluteFile() + File.separator
+		+ "tanks.shp");
+	if (file.exists()) {
+	    FLyrVect tanks = SHPFactory.getFLyrVectFromSHP(file);
+	    layerParser.addTanks(tanks);
 	}
 
 	file = new File(temp.getRoot().getAbsoluteFile() + File.separator
@@ -254,20 +268,6 @@ public class FixtureLayerFactory {
 	if (file.exists()) {
 	    FLyrVect pumps = SHPFactory.getFLyrVectFromSHP(file);
 	    layerParser.addPumps(pumps);
-	}
-
-	file = new File(temp.getRoot().getAbsoluteFile() + File.separator
-		+ "junctions.shp");
-	if (file.exists()) {
-	    FLyrVect junctions = SHPFactory.getFLyrVectFromSHP(file);
-	    layerParser.addJunctions(junctions);
-	}
-
-	file = new File(temp.getRoot().getAbsoluteFile() + File.separator
-		+ "tanks.shp");
-	if (file.exists()) {
-	    FLyrVect tanks = SHPFactory.getFLyrVectFromSHP(file);
-	    layerParser.addTanks(tanks);
 	}
 
 	file = new File(temp.getRoot().getAbsoluteFile() + File.separator
