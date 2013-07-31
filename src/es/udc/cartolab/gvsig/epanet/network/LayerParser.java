@@ -121,10 +121,18 @@ public class LayerParser {
 	    throw new ExternalError(e);
 	} finally {
 	    delete(inp);
-	    delete(output[0]);
-	    delete(output[1]);
+	    delete(output);
+	    delete(output);
 	}
 
+    }
+
+    private void delete(String[] output) {
+	if (output != null) {
+	    for (String path : output) {
+		delete(path);
+	    }
+	}
     }
 
     private void delete(String path) {
