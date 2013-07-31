@@ -1,7 +1,6 @@
 package es.udc.cartolab.gvsig.epanet;
 
-import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
-
+import es.udc.cartolab.gvsig.epanet.cad.TankCADTool;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class TankExtension extends AbstractCADExtension {
@@ -10,7 +9,7 @@ public class TankExtension extends AbstractCADExtension {
     public void initialize() {
 	layername = Preferences.getLayerNames().getTanks();
 	iconName = "tank";
-	tool = new PointCADTool();
+	tool = new TankCADTool();
 	super.initialize();
     }
 

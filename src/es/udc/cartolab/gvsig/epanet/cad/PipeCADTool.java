@@ -589,7 +589,7 @@ public class PipeCADTool extends InsertionCADTool {
 
     @Override
     public String getName() {
-	return PluginServices.getText(this, "polyline_");
+	return "_epanet_cadtool_pipes";
     }
 
     @Override

@@ -1,7 +1,6 @@
 package es.udc.cartolab.gvsig.epanet;
 
-import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
-
+import es.udc.cartolab.gvsig.epanet.cad.PumpCADTool;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class PumpExtension extends AbstractCADExtension {
@@ -10,7 +9,7 @@ public class PumpExtension extends AbstractCADExtension {
     public void initialize() {
 	layername = Preferences.getLayerNames().getPumps();
 	iconName = "pump";
-	tool = new PointCADTool();
+	tool = new PumpCADTool();
 	super.initialize();
     }
 
