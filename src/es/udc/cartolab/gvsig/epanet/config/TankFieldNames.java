@@ -11,9 +11,9 @@ public class TankFieldNames {
     private String head;
     private String demand;
 
-    protected TankFieldNames() {
+    public TankFieldNames() {
 	elevation = "elevation";
-	initLevel = "inilevel";
+	initLevel = "initlevel";
 	minLevel = "minlevel";
 	maxLevel = "maxlevel";
 	diameter = "diameter";
@@ -54,35 +54,35 @@ public class TankFieldNames {
 	return demand;
     }
 
-    protected void setElevation(String elevation) {
+    public void setElevation(String elevation) {
 	this.elevation = elevation;
     }
 
-    protected void setInitLevel(String initLevel) {
+    public void setInitLevel(String initLevel) {
 	this.initLevel = initLevel;
     }
 
-    protected void setMinLevel(String minLevel) {
+    public void setMinLevel(String minLevel) {
 	this.minLevel = minLevel;
     }
 
-    protected void setMaxLevel(String maxLevel) {
+    public void setMaxLevel(String maxLevel) {
 	this.maxLevel = maxLevel;
     }
 
-    protected void setDiameter(String diameter) {
+    public void setDiameter(String diameter) {
 	this.diameter = diameter;
     }
 
-    protected void setPressure(String pressure) {
+    public void setPressure(String pressure) {
 	this.pressure = pressure;
     }
 
-    protected void setHead(String head) {
+    public void setHead(String head) {
 	this.head = head;
     }
 
-    protected void setDemand(String demand) {
+    public void setDemand(String demand) {
 	this.demand = demand;
     }
 

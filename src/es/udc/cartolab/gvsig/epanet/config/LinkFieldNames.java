@@ -7,7 +7,7 @@ public class LinkFieldNames {
     private String unitHeadLoss;
     private String frictionFactor;
 
-    protected LinkFieldNames() {
+    public LinkFieldNames() {
 	flow = "flow";
 	velocity = "velocity";
 	unitHeadLoss = "uhloss";
@@ -30,19 +30,19 @@ public class LinkFieldNames {
 	return frictionFactor;
     }
 
-    protected void setFlow(String flow) {
+    public void setFlow(String flow) {
 	this.flow = flow;
     }
 
-    protected void setVelocity(String velocity) {
+    public void setVelocity(String velocity) {
 	this.velocity = velocity;
     }
 
-    protected void setUnitHeadLoss(String unitHeadLoss) {
+    public void setUnitHeadLoss(String unitHeadLoss) {
 	this.unitHeadLoss = unitHeadLoss;
     }
 
-    protected void setFrictionFactor(String frictionFactor) {
+    public void setFrictionFactor(String frictionFactor) {
 	this.frictionFactor = frictionFactor;
     }
 

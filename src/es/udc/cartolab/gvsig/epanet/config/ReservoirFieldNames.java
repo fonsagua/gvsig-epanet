@@ -6,7 +6,7 @@ public class ReservoirFieldNames {
     private String head;
     private String demand;
 
-    protected ReservoirFieldNames() {
+    public ReservoirFieldNames() {
 	totalHead = "totalhead";
 	pressure = "pressure";
 	head = "head";
@@ -29,19 +29,19 @@ public class ReservoirFieldNames {
 	return demand;
     }
 
-    protected void setTotalHead(String totalHead) {
+    public void setTotalHead(String totalHead) {
 	this.totalHead = totalHead;
     }
 
-    protected void setPressure(String pressure) {
+    public void setPressure(String pressure) {
 	this.pressure = pressure;
     }
 
-    protected void setHead(String head) {
+    public void setHead(String head) {
 	this.head = head;
     }
 
-    protected void setDemand(String demand) {
+    public void setDemand(String demand) {
 	this.demand = demand;
     }
 

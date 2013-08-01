@@ -9,7 +9,7 @@ public class LayerNames {
     private String tanks;
     private String valves;
 
-    protected LayerNames() {
+    public LayerNames() {
 	junctions = "junctions";
 	pipes = "pipes";
 	pumps = "pumps";
@@ -42,27 +42,27 @@ public class LayerNames {
 	return valves;
     }
 
-    protected void setJunctions(String junctions) {
+    public void setJunctions(String junctions) {
 	this.junctions = junctions;
     }
 
-    protected void setPipes(String pipes) {
+    public void setPipes(String pipes) {
 	this.pipes = pipes;
     }
 
-    protected void setPumps(String pumps) {
+    public void setPumps(String pumps) {
 	this.pumps = pumps;
     }
 
-    protected void setReservoirs(String reservoirs) {
+    public void setReservoirs(String reservoirs) {
 	this.reservoirs = reservoirs;
     }
 
-    protected void setTanks(String tanks) {
+    public void setTanks(String tanks) {
 	this.tanks = tanks;
     }
 
-    protected void setValves(String valves) {
+    public void setValves(String valves) {
 	this.valves = valves;
     }
 

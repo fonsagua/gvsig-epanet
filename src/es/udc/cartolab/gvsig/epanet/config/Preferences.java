@@ -12,76 +12,62 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 public class Preferences {
 
     private static String baseformpath;
+    private static JunctionFieldNames junctionFieldNames;
+    private static TankFieldNames tankFieldNames;
+    private static ReservoirFieldNames reservoirFieldNames;
+    private static PipeFieldNames pipeFieldNames;
+    private static PumpFieldNames pumpFieldNames;
+    private static ValveFieldNames valveFieldNames;
+    private static LayerNames layerNames;
 
     public static LayerNames getLayerNames() {
-	LayerNames layerNames = new LayerNames();
+	if (layerNames == null) {
+	    layerNames = new LayerNames();
+	}
 	return layerNames;
     }
 
     public static JunctionFieldNames getJunctionFieldNames() {
-	JunctionFieldNames names = new JunctionFieldNames();
-	names.setElevation("elevation");
-	names.setBaseDemand("basedemand");
-	names.setPressure("pressure");
-	names.setHead("head");
-	names.setDemand("demand");
+	if (junctionFieldNames == null) {
+	    junctionFieldNames = new JunctionFieldNames();
+	}
 
-	return names;
+	return junctionFieldNames;
     }
 
     public static TankFieldNames getTankFieldNames() {
-	TankFieldNames names = new TankFieldNames();
-	names.setElevation("elevation");
-	names.setInitLevel("initlevel");
-	names.setMinLevel("minlevel");
-	names.setMaxLevel("maxlevel");
-	names.setDiameter("diameter");
-	names.setPressure("pressure");
-	names.setHead("head");
-	names.setDemand("demand");
-	return names;
+	if (tankFieldNames == null) {
+	    tankFieldNames = new TankFieldNames();
+	}
+	return tankFieldNames;
     }
 
     public static ReservoirFieldNames getReservoirFieldNames() {
-	ReservoirFieldNames names = new ReservoirFieldNames();
-	names.setTotalHead("totalhead");
-	names.setPressure("pressure");
-	names.setHead("head");
-	names.setDemand("demand");
-	return names;
+	if (reservoirFieldNames == null) {
+	    reservoirFieldNames = new ReservoirFieldNames();
+	}
+	return reservoirFieldNames;
     }
 
     public static PipeFieldNames getPipeFieldNames() {
-	PipeFieldNames names = new PipeFieldNames();
-	names.setDiameter("diameter");
-	names.setRoughness("roughness");
-	names.setFlow("flow");
-	names.setVelocity("velocity");
-	names.setUnitHeadLoss("uhloss");
-	names.setFrictionFactor("fricfactor");
-	return names;
+	if (pipeFieldNames == null) {
+	    pipeFieldNames = new PipeFieldNames();
+	}
+	return pipeFieldNames;
     }
 
     public static PumpFieldNames getPumpFieldNames() {
-	PumpFieldNames names = new PumpFieldNames();
-	names.setElevation("elevation");
-	names.setValue("value");
-	names.setFlow("flow");
-	names.setVelocity("velocity");
-	names.setUnitHeadLoss("uhloss");
-	names.setFrictionFactor("fricfactor");
-	return names;
+	if (pumpFieldNames == null) {
+	    pumpFieldNames = new PumpFieldNames();
+	}
+	return pumpFieldNames;
     }
 
     public static ValveFieldNames getValveFieldNames() {
-	ValveFieldNames names = new ValveFieldNames();
-	names.setElevation("elevation");
-	names.setDiameter("diameter");
-	names.setFlow("flow");
-	names.setVelocity("velocity");
-	names.setUnitHeadLoss("uhloss");
-	names.setFrictionFactor("fricfactor");
-	return names;
+	if (valveFieldNames == null) {
+	    valveFieldNames = new ValveFieldNames();
+	}
+	return valveFieldNames;
     }
 
     public static Set<FLyrVect> getPointLayers() {
@@ -111,4 +97,43 @@ public class Preferences {
     public static void setBaseformPath(String path) {
 	baseformpath = path;
     }
+
+    public static String getBaseformpath() {
+	return baseformpath;
+    }
+
+    public static void setBaseformpath(String baseformpath) {
+	Preferences.baseformpath = baseformpath;
+    }
+
+    public static void setJunctionFieldNames(
+	    JunctionFieldNames junctionFieldNames) {
+	Preferences.junctionFieldNames = junctionFieldNames;
+    }
+
+    public static void setTankFieldNames(TankFieldNames tankFieldNames) {
+	Preferences.tankFieldNames = tankFieldNames;
+    }
+
+    public static void setReservoirFieldNames(
+	    ReservoirFieldNames reservoirFieldNames) {
+	Preferences.reservoirFieldNames = reservoirFieldNames;
+    }
+
+    public static void setPipeFieldNames(PipeFieldNames pipeFieldNames) {
+	Preferences.pipeFieldNames = pipeFieldNames;
+    }
+
+    public static void setPumpFieldNames(PumpFieldNames pumpFieldNames) {
+	Preferences.pumpFieldNames = pumpFieldNames;
+    }
+
+    public static void setValveFieldNames(ValveFieldNames valveFieldNames) {
+	Preferences.valveFieldNames = valveFieldNames;
+    }
+
+    public static void setLayerNames(LayerNames layerNames) {
+	Preferences.layerNames = layerNames;
+    }
+
 }

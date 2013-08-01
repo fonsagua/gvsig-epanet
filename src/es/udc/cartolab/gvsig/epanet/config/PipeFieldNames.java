@@ -5,7 +5,7 @@ public class PipeFieldNames extends LinkFieldNames {
     private String diameter;
     private String roughness;
 
-    protected PipeFieldNames() {
+    public PipeFieldNames() {
 	diameter = "diameter";
 	roughness = "roughness";
     }
@@ -18,11 +18,11 @@ public class PipeFieldNames extends LinkFieldNames {
 	return roughness;
     }
 
-    protected void setDiameter(String diameter) {
+    public void setDiameter(String diameter) {
 	this.diameter = diameter;
     }
 
-    protected void setRoughness(String roughness) {
+    public void setRoughness(String roughness) {
 	this.roughness = roughness;
     }
 }

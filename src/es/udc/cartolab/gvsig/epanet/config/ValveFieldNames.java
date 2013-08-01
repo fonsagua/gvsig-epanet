@@ -4,10 +4,12 @@ public class ValveFieldNames extends LinkFieldNames {
 
     private String elevation;
     private String diameter;
+    private String setting;
 
-    protected ValveFieldNames() {
+    public ValveFieldNames() {
 	elevation = "elevation";
 	diameter = "diameter";
+	setting = "setting";
     }
 
     public String getElevation() {
@@ -18,11 +20,20 @@ public class ValveFieldNames extends LinkFieldNames {
 	return diameter;
     }
 
-    protected void setElevation(String elevation) {
+    public String getSetting() {
+	return setting;
+    }
+
+    public void setElevation(String elevation) {
 	this.elevation = elevation;
     }
 
-    protected void setDiameter(String diameter) {
+    public void setDiameter(String diameter) {
 	this.diameter = diameter;
     }
+
+    public void setSetting(String setting) {
+	this.setting = setting;
+    }
+
 }

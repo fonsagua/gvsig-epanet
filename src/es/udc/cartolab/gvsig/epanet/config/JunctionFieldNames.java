@@ -8,7 +8,7 @@ public class JunctionFieldNames {
     private String head;
     private String demand;
 
-    protected JunctionFieldNames() {
+    public JunctionFieldNames() {
 	elevation = "elevation";
 	baseDemand = "basedemand";
 	pressure = "pressure";
@@ -36,23 +36,23 @@ public class JunctionFieldNames {
 	return demand;
     }
 
-    protected void setElevation(String elevation) {
+    public void setElevation(String elevation) {
 	this.elevation = elevation;
     }
 
-    protected void setBaseDemand(String baseDemand) {
+    public void setBaseDemand(String baseDemand) {
 	this.baseDemand = baseDemand;
     }
 
-    protected void setPressure(String pressure) {
+    public void setPressure(String pressure) {
 	this.pressure = pressure;
     }
 
-    protected void setHead(String head) {
+    public void setHead(String head) {
 	this.head = head;
     }
 
-    protected void setDemand(String demand) {
+    public void setDemand(String demand) {
 	this.demand = demand;
     }
 
