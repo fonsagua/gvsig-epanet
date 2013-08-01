@@ -7,23 +7,35 @@ import com.iver.cit.gvsig.fmap.layers.LayerFactory;
 public class Drivers {
 
     public static void initgvSIGDrivers(String driversPath) {
-    
-        final File baseDriversPath = new File(driversPath);
-        if (!baseDriversPath.exists()) {
-            throw new RuntimeException("Can't find drivers path: "
-        	    + driversPath);
-        }
-    
-        LayerFactory.setDriversPath(baseDriversPath.getAbsolutePath());
-        if (LayerFactory.getDM().getDriverNames().length < 1) {
-            throw new RuntimeException("Can't find drivers in path: "
-        	    + driversPath);
-        }
-        LayerFactory.setWritersPath(baseDriversPath.getAbsolutePath());
-        if (LayerFactory.getWM().getWriterNames().length < 1) {
-            throw new RuntimeException("Can't find writers in path: "
-        	    + driversPath);
-        }
+
+	throwIfPathNotExists(driversPath);
+	initgvSIGReadDrivers(driversPath);
+	initgvSIGWriteDrivers(driversPath);
+
+    }
+
+    private static void throwIfPathNotExists(String driversPath) {
+	if (!new File(driversPath).exists()) {
+	    throw new RuntimeException("Can't find drivers path: "
+		    + driversPath);
+	}
+    }
+
+    public static void initgvSIGReadDrivers(String driversPath) {
+	LayerFactory.setDriversPath(driversPath);
+	if (LayerFactory.getDM().getDriverNames().length < 1) {
+	    throw new RuntimeException("Can't find drivers in path: "
+		    + driversPath);
+	}
+
+    }
+
+    public static void initgvSIGWriteDrivers(String driversPath) {
+	LayerFactory.setWritersPath(driversPath);
+	if (LayerFactory.getWM().getWriterNames().length < 1) {
+	    throw new RuntimeException("Can't find writers in path: "
+		    + driversPath);
+	}
     }
 
 }
