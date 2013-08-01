@@ -112,7 +112,7 @@ public class FixtureSHPFactory {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
 	fdFactory.addDouble("elevation");
 	fdFactory.addDouble("diameter");
-	fdFactory.addDouble("flow");
+	fdFactory.addDouble("setting");
 	addLinkResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
@@ -132,7 +132,7 @@ public class FixtureSHPFactory {
     public static void createPumpShp(File file, IFeature[] features)
 	    throws Exception {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
-	fdFactory.addInteger("elevation");
+	fdFactory.addDouble("elevation");
 	fdFactory.addString("type");
 	fdFactory.addString("value");
 	addLinkResultFields(fdFactory);

@@ -13,13 +13,13 @@ public class ValveWrapper extends LinkWrapper {
     }
 
     public ValveWrapper(String id, NodeWrapper startNode, NodeWrapper endNode,
-	    double diameter, double flow) {
+	    double diameter, double setting) {
 	super();
-	createValve(id, startNode, endNode, diameter, flow);
+	createValve(id, startNode, endNode, diameter, setting);
     }
 
     protected void createValve(String id, NodeWrapper startNode,
-	    NodeWrapper endNode, double diameter, double flow) {
+	    NodeWrapper endNode, double diameter, double setting) {
 	// TODO: MinorLoss; Checks from InpParser
 	Valve valve = new Valve();
 	valve.setId(id);
@@ -27,7 +27,7 @@ public class ValveWrapper extends LinkWrapper {
 	valve.setSecond(endNode.getNode());
 	valve.setDiameter(diameter);
 	valve.setLenght(0.0d);
-	valve.setRoughness(flow);
+	valve.setRoughness(setting);
 	valve.setKm(0.0);
 	valve.setKb(0.0d);
 	valve.setKw(0.0d);

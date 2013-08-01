@@ -19,6 +19,7 @@ public class ValveLayer extends LinkLayer {
 
     private int elevationIdx;
     private int diameterIdx;
+    private int settingIdx;
     private int flowIdx;
     private int velocityIdx;
     private int unitHeadLossIdx;
@@ -38,7 +39,7 @@ public class ValveLayer extends LinkLayer {
 		.getAttribute(elevationIdx);
 	NumericValue diameter = (NumericValue) iFeature
 		.getAttribute(diameterIdx);
-	NumericValue flow = (NumericValue) iFeature.getAttribute(flowIdx);
+	NumericValue setting = (NumericValue) iFeature.getAttribute(settingIdx);
 
 	String startNodeId = IDCreator.addValveNode(iFeature.getID());
 	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,
@@ -66,6 +67,7 @@ public class ValveLayer extends LinkLayer {
 	    recordset = layer.getRecordset();
 	    elevationIdx = recordset.getFieldIndexByName(names.getElevation());
 	    diameterIdx = recordset.getFieldIndexByName(names.getDiameter());
+	    settingIdx = recordset.getFieldIndexByName(names.getSetting());
 	    flowIdx = recordset.getFieldIndexByName(names.getFlow());
 	    velocityIdx = recordset.getFieldIndexByName(names.getVelocity());
 	    unitHeadLossIdx = recordset.getFieldIndexByName(names
@@ -79,6 +81,7 @@ public class ValveLayer extends LinkLayer {
 
 	throwIfFieldNotFound(elevationIdx, names.getElevation());
 	throwIfFieldNotFound(diameterIdx, names.getDiameter());
+	throwIfFieldNotFound(settingIdx, names.getSetting());
 	throwIfFieldNotFound(flowIdx, names.getFlow());
 	throwIfFieldNotFound(velocityIdx, names.getVelocity());
 	throwIfFieldNotFound(unitHeadLossIdx, names.getUnitHeadLoss());
