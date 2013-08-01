@@ -138,6 +138,10 @@ public class FixtureLayerFactory {
 	FixtureSHPFactory.createPipeShp(file, new IFeature[] { l1, l2, l3 });
     }
 
+    public void getValveOverReservoir() {
+
+    }
+
     public void getPumpWithPower() throws Exception {
 	final double yCoord = 8500;
 	IFeature n1 = FixtureSHPFactory.createReservoirFeature(0, yCoord, 100);

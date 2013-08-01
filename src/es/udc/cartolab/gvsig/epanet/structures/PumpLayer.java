@@ -1,5 +1,6 @@
 package es.udc.cartolab.gvsig.epanet.structures;
 
+import java.util.List;
 import java.util.Map;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
@@ -13,6 +14,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.PumpFieldNames;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
@@ -40,10 +43,8 @@ public class PumpLayer extends LinkLayer {
 	StringValue value = (StringValue) iFeature.getAttribute(valueIdx);
 	int baseDemand = 0;
 
-	String startNodeId = IDCreator.addPumpNode(iFeature.getID());
-	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,
-		coordinate.y, elevation.intValue(), baseDemand);
-	auxNodes.put(startNodeId, startNode);
+	NodeWrapper startNode = getStartNode(nb, coordinate,
+		elevation.doubleValue(), iFeature.getID());
 
 	String endNodeId = IDCreator.addPumpNode(iFeature.getID());
 	NodeWrapper endNode = new JunctionWrapper(endNodeId, coordinate.x,
@@ -56,6 +57,42 @@ public class PumpLayer extends LinkLayer {
 	pump.createPump(id, startNode, endNode, power);
 	nb.addPump(pump);
 	return pump;
+    }
+
+    private NodeWrapper getStartNode(NetworkBuilder nb, Coordinate coordinate,
+	    double elevation, String featureID) {
+	NodeWrapper startNode = null;
+	NodeFinder nodeFinder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
+	List<NodeWrapper> existentNodesInThatCoord = nodeFinder
+		.getNodesAt(coordinate);
+	if (existentNodesInThatCoord.size() > 1) {
+	    throw new InvalidNetworkError(
+		    "Una bomba sólo puede estar sobre un tanque y en este punto hay más de un nodo");
+	}
+
+	if (existentNodesInThatCoord.size() == 1) {
+	    NodeWrapper existentNodeInThatCoord = existentNodesInThatCoord
+		    .get(0);
+	    if (!(existentNodeInThatCoord instanceof TankWrapper)) {
+		throw new InvalidNetworkError(
+			"Una bomba sólo puede estar sobre un tanque y en este punto no hay un tanque");
+	    }
+
+	    if (!MathUtils.compare(elevation, existentNodeInThatCoord.getNode()
+		    .getElevation())) {
+		throw new InvalidNetworkError(
+			"La elevación de la bomba y la del tanque sobre la que está no coinciden");
+	    }
+
+	    startNode = existentNodeInThatCoord;
+	} else {
+	    String startNodeId = IDCreator.addValveNode(featureID);
+	    startNode = new JunctionWrapper(startNodeId, coordinate.x,
+		    coordinate.y, elevation, 0);
+	    nb.getAuxNodes().put(startNodeId, startNode);
+	}
+
+	return startNode;
     }
 
     @Override

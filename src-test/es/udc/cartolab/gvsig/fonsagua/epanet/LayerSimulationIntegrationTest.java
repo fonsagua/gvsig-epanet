@@ -59,6 +59,12 @@ public class LayerSimulationIntegrationTest {
     }
 
     @Test
+    public void valve_over_reservoir() throws Exception {
+	fixtureFactory.getValveOverReservoir();
+	executeTest("valve_over_reservoir");
+    }
+
+    @Test
     public void pumpWithPower() throws Exception {
 	fixtureFactory.getPumpWithPower();
 	executeTest("pumpWithPower");

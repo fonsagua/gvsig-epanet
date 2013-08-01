@@ -1,5 +1,6 @@
 package es.udc.cartolab.gvsig.epanet.structures;
 
+import java.util.List;
 import java.util.Map;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
@@ -12,6 +13,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.ValveFieldNames;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
@@ -32,7 +35,6 @@ public class ValveLayer extends LinkLayer {
 
     @Override
     protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
-	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
 	NumericValue elevation = (NumericValue) iFeature
@@ -41,10 +43,10 @@ public class ValveLayer extends LinkLayer {
 		.getAttribute(diameterIdx);
 	NumericValue setting = (NumericValue) iFeature.getAttribute(settingIdx);
 
-	String startNodeId = IDCreator.addValveNode(iFeature.getID());
-	NodeWrapper startNode = new JunctionWrapper(startNodeId, coordinate.x,
-		coordinate.y, elevation.intValue(), 0);
-	auxNodes.put(startNodeId, startNode);
+	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
+
+	NodeWrapper startNode = getStartNode(nb, coordinate,
+		elevation.doubleValue(), iFeature.getID());
 
 	String endNodeId = IDCreator.addValveNode(iFeature.getID());
 	NodeWrapper endNode = new JunctionWrapper(endNodeId, coordinate.x,
@@ -54,9 +56,45 @@ public class ValveLayer extends LinkLayer {
 	String id = IDCreator.addValveLink(iFeature.getID());
 	ValveWrapper valve = new ValveWrapper(iFeature);
 	valve.createValve(id, startNode, endNode, diameter.intValue(),
-		flow.intValue());
+		setting.intValue());
 	nb.addFlowControlValve(valve);
 	return valve;
+    }
+
+    private NodeWrapper getStartNode(NetworkBuilder nb, Coordinate coordinate,
+	    double elevation, String featureID) {
+	NodeWrapper startNode = null;
+	NodeFinder nodeFinder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
+	List<NodeWrapper> existentNodesInThatCoord = nodeFinder
+		.getNodesAt(coordinate);
+	if (existentNodesInThatCoord.size() > 1) {
+	    throw new InvalidNetworkError(
+		    "Una válvula sólo puede estar sobre una fuente y en este punto hay más de un nodo");
+	}
+
+	if (existentNodesInThatCoord.size() == 1) {
+	    NodeWrapper existentNodeInThatCoord = existentNodesInThatCoord
+		    .get(0);
+	    if (!(existentNodeInThatCoord instanceof ReservoirWrapper)) {
+		throw new InvalidNetworkError(
+			"Una válvula sólo puede estar sobre una fuente y en este punto no hay una fuente");
+	    }
+
+	    if (!MathUtils.compare(elevation, existentNodeInThatCoord.getNode()
+		    .getElevation())) {
+		throw new InvalidNetworkError(
+			"La elevación de la válvula y de la fuente sobre la que está no coinciden");
+	    }
+
+	    startNode = existentNodeInThatCoord;
+	} else {
+	    String startNodeId = IDCreator.addValveNode(featureID);
+	    startNode = new JunctionWrapper(startNodeId, coordinate.x,
+		    coordinate.y, elevation, 0);
+	    nb.getAuxNodes().put(startNodeId, startNode);
+	}
+
+	return startNode;
     }
 
     @Override
