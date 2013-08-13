@@ -6,6 +6,6 @@ public class TankCADTool extends PointCADTool {
 
     @Override
     public String getName() {
-	return "_epanet_cadtool_tanks";
+	return "_epanet_cadtool_tank";
     }
 }

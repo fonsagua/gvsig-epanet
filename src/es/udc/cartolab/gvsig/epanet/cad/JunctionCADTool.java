@@ -6,6 +6,6 @@ public class JunctionCADTool extends PointCADTool {
 
     @Override
     public String getName() {
-	return "_epanet_cadtool_junctions";
+	return "_epanet_cadtool_junction";
     }
 }

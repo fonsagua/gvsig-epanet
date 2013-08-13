@@ -23,7 +23,7 @@ public abstract class AbstractCADExtension extends AbstractExtension {
     @Override
     public void initialize() {
 	registerIcon(iconName);
-	customTool = "_epanet_cadtool_" + layername;
+	customTool = "_epanet_cadtool_" + iconName;
 	CADExtension.addCADTool(customTool, tool);
 	startEditingExt = (StartEditing) PluginServices
 		.getExtension(StartEditing.class);

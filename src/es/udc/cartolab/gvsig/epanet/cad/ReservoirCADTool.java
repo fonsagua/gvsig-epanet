@@ -5,6 +5,6 @@ import com.iver.cit.gvsig.gui.cad.tools.PointCADTool;
 public class ReservoirCADTool extends PointCADTool {
     @Override
     public String getName() {
-	return "_epanet_cadtool_reservoirs";
+	return "_epanet_cadtool_reservoir";
     }
 }

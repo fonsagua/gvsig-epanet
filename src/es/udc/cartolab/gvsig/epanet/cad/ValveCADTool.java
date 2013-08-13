@@ -6,6 +6,6 @@ public class ValveCADTool extends PointCADTool {
 
     @Override
     public String getName() {
-	return "_epanet_cadtool_valves";
+	return "_epanet_cadtool_valve";
     }
 }

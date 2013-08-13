@@ -6,6 +6,6 @@ public class PumpCADTool extends PointCADTool {
 
     @Override
     public String getName() {
-	return "_epanet_cadtool_pumps";
+	return "_epanet_cadtool_pump";
     }
 }

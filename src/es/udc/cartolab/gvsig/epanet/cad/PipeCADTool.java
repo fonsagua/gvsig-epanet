@@ -589,7 +589,7 @@ public class PipeCADTool extends InsertionCADTool {
 
     @Override
     public String getName() {
-	return "_epanet_cadtool_pipes";
+	return "_epanet_cadtool_pipe";
     }
 
     @Override
