@@ -11,6 +11,7 @@ import com.iver.cit.gvsig.exceptions.expansionfile.ExpansionFileReadException;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
+import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 
 import es.udc.cartolab.gvsig.epanet.cad.ModifyValues;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
@@ -49,16 +50,22 @@ public abstract class NodeLayer {
 	NodeWrapper node = processSpecific(iFeature, nb);
 	Value[] attr = iFeature.getAttributes();
 
-	double pressure = ((NumericValue) attr[indexes[0]]).doubleValue();
-	node.setPressure(pressure);
-
-	double head = ((NumericValue) attr[indexes[1]]).doubleValue();
-	node.setHead(head);
-
-	double demand = ((NumericValue) attr[indexes[2]]).doubleValue();
-	node.setDemand(demand);
+	node.setPressure(value2double(attr, 0));
+	node.setHead(value2double(attr, 1));
+	node.setDemand(value2double(attr, 2));
 
 	return node;
+    }
+
+    private double value2double(Value[] attr, int i) {
+	double r = 0;
+	if (indexes[i] != -1) {
+	    Value value = attr[indexes[i]];
+	    if (value instanceof NumericValue) {
+		r = ((NumericValue) value).doubleValue();
+	    }
+	}
+	return r;
     }
 
     protected abstract NodeWrapper processSpecific(IFeature iFeature,
@@ -83,6 +90,16 @@ public abstract class NodeLayer {
     }
 
     protected abstract int[] getIndexes();
+
+    protected int getFieldIdx(String name) throws ReadDriverException {
+	int idx = -1;
+	if (name != null) {
+	    SelectableDataSource recordset = layer.getRecordset();
+	    idx = recordset.getFieldIndexByName(name);
+	    throwIfFieldNotFound(idx, name);
+	}
+	return idx;
+    }
 
     protected void throwIfFieldNotFound(int index, String field) {
 	if (index == -1) {

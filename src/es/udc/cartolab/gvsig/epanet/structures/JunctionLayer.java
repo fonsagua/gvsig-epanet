@@ -4,7 +4,6 @@ import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.NumericValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import es.udc.cartolab.gvsig.epanet.config.JunctionFieldNames;
@@ -43,28 +42,15 @@ public class JunctionLayer extends NodeLayer {
     @Override
     protected int[] getIndexes() {
 	JunctionFieldNames fieldNames = Preferences.getJunctionFieldNames();
-
-	SelectableDataSource recordset;
 	try {
-	    recordset = layer.getRecordset();
-	    elevationIdx = recordset.getFieldIndexByName(fieldNames
-		    .getElevation());
-	    bdemandIdx = recordset.getFieldIndexByName(fieldNames
-		    .getBaseDemand());
-	    pressureIdx = recordset.getFieldIndexByName(fieldNames
-		    .getPressure());
-	    headIdx = recordset.getFieldIndexByName(fieldNames.getHead());
-	    demandIdx = recordset.getFieldIndexByName(fieldNames.getDemand());
+	    elevationIdx = getFieldIdx(fieldNames.getElevation());
+	    bdemandIdx = getFieldIdx(fieldNames.getBaseDemand());
+	    pressureIdx = getFieldIdx(fieldNames.getPressure());
+	    headIdx = getFieldIdx(fieldNames.getHead());
+	    demandIdx = getFieldIdx(fieldNames.getDemand());
 	} catch (ReadDriverException e) {
 	    throw new ExternalError(e);
 	}
-
-	throwIfFieldNotFound(elevationIdx, fieldNames.getElevation());
-	throwIfFieldNotFound(bdemandIdx, fieldNames.getBaseDemand());
-	throwIfFieldNotFound(pressureIdx, fieldNames.getPressure());
-	throwIfFieldNotFound(headIdx, fieldNames.getHead());
-	throwIfFieldNotFound(demandIdx, fieldNames.getDemand());
-
 	return new int[] { pressureIdx, headIdx, demandIdx };
 
     }

@@ -68,7 +68,9 @@ public class ModifyValues extends ToggleEditing {
 	Value[] attributes = row.getAttributes();
 
 	for (int i = 0; i < indexes.length; i++) {
-	    attributes[indexes[i]] = values[i];
+	    if (indexes[i] != -1) {
+		attributes[indexes[i]] = values[i];
+	    }
 	}
 
 	IGeometry geom = ((DefaultFeature) row.getLinkedRow()).getGeometry();

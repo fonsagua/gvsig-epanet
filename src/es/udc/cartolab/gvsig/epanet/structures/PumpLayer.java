@@ -8,7 +8,6 @@ import com.hardcode.gdbms.engine.values.NumericValue;
 import com.hardcode.gdbms.engine.values.StringValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
-import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
@@ -98,28 +97,17 @@ public class PumpLayer extends LinkLayer {
     @Override
     protected int[] getIndexes() {
 	PumpFieldNames names = Preferences.getPumpFieldNames();
-	SelectableDataSource recordset;
-	try {
-	    recordset = layer.getRecordset();
-	    elevationIdx = recordset.getFieldIndexByName(names.getElevation());
-	    valueIdx = recordset.getFieldIndexByName(names.getValue());
-	    flowIdx = recordset.getFieldIndexByName(names.getFlow());
-	    velocityIdx = recordset.getFieldIndexByName(names.getVelocity());
-	    unitHeadLossIdx = recordset.getFieldIndexByName(names
-		    .getUnitHeadLoss());
-	    frictionFactorIdx = recordset.getFieldIndexByName(names
-		    .getFrictionFactor());
 
+	try {
+	    elevationIdx = getFieldIdx(names.getElevation());
+	    valueIdx = getFieldIdx(names.getValue());
+	    flowIdx = getFieldIdx(names.getFlow());
+	    velocityIdx = getFieldIdx(names.getVelocity());
+	    unitHeadLossIdx = getFieldIdx(names.getUnitHeadLoss());
+	    frictionFactorIdx = getFieldIdx(names.getFrictionFactor());
 	} catch (ReadDriverException e) {
 	    throw new ExternalError(e);
 	}
-
-	throwIfFieldNotFound(elevationIdx, names.getElevation());
-	throwIfFieldNotFound(valueIdx, names.getValue());
-	throwIfFieldNotFound(flowIdx, names.getFlow());
-	throwIfFieldNotFound(velocityIdx, names.getVelocity());
-	throwIfFieldNotFound(unitHeadLossIdx, names.getUnitHeadLoss());
-	throwIfFieldNotFound(frictionFactorIdx, names.getFrictionFactor());
 
 	return new int[] { flowIdx, velocityIdx, unitHeadLossIdx,
 		frictionFactorIdx };
