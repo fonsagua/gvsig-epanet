@@ -1,5 +1,6 @@
 package es.udc.cartolab.gvsig.epanet.config;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class Preferences {
 	return valveFieldNames;
     }
 
-    public static Set<FLyrVect> getPointLayers() {
+    public static Collection<FLyrVect> getPointLayers() {
 	Set<FLyrVect> pointLayers = new HashSet<FLyrVect>();
 	FLayers layers = ((View) PluginServices.getMDIManager()
 		.getActiveWindow()).getMapControl().getMapContext().getLayers();

@@ -26,7 +26,7 @@
 package es.udc.cartolab.gvsig.epanet.cad;
 
 import java.awt.event.InputEvent;
-import java.util.Set;
+import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
@@ -46,7 +46,7 @@ public final class PipeCADToolContext extends statemap.FSMContext {
     // ---------------------------------------------------------------
     // Member methods.
     //
-    private static Set<FLyrVect> pointLayers;
+    private static Collection<FLyrVect> pointLayers;
 
     public PipeCADToolContext(PipeCADTool owner) {
 	super();
