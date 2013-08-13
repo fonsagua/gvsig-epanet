@@ -7,9 +7,14 @@ public class ValveExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	layername = Preferences.getLayerNames().getValves();
 	iconName = "valve";
 	tool = new ValveCADTool();
 	super.initialize();
+    }
+
+    @Override
+    public void postInitialize() {
+	layername = Preferences.getLayerNames().getValves();
+	super.postInitialize();
     }
 }

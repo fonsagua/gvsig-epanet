@@ -10,10 +10,15 @@ public class JunctionExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	layername = Preferences.getLayerNames().getJunctions();
 	iconName = "junction";
 	tool = new JunctionCADTool();
 	super.initialize();
+    }
+
+    @Override
+    public void postInitialize() {
+	layername = Preferences.getLayerNames().getJunctions();
+	super.postInitialize();
 
 	EpanetEndGeometryListener listener = new EpanetEndGeometryListener();
 	CADListenerManager.addEndGeometryListener("epanet-listener", listener);

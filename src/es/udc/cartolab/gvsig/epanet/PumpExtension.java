@@ -7,10 +7,15 @@ public class PumpExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	layername = Preferences.getLayerNames().getPumps();
 	iconName = "pump";
 	tool = new PumpCADTool();
 	super.initialize();
+    }
+
+    @Override
+    public void postInitialize() {
+	layername = Preferences.getLayerNames().getPumps();
+	super.postInitialize();
     }
 
 }

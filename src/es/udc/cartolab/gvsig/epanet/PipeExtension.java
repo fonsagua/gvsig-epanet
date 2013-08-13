@@ -7,10 +7,15 @@ public class PipeExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	layername = Preferences.getLayerNames().getPipes();
 	iconName = "pipe";
 	tool = new PipeCADTool();
 	super.initialize();
+    }
+
+    @Override
+    public void postInitialize() {
+	layername = Preferences.getLayerNames().getPipes();
+	super.postInitialize();
     }
 
 }

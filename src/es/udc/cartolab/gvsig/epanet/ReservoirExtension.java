@@ -7,10 +7,15 @@ public class ReservoirExtension extends AbstractCADExtension {
 
     @Override
     public void initialize() {
-	layername = Preferences.getLayerNames().getReservoirs();
 	iconName = "reservoir";
 	tool = new ReservoirCADTool();
 	super.initialize();
+    }
+
+    @Override
+    public void postInitialize() {
+	layername = Preferences.getLayerNames().getReservoirs();
+	super.postInitialize();
     }
 
 }
