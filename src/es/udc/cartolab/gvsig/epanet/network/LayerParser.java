@@ -16,6 +16,7 @@ import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeLayer;
 import es.udc.cartolab.gvsig.epanet.structures.PumpLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirLayer;
+import es.udc.cartolab.gvsig.epanet.structures.SourceLayer;
 import es.udc.cartolab.gvsig.epanet.structures.TankLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ValveLayer;
 
@@ -28,6 +29,7 @@ public class LayerParser {
     private PipeLayer pipeLayer;
     private ValveLayer valveLayer;
     private PumpLayer pumpLayer;
+    private SourceLayer sourceLayer;
 
     public LayerParser() {
 	nb = new NetworkBuilder();
@@ -36,12 +38,14 @@ public class LayerParser {
 
     /**
      * This is the preferred method to parse the layers that constitute a
-     * network. Take into account that the order in which the layers are parse
-     * is important: 1 - junctions 2 - reservoirs 3 - tanks 4 - valves 5 - pumps
-     * 6 - pipes
+     * network. Take into account that the order in which the layers are parsed
+     * is important: 1 sources - 2 junctions - 3 reservoirs - 4 tanks - 5 valves
+     * - 6 pumps - 7 pipes
      */
     public void add(FLayers fLayers) {
 
+	addSources((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
+		.getSources()));
 	addJunctions((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
 		.getJunctions()));
 	addReservoirs((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
@@ -54,6 +58,14 @@ public class LayerParser {
 		.getPumps()));
 	addPipes((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
 		.getPipes()));
+    }
+
+    /**
+     * A special version of a junction layer
+     */
+    private void addSources(FLyrVect layer) {
+	sourceLayer = new SourceLayer(layer);
+	sourceLayer.addToNetwork(nb);
     }
 
     public void addJunctions(FLyrVect layer) {
@@ -188,6 +200,9 @@ public class LayerParser {
     private void updateLayers() {
 	if (junctionLayer != null) {
 	    junctionLayer.update();
+	}
+	if (sourceLayer != null) {
+	    sourceLayer.update();
 	}
 	if (tankLayer != null) {
 	    tankLayer.update();

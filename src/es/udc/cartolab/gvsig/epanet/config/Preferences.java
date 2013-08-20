@@ -20,6 +20,7 @@ public class Preferences {
     private static PumpFieldNames pumpFieldNames;
     private static ValveFieldNames valveFieldNames;
     private static LayerNames layerNames;
+    private static JunctionFieldNames sourceFieldNames;
 
     public static LayerNames getLayerNames() {
 	if (layerNames == null) {
@@ -71,6 +72,13 @@ public class Preferences {
 	return valveFieldNames;
     }
 
+    public static JunctionFieldNames getSourceFieldNames() {
+	if (sourceFieldNames == null) {
+	    sourceFieldNames = new JunctionFieldNames();
+	}
+	return sourceFieldNames;
+    }
+
     public static Collection<FLyrVect> getPointLayers() {
 	Set<FLyrVect> pointLayers = new HashSet<FLyrVect>();
 	FLayers layers = ((View) PluginServices.getMDIManager()
@@ -80,7 +88,8 @@ public class Preferences {
 	LayerNames layerNames = getLayerNames();
 	String[] pointLayerNames = { layerNames.getJunctions(),
 		layerNames.getTanks(), layerNames.getReservoirs(),
-		layerNames.getPumps(), layerNames.getValves() };
+		layerNames.getPumps(), layerNames.getValves(),
+		layerNames.getSources() };
 
 	for (String name : pointLayerNames) {
 	    layer = layers.getLayer(name);
@@ -131,6 +140,10 @@ public class Preferences {
 
     public static void setValveFieldNames(ValveFieldNames valveFieldNames) {
 	Preferences.valveFieldNames = valveFieldNames;
+    }
+
+    public static void setSourceFieldNames(JunctionFieldNames sourceFieldNames) {
+	Preferences.sourceFieldNames = sourceFieldNames;
     }
 
     public static void setLayerNames(LayerNames layerNames) {

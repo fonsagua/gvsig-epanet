@@ -8,6 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
+import org.junit.rules.TemporaryFolder;
+
+import com.hardcode.driverManager.DriverLoadException;
+
+import es.udc.cartolab.gvsig.epanet.network.LayerParser;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 
@@ -55,6 +60,15 @@ public class ComparatorUtils {
 		actual.getUnitHeadLoss());
 	assertDoublesAreEqual(expected.getFrictionFactor(),
 		actual.getFrictionFactor());
+    }
+
+    public static Object[] parseSHPAfterSimulation(TemporaryFolder temp)
+	    throws DriverLoadException, Exception {
+	LayerParser lp = new LayerParser();
+	FixtureLayerFactory flf = new FixtureLayerFactory(temp, lp);
+	flf.parseSHPs();
+
+	return new Object[] { lp.getNodes(), lp.getLinks() };
     }
 
     private static void assertDoublesAreEqual(double exp, double actual) {

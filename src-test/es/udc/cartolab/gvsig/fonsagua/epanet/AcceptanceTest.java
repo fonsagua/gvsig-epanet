@@ -17,7 +17,7 @@ import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureLayerFactory;
 import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
 import es.udc.cartolab.gvsig.shputils.Drivers;
 
-public class LayerSimulationIntegrationTest {
+public class AcceptanceTest {
 
     @Rule
     public TemporaryFolder temp = new TemporaryFolder();
@@ -41,34 +41,10 @@ public class LayerSimulationIntegrationTest {
     @Test
     public void reservoir_junctionWithDemand() throws Exception {
 	fixtureFactory.getReservoirJunctionWithDemand();
-	executeTest("reservoir_junction-with-demand");
+	executeTest();
     }
 
-    @Test
-    public void reservoir_tank_junctionWithDemand() throws Exception {
-	fixtureFactory.getReservoirTankJunctionWithDemand();
-	executeTest("reservoir_tank_junction-with-demand");
-    }
-
-    @Test
-    public void reservoir_valve_tank_junctionWithDemand() throws Exception {
-	fixtureFactory.getReservoirValveTankJunctionWithDemand();
-	executeTest("reservoir_valve_tank_junctionWithDemand");
-    }
-
-    @Test
-    public void valve_over_reservoir() throws Exception {
-	fixtureFactory.getValveOverReservoir();
-	executeTest("valve_over_reservoir");
-    }
-
-    @Test
-    public void pumpWithPower() throws Exception {
-	fixtureFactory.getPumpWithPower();
-	executeTest("pumpWithPower");
-    }
-
-    private void executeTest(String patternName) throws Exception {
+    private void executeTest() throws Exception {
 	fixtureFactory.parseSHPs();
 	layerParser.hydraulicSim();
 

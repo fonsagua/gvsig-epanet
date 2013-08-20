@@ -8,6 +8,7 @@ public class LayerNames {
     private String reservoirs;
     private String tanks;
     private String valves;
+    private String sources;
 
     public LayerNames() {
 	junctions = "junctions";
@@ -16,6 +17,7 @@ public class LayerNames {
 	reservoirs = "reservoirs";
 	tanks = "tanks";
 	valves = "valves";
+	sources = "sources";
     }
 
     public String getJunctions() {
@@ -41,6 +43,10 @@ public class LayerNames {
     public String getValves() {
 	return valves;
     }
+    
+    public String getSources() {
+	return sources;
+    }
 
     public void setJunctions(String junctions) {
 	this.junctions = junctions;
@@ -64,6 +70,10 @@ public class LayerNames {
 
     public void setValves(String valves) {
 	this.valves = valves;
+    }
+
+    public void setSources(String sources) {
+	this.sources = sources;
     }
 
 }
