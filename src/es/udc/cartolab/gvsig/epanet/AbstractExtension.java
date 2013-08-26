@@ -28,14 +28,12 @@ public abstract class AbstractExtension extends Extension {
     @Override
     public boolean isEnabled() {
 	IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
-	boolean isEnabled = false;
 
 	if (iWindow instanceof View) {
-	    isEnabled = true;
 	    view = (View) iWindow;
+	    return true;
 	}
-
-	return isEnabled;
+	return false;
     }
 
     @Override

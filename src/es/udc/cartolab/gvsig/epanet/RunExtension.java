@@ -10,6 +10,8 @@ import es.udc.cartolab.gvsig.epanet.network.LayerParser;
 
 public class RunExtension extends AbstractExtension {
 
+    private static boolean externalEnability;
+
     @Override
     public void initialize() {
 	String baseformpath = PluginServices.getPluginServices(this)
@@ -28,10 +30,22 @@ public class RunExtension extends AbstractExtension {
     public void execute(String actionCommand) {
 	PluginServices.getMDIManager().setWaitCursor();
 	LayerParser layerParser = new LayerParser();
-	final FLayers layers = getView().getMapControl().getMapContext().getLayers();
+	final FLayers layers = getView().getMapControl().getMapContext()
+		.getLayers();
 	layerParser.add(layers);
 	layerParser.hydraulicSim();
 	PluginServices.getMDIManager().restoreCursor();
     }
 
+    public static void setExternalEnability(boolean validAlternative) {
+	externalEnability = validAlternative;
+    }
+
+    @Override
+    public boolean isEnabled() {
+	if (externalEnability) {
+	    return super.isEnabled();
+	}
+	return false;
+    }
 }

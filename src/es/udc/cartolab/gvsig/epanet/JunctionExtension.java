@@ -8,6 +8,8 @@ import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class JunctionExtension extends AbstractCADExtension {
 
+    private static boolean externalEnability;
+
     @Override
     public void initialize() {
 	iconName = "junction";
@@ -22,5 +24,17 @@ public class JunctionExtension extends AbstractCADExtension {
 
 	EpanetEndGeometryListener listener = new EpanetEndGeometryListener();
 	CADListenerManager.addEndGeometryListener("epanet-listener", listener);
+    }
+
+    public static void setExternalEnability(boolean validAlternative) {
+	externalEnability = validAlternative;
+    }
+
+    @Override
+    public boolean isEnabled() {
+	if (externalEnability) {
+	    return super.isEnabled();
+	}
+	return false;
     }
 }

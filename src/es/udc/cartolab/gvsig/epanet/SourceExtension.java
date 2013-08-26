@@ -5,6 +5,8 @@ import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class SourceExtension extends AbstractCADExtension {
 
+    private static boolean externalEnability;
+
     @Override
     public void initialize() {
 	iconName = "source";
@@ -16,5 +18,17 @@ public class SourceExtension extends AbstractCADExtension {
     public void postInitialize() {
 	layername = Preferences.getLayerNames().getSources();
 	super.postInitialize();
+    }
+
+    public static void setExternalEnability(boolean validAlternative) {
+	externalEnability = validAlternative;
+    }
+
+    @Override
+    public boolean isEnabled() {
+	if (externalEnability) {
+	    return super.isEnabled();
+	}
+	return false;
     }
 }

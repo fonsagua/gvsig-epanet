@@ -5,6 +5,8 @@ import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class ValveExtension extends AbstractCADExtension {
 
+    private static boolean externalEnability;
+
     @Override
     public void initialize() {
 	iconName = "valve";
@@ -16,5 +18,17 @@ public class ValveExtension extends AbstractCADExtension {
     public void postInitialize() {
 	layername = Preferences.getLayerNames().getValves();
 	super.postInitialize();
+    }
+
+    public static void setExternalEnability(boolean validAlternative) {
+	externalEnability = validAlternative;
+    }
+
+    @Override
+    public boolean isEnabled() {
+	if (externalEnability) {
+	    return super.isEnabled();
+	}
+	return false;
     }
 }

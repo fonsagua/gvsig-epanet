@@ -5,6 +5,8 @@ import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class PipeExtension extends AbstractCADExtension {
 
+    private static boolean externalEnability;
+
     @Override
     public void initialize() {
 	iconName = "pipe";
@@ -18,4 +20,15 @@ public class PipeExtension extends AbstractCADExtension {
 	super.postInitialize();
     }
 
+    public static void setExternalEnability(boolean validAlternative) {
+	externalEnability = validAlternative;
+    }
+
+    @Override
+    public boolean isEnabled() {
+	if (externalEnability) {
+	    return super.isEnabled();
+	}
+	return false;
+    }
 }
