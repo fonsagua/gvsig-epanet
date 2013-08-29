@@ -1,7 +1,6 @@
 package es.udc.cartolab.gvsig.epanet.structures;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
-import com.hardcode.gdbms.engine.values.IntValue;
 import com.hardcode.gdbms.engine.values.NumericValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
@@ -37,9 +36,12 @@ public class TankLayer extends NodeLayer {
 		.getCoordinate();
 	NumericValue elevation = (NumericValue) iFeature
 		.getAttribute(elevationIdx);
-	IntValue initLevel = (IntValue) iFeature.getAttribute(initLevelIdx);
-	IntValue minLevel = (IntValue) iFeature.getAttribute(minLevelIdx);
-	IntValue maxLevel = (IntValue) iFeature.getAttribute(maxLevelIdx);
+	NumericValue initLevel = (NumericValue) iFeature
+		.getAttribute(initLevelIdx);
+	NumericValue minLevel = (NumericValue) iFeature
+		.getAttribute(minLevelIdx);
+	NumericValue maxLevel = (NumericValue) iFeature
+		.getAttribute(maxLevelIdx);
 	NumericValue diameter = (NumericValue) iFeature
 		.getAttribute(diameterIdx);
 	tank.createTank(id, coordinate.x, coordinate.y,
