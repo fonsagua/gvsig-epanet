@@ -1,5 +1,7 @@
 package es.udc.cartolab.gvsig.epanet;
 
+import java.util.Collection;
+
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.CADExtension;
 import com.iver.cit.gvsig.StartEditing;
@@ -9,8 +11,6 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.tools.InsertionCADTool;
 import com.iver.cit.gvsig.project.documents.view.snapping.VectorialLayerSnapping;
 
-import es.udc.cartolab.gvsig.epanet.config.Preferences;
-
 public abstract class AbstractCADExtension extends AbstractExtension {
 
     protected String layername;
@@ -19,6 +19,10 @@ public abstract class AbstractCADExtension extends AbstractExtension {
     protected InsertionCADTool tool;
     private FLayer layer;
     private StartEditing startEditingExt;
+
+    // TODO: This should be improved. layersToSnap are hardcoded in the execute
+    // of the cad extensions. Should be defined from an outside plugin
+    protected Collection<FLyrVect> layersToSnap;
 
     @Override
     public void initialize() {
@@ -37,7 +41,7 @@ public abstract class AbstractCADExtension extends AbstractExtension {
 	startEditingExt.startEditing(getView(), (FLyrVect) layer);
 	VectorialLayerSnapping snapTo = new VectorialLayerSnapping(
 		(FLyrVect) layer);
-	snapTo.setSnappers(Preferences.getPointLayers());
+	snapTo.setSnappers(layersToSnap);
 
 	CADExtension.setCADTool(customTool, true);
     }

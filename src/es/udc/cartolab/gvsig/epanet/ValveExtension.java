@@ -25,6 +25,14 @@ public class ValveExtension extends AbstractCADExtension {
     }
 
     @Override
+    public void execute(String actionCommand) {
+
+	layersToSnap = Preferences.getPointLayers();
+
+	super.execute(actionCommand);
+    }
+
+    @Override
     public boolean isEnabled() {
 	if (externalEnability) {
 	    return super.isEnabled();

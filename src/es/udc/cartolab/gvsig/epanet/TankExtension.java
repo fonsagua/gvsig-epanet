@@ -1,5 +1,8 @@
 package es.udc.cartolab.gvsig.epanet;
 
+import com.iver.cit.gvsig.fmap.layers.FLayers;
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+
 import es.udc.cartolab.gvsig.epanet.cad.TankCADTool;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
@@ -18,6 +21,18 @@ public class TankExtension extends AbstractCADExtension {
     public void postInitialize() {
 	layername = Preferences.getLayerNames().getTanks();
 	super.postInitialize();
+    }
+
+    @Override
+    public void execute(String actionCommand) {
+
+	layersToSnap = Preferences.getPointLayers();
+	final FLayers layers = getView().getMapControl().getMapContext()
+		.getLayers();
+	layersToSnap.add((FLyrVect) layers.getLayer("dep_intermedios"));
+	layersToSnap.add((FLyrVect) layers.getLayer("dep_distribucion"));
+
+	super.execute(actionCommand);
     }
 
     public static void setExternalEnability(boolean validAlternative) {

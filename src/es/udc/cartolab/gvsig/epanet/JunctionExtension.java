@@ -1,5 +1,6 @@
 package es.udc.cartolab.gvsig.epanet;
 
+import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.listeners.CADListenerManager;
 
 import es.udc.cartolab.gvsig.epanet.cad.EpanetEndGeometryListener;
@@ -24,6 +25,16 @@ public class JunctionExtension extends AbstractCADExtension {
 
 	EpanetEndGeometryListener listener = new EpanetEndGeometryListener();
 	CADListenerManager.addEndGeometryListener("epanet-listener", listener);
+    }
+
+    @Override
+    public void execute(String actionCommand) {
+
+	layersToSnap = Preferences.getPointLayers();
+	layersToSnap.add((FLyrVect) getView().getMapControl().getMapContext()
+		.getLayers().getLayer("tuberias"));
+
+	super.execute(actionCommand);
     }
 
     public static void setExternalEnability(boolean validAlternative) {

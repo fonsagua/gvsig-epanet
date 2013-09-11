@@ -20,6 +20,14 @@ public class PipeExtension extends AbstractCADExtension {
 	super.postInitialize();
     }
 
+    @Override
+    public void execute(String actionCommand) {
+
+	layersToSnap = Preferences.getPointLayers();
+
+	super.execute(actionCommand);
+    }
+
     public static void setExternalEnability(boolean validAlternative) {
 	externalEnability = validAlternative;
     }
