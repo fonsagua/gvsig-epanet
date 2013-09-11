@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.NumericValue;
-import com.hardcode.gdbms.engine.values.StringValue;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -39,7 +38,7 @@ public class PumpLayer extends LinkLayer {
 	NumericValue elevation = (NumericValue) iFeature
 		.getAttribute(elevationIdx);
 	// StringValue type = (StringValue) iFeature.getAttribute(1);
-	StringValue value = (StringValue) iFeature.getAttribute(valueIdx);
+	NumericValue power = (NumericValue) iFeature.getAttribute(valueIdx);
 	int baseDemand = 0;
 
 	NodeWrapper startNode = getStartNode(nb, coordinate,
@@ -51,9 +50,9 @@ public class PumpLayer extends LinkLayer {
 	auxNodes.put(endNodeId, endNode);
 
 	String id = IDCreator.addPumpLink(iFeature.getID());
-	double power = Double.parseDouble(value.getValue());
+	// double power = Double.parseDouble(value.getValue());
 	PumpWrapper pump = new PumpWrapper(iFeature);
-	pump.createPump(id, startNode, endNode, power);
+	pump.createPump(id, startNode, endNode, power.doubleValue());
 	nb.addPump(pump);
 	return pump;
     }

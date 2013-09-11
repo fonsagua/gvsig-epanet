@@ -38,7 +38,11 @@ public abstract class AbstractCADExtension extends AbstractExtension {
 	// Utils.removeCADButtons();
 	activeOnly(layername);
 
-	startEditingExt.startEditing(getView(), (FLyrVect) layer);
+	// Sanity check, if the user re-clicks a cad-epanet tool without using
+	// the previous
+	if (!layer.isEditing()) {
+	    startEditingExt.startEditing(getView(), (FLyrVect) layer);
+	}
 	VectorialLayerSnapping snapTo = new VectorialLayerSnapping(
 		(FLyrVect) layer);
 	snapTo.setSnappers(layersToSnap);
