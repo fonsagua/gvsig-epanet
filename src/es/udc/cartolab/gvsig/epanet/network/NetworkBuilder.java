@@ -279,9 +279,20 @@ public class NetworkBuilder {
 	    net.addJunction(node.getId(), node.getNode());
 	}
 
+	checkThatThereAreTankOrReservoir();
 	parser.parse(net, null);
 	if (handler.hasExceptions()) {
 	    handler.throwException();
+	}
+
+    }
+
+    // This should be checked by baseform but if fails in console without
+    // logging the error
+    private void checkThatThereAreTankOrReservoir() throws ENException {
+	// Baseform models reservoirs as tanks.
+	if (net.getTanks().isEmpty()) {
+	    throw new ENException(224);
 	}
     }
 
@@ -304,10 +315,11 @@ public class NetworkBuilder {
 	case 233:
 	    throw new InvalidNetworkError(
 		    "Error de digitalización: Existen elementos puntuales aislados o no conectados al sistema");
-	    // break;
-
+	case 224:
+	    throw new InvalidNetworkError(
+		    "Error de digitalización: El sistema ha de contener al menos un embalse o un depósito");
 	default:
-	    break;
+	    throw new RuntimeException("Error desconocido");
 	}
 
     }
