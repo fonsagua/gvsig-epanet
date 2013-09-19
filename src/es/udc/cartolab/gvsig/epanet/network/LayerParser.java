@@ -9,6 +9,7 @@ import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.exceptions.SimulationError;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionLayer;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
@@ -98,11 +99,11 @@ public class LayerParser {
 	pumpLayer.addToNetwork(nb);
     }
 
-    public void createInpFile(File inp) {
+    public void createInpFile(File inp) throws InvalidNetworkError {
 	nb.createInpFile(inp);
     }
 
-    public void hydraulicSim() {
+    public void hydraulicSim() throws InvalidNetworkError {
 
 	File inp = null;
 	String[] output = null;

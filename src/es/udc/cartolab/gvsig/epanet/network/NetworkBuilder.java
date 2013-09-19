@@ -3,7 +3,6 @@ package es.udc.cartolab.gvsig.epanet.network;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -87,7 +86,12 @@ public class NetworkBuilder {
 	    setReportOptions();
 	    setOptions();
 	} catch (ENException e) {
-	    throw new InvalidNetworkError(e);
+	    // There is no way to reach this block with current implementation
+	    // of the BaseformEpaNetLib-1.0.jar It's throwing ENException
+	    // accessing Maps. That's a bad API design. Just in case of an
+	    // implementation change, the exception is chained and let it be
+	    // handled (logged) by gvSIG
+	    throw new RuntimeException(e);
 	}
 
     }
@@ -269,96 +273,125 @@ public class NetworkBuilder {
 	net.addValve(fcv.getId(), (Valve) fcv.getLink());
     }
 
-    private void prepare() {
+    private void prepare() throws ENException {
 	// TODO: Como gestionar esto
 	for (NodeWrapper node : auxNodes.values()) {
 	    net.addJunction(node.getId(), node.getNode());
 	}
-	try {
-	    parser.parse(net, null);
-	} catch (ENException e) {
-	    throw new InvalidNetworkError(e);
-	}
-	ArrayList<Throwable> stack = handler.getStack();
-	if (!stack.isEmpty()) {
-	    throw new InvalidNetworkError(stack.get(0));
+
+	parser.parse(net, null);
+	if (handler.hasExceptions()) {
+	    handler.throwException();
 	}
     }
 
-    public void createInpFile(File ofile) {
-	prepare();
-	OutputComposer composer = OutputComposer.create(FileType.INP_FILE);
+    public void createInpFile(File ofile) throws InvalidNetworkError {
 	try {
+	    prepare();
+	    OutputComposer composer = OutputComposer.create(FileType.INP_FILE);
 	    composer.composer(net, ofile);
+	    if (handler.hasExceptions()) {
+		handler.throwException();
+	    }
 	} catch (ENException e) {
-	    throw new InvalidNetworkError(e);
+	    translateENException(e);
 	}
+
     }
 
-    public void hydraulicSim() {
-	prepare();
+    private void translateENException(ENException e) throws InvalidNetworkError {
+	switch (e.getCodeID()) {
+	case 233:
+	    throw new InvalidNetworkError(
+		    "Error de digitalización: Existen elementos puntuales aislados o no conectados al sistema");
+	    // break;
+
+	default:
+	    break;
+	}
+
+    }
+
+    public void hydraulicSim() throws InvalidNetworkError {
+
+	AwareStep step = null;
 	try {
-	    File hydFile = File.createTempFile("hydSim", ".bin");
+	    step = simulateFirstStep();
+	    if (handler.hasExceptions()) {
+		handler.throwException();
+	    }
+	} catch (ENException e) {
+	    translateENException(e);
+	}
+	FieldsMap fmap = net.getFieldsMap();
+
+	/*
+	 * WARNING Baseform usa para las listas de nodos, links,... un
+	 * LinkedHashMap, es decir, una colección ordenada por orden de
+	 * inserción. Cuando hace los cálculos hidráulicos, no almacena los
+	 * resultados en los propios objectos si no en elementos tipo ArrayList,
+	 * donde el índice del array se corresponde con el de inserción en la
+	 * colección, y este es el mismo orden que sigue cuando vuelca los
+	 * resultados al fichero binario intermedio.
+	 * 
+	 * El index (i) que se le pasa a AwareStep es el índice del array de
+	 * donde obtendrá el resultado. Por eso esta estructura extraña de
+	 * iterar por los nodos e ir aumentando un índice
+	 */
+	int i = 0;
+	for (Node node : net.getNodes()) {
+	    NodeWrapper nw = nodesWrapper.get(node.getId());
+	    if (nw == null) {
+		if (auxNodes.get(node.getId()) == null) {
+		    throw new InvalidNetworkError(
+			    "Una conexión de la red no encontrada entre nuestros nodos");
+		}
+		continue;
+	    }
+	    double demand = step.getNodeDemand(i, node, fmap);
+	    double head = step.getNodeHead(i, node, fmap);
+	    double pressure = step.getNodePressure(i, node, fmap);
+	    nw.setDemand(round(demand));
+	    nw.setHead(round(head));
+	    nw.setPressure(round(pressure));
+	    i++;
+	}
+
+	i = 0;
+	for (Link link : net.getLinks()) {
+	    LinkWrapper lw = linksWrapper.get(link.getId());
+	    double flow = Math.abs(step.getLinkFlow(i, link, fmap));
+	    double velocity = Math.abs(step.getLinkVelocity(i, link, fmap));
+	    double unitheadloss = step.getLinkHeadLoss(i, link, fmap);
+	    double frictionFactor = step.getLinkFriction(i, link, fmap);
+	    lw.setFlow(round(flow));
+	    lw.setVelocity(round(velocity));
+	    lw.setUnitHeadLoss(round(unitheadloss));
+	    lw.setFrictionFactor(round(frictionFactor));
+	    i++;
+	}
+
+    }
+
+    private AwareStep simulateFirstStep() throws ENException {
+
+	File hydFile = null;
+	AwareStep step = null;
+	try {
+	    prepare();
+	    hydFile = File.createTempFile("hydSim", ".bin");
 	    HydraulicSim hydSim = new HydraulicSim(net, log);
 	    hydSim.simulate(hydFile);
 	    HydraulicReader hydReader = new HydraulicReader(
 		    new RandomAccessFile(hydFile, "r"));
 
-	    FieldsMap fmap = net.getFieldsMap();
-
-	    AwareStep step = hydReader.getStep(0);
-	    /*
-	     * WARNING Baseform usa para las listas de nodos, links,... un
-	     * LinkedHashMap, es decir, una colección ordenada por orden de
-	     * inserción. Cuando hace los cálculos hidráulicos, no almacena los
-	     * resultados en los propios objectos si no en elementos tipo
-	     * ArrayList, donde el índice del array se corresponde con el de
-	     * inserción en la colección, y este es el mismo orden que sigue
-	     * cuando vuelca los resultados al fichero binario intermedio.
-	     * 
-	     * El index (i) que se le pasa a AwareStep es el índice del array de
-	     * donde obtendrá el resultado. Por eso esta estructura extraña de
-	     * iterar por los nodos e ir aumentando un índice
-	     */
-	    int i = 0;
-	    for (Node node : net.getNodes()) {
-		NodeWrapper nw = nodesWrapper.get(node.getId());
-		if (nw == null) {
-		    if (auxNodes.get(node.getId()) == null) {
-			throw new InvalidNetworkError(
-				"Una conexión de la red no encontrada entre nuestros nodos");
-		    }
-		    continue;
-		}
-		double demand = step.getNodeDemand(i, node, fmap);
-		double head = step.getNodeHead(i, node, fmap);
-		double pressure = step.getNodePressure(i, node, fmap);
-		nw.setDemand(round(demand));
-		nw.setHead(round(head));
-		nw.setPressure(round(pressure));
-		i++;
-	    }
-
-	    i = 0;
-	    for (Link link : net.getLinks()) {
-		LinkWrapper lw = linksWrapper.get(link.getId());
-		double flow = Math.abs(step.getLinkFlow(i, link, fmap));
-		double velocity = Math.abs(step.getLinkVelocity(i, link, fmap));
-		double unitheadloss = step.getLinkHeadLoss(i, link, fmap);
-		double frictionFactor = step.getLinkFriction(i, link, fmap);
-		lw.setFlow(round(flow));
-		lw.setVelocity(round(velocity));
-		lw.setUnitHeadLoss(round(unitheadloss));
-		lw.setFrictionFactor(round(frictionFactor));
-		i++;
-	    }
-	    deleteHydFile(hydFile);
+	    step = hydReader.getStep(0);
 	} catch (IOException e) {
 	    throw new ExternalError(e);
-
-	} catch (ENException e) {
-	    throw new InvalidNetworkError(e);
+	} finally {
+	    deleteHydFile(hydFile);
 	}
+	return step;
     }
 
     private double round(double value) {

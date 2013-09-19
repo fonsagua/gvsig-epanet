@@ -1,7 +1,7 @@
 package es.udc.cartolab.gvsig.epanet.exceptions;
 
 @SuppressWarnings("serial")
-public class InvalidNetworkError extends RuntimeException {
+public class InvalidNetworkError extends Exception {
 
     public InvalidNetworkError(String msg) {
 	super(msg);

@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.ValveFieldNames;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
-import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkErrorToFix;
 import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
@@ -67,7 +67,7 @@ public class ValveLayer extends LinkLayer {
 	List<NodeWrapper> existentNodesInThatCoord = nodeFinder
 		.getNodesAt(coordinate);
 	if (existentNodesInThatCoord.size() > 1) {
-	    throw new InvalidNetworkError(
+	    throw new InvalidNetworkErrorToFix(
 		    "Una válvula sólo puede estar sobre una fuente y en este punto hay más de un nodo");
 	}
 
@@ -75,13 +75,13 @@ public class ValveLayer extends LinkLayer {
 	    NodeWrapper existentNodeInThatCoord = existentNodesInThatCoord
 		    .get(0);
 	    if (!(existentNodeInThatCoord instanceof ReservoirWrapper)) {
-		throw new InvalidNetworkError(
+		throw new InvalidNetworkErrorToFix(
 			"Una válvula sólo puede estar sobre una fuente y en este punto no hay una fuente");
 	    }
 
 	    if (!MathUtils.compare(elevation, existentNodeInThatCoord.getNode()
 		    .getElevation())) {
-		throw new InvalidNetworkError(
+		throw new InvalidNetworkErrorToFix(
 			"La elevación de la válvula y de la fuente sobre la que está no coinciden");
 	    }
 

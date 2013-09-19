@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkErrorToFix;
 import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 
 public class NodeFinder {
@@ -35,7 +35,7 @@ public class NodeFinder {
 	}
 
 	if (!MathUtils.inClosedInterval(0, finded.size(), 2)) {
-	    throw new InvalidNetworkError(
+	    throw new InvalidNetworkErrorToFix(
 		    "More than two nodes in the same point");
 	}
 
@@ -63,7 +63,7 @@ public class NodeFinder {
 	    return a > b ? startNode : endNode;
 
 	} else {
-	    throw new InvalidNetworkError(overlapped.size()
+	    throw new InvalidNetworkErrorToFix(overlapped.size()
 		    + " nodes at this point. Should be 1 or 2.");
 	}
 
@@ -81,7 +81,7 @@ public class NodeFinder {
 	    return a < b ? startNode : endNode;
 
 	} else {
-	    throw new InvalidNetworkError(
+	    throw new InvalidNetworkErrorToFix(
 		    "More than two nodes in the same point");
 	}
 
