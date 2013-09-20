@@ -9,6 +9,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.ReservoirFieldNames;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
@@ -24,12 +25,12 @@ public class ReservoirLayer extends NodeLayer {
     }
 
     @Override
-    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
+    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb)
+	    throws InvalidNetworkError {
 	ReservoirWrapper reservoir = new ReservoirWrapper(iFeature);
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	NumericValue totalHead = (NumericValue) iFeature
-		.getAttribute(totalHeadIdx);
+	NumericValue totalHead = getValue(iFeature, totalHeadIdx);
 	String id = IDCreator.addNode(iFeature.getID());
 	reservoir.createReservoir(id, coordinate.x, coordinate.y,
 		totalHead.intValue());

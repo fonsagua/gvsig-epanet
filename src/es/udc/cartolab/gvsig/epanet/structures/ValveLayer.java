@@ -12,6 +12,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.ValveFieldNames;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkErrorToFix;
 import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
@@ -33,14 +34,13 @@ public class ValveLayer extends LinkLayer {
     }
 
     @Override
-    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
+    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb)
+	    throws InvalidNetworkError {
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	NumericValue elevation = (NumericValue) iFeature
-		.getAttribute(elevationIdx);
-	NumericValue diameter = (NumericValue) iFeature
-		.getAttribute(diameterIdx);
-	NumericValue setting = (NumericValue) iFeature.getAttribute(settingIdx);
+	NumericValue elevation = getValue(iFeature, elevationIdx);
+	NumericValue diameter = getValue(iFeature, diameterIdx);
+	NumericValue setting = getValue(iFeature, settingIdx);
 
 	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
 

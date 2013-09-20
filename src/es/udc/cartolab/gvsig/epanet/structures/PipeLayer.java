@@ -10,6 +10,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import es.udc.cartolab.gvsig.epanet.config.PipeFieldNames;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
@@ -27,14 +28,13 @@ public class PipeLayer extends LinkLayer {
     }
 
     @Override
-    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
+    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb)
+	    throws InvalidNetworkError {
 	NodeFinder nodeFinder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
 	String id = IDCreator.addLink(iFeature.getID());
 	PipeWrapper pipe = new PipeWrapper(iFeature);
-	NumericValue diameter = (NumericValue) iFeature
-		.getAttribute(diameterIdx);
-	NumericValue roughness = (NumericValue) iFeature
-		.getAttribute(roughnessIdx);
+	NumericValue diameter = getValue(iFeature, diameterIdx);
+	NumericValue roughness = getValue(iFeature, roughnessIdx);
 
 	Geometry geom = iFeature.getGeometry().toJTSGeometry();
 	Coordinate[] coordinates = geom.getCoordinates();

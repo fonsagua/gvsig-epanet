@@ -9,6 +9,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.JunctionFieldNames;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
@@ -30,13 +31,13 @@ public class SourceLayer extends NodeLayer {
     }
 
     @Override
-    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
+    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb)
+	    throws InvalidNetworkError {
 	JunctionWrapper junction = new JunctionWrapper(iFeature);
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	NumericValue elevation = (NumericValue) iFeature
-		.getAttribute(elevationIdx);
-	NumericValue bdemand = (NumericValue) iFeature.getAttribute(bdemandIdx);
+	NumericValue elevation = getValue(iFeature, elevationIdx);
+	NumericValue bdemand = getValue(iFeature, bdemandIdx);
 	String id = IDCreator.addNode(iFeature.getID());
 	junction.createJunction(id, coordinate.x, coordinate.y,
 		elevation.doubleValue(), bdemand.doubleValue());

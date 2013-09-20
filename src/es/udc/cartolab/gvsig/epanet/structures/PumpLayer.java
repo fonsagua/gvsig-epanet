@@ -12,6 +12,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.PumpFieldNames;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkErrorToFix;
 import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
@@ -31,14 +32,13 @@ public class PumpLayer extends LinkLayer {
     }
 
     @Override
-    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
+    protected LinkWrapper processSpecific(IFeature iFeature, NetworkBuilder nb)
+	    throws InvalidNetworkError {
 	Map<String, NodeWrapper> auxNodes = nb.getAuxNodes();
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	NumericValue elevation = (NumericValue) iFeature
-		.getAttribute(elevationIdx);
-	// StringValue type = (StringValue) iFeature.getAttribute(1);
-	NumericValue power = (NumericValue) iFeature.getAttribute(valueIdx);
+	NumericValue elevation = getValue(iFeature, elevationIdx);
+	NumericValue power = getValue(iFeature, valueIdx);
 	int baseDemand = 0;
 
 	NodeWrapper startNode = getStartNode(nb, coordinate,
@@ -50,7 +50,6 @@ public class PumpLayer extends LinkLayer {
 	auxNodes.put(endNodeId, endNode);
 
 	String id = IDCreator.addPumpLink(iFeature.getID());
-	// double power = Double.parseDouble(value.getValue());
 	PumpWrapper pump = new PumpWrapper(iFeature);
 	pump.createPump(id, startNode, endNode, power.doubleValue());
 	nb.addPump(pump);

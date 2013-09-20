@@ -9,6 +9,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.TankFieldNames;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
@@ -28,22 +29,18 @@ public class TankLayer extends NodeLayer {
     }
 
     @Override
-    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb) {
+    protected NodeWrapper processSpecific(IFeature iFeature, NetworkBuilder nb)
+	    throws InvalidNetworkError {
 	TankWrapper tank = new TankWrapper(iFeature);
 
 	String id = IDCreator.addNode(iFeature.getID());
 	Coordinate coordinate = iFeature.getGeometry().toJTSGeometry()
 		.getCoordinate();
-	NumericValue elevation = (NumericValue) iFeature
-		.getAttribute(elevationIdx);
-	NumericValue initLevel = (NumericValue) iFeature
-		.getAttribute(initLevelIdx);
-	NumericValue minLevel = (NumericValue) iFeature
-		.getAttribute(minLevelIdx);
-	NumericValue maxLevel = (NumericValue) iFeature
-		.getAttribute(maxLevelIdx);
-	NumericValue diameter = (NumericValue) iFeature
-		.getAttribute(diameterIdx);
+	NumericValue elevation = getValue(iFeature, elevationIdx);
+	NumericValue initLevel = getValue(iFeature, initLevelIdx);
+	NumericValue minLevel = getValue(iFeature, minLevelIdx);
+	NumericValue maxLevel = getValue(iFeature, maxLevelIdx);
+	NumericValue diameter = getValue(iFeature, diameterIdx);
 	tank.createTank(id, coordinate.x, coordinate.y,
 		elevation.doubleValue(), initLevel.intValue(),
 		minLevel.intValue(), maxLevel.intValue(),

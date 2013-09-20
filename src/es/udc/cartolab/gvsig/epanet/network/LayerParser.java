@@ -42,8 +42,10 @@ public class LayerParser {
      * network. Take into account that the order in which the layers are parsed
      * is important: 1 sources - 2 junctions - 3 reservoirs - 4 tanks - 5 valves
      * - 6 pumps - 7 pipes
+     * 
+     * @throws InvalidNetworkError
      */
-    public void add(FLayers fLayers) {
+    public void add(FLayers fLayers) throws InvalidNetworkError {
 
 	addSources((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
 		.getSources()));
@@ -63,38 +65,40 @@ public class LayerParser {
 
     /**
      * A special version of a junction layer
+     * 
+     * @throws InvalidNetworkError
      */
-    private void addSources(FLyrVect layer) {
+    private void addSources(FLyrVect layer) throws InvalidNetworkError {
 	sourceLayer = new SourceLayer(layer);
 	sourceLayer.addToNetwork(nb);
     }
 
-    public void addJunctions(FLyrVect layer) {
+    public void addJunctions(FLyrVect layer) throws InvalidNetworkError {
 	junctionLayer = new JunctionLayer(layer);
 	junctionLayer.addToNetwork(nb);
     }
 
-    public void addReservoirs(FLyrVect layer) {
+    public void addReservoirs(FLyrVect layer) throws InvalidNetworkError {
 	reservoirLayer = new ReservoirLayer(layer);
 	reservoirLayer.addToNetwork(nb);
     }
 
-    public void addTanks(FLyrVect layer) {
+    public void addTanks(FLyrVect layer) throws InvalidNetworkError {
 	tankLayer = new TankLayer(layer);
 	tankLayer.addToNetwork(nb);
     }
 
-    public void addPipes(FLyrVect layer) {
+    public void addPipes(FLyrVect layer) throws InvalidNetworkError {
 	pipeLayer = new PipeLayer(layer);
 	pipeLayer.addToNetwork(nb);
     }
 
-    public void addValves(FLyrVect layer) {
+    public void addValves(FLyrVect layer) throws InvalidNetworkError {
 	valveLayer = new ValveLayer(layer);
 	valveLayer.addToNetwork(nb);
     }
 
-    public void addPumps(FLyrVect layer) {
+    public void addPumps(FLyrVect layer) throws InvalidNetworkError {
 	pumpLayer = new PumpLayer(layer);
 	pumpLayer.addToNetwork(nb);
     }

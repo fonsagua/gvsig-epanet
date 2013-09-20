@@ -15,6 +15,7 @@ import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 
 import es.udc.cartolab.gvsig.epanet.cad.ModifyValues;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
 
 public abstract class LinkLayer {
@@ -29,7 +30,7 @@ public abstract class LinkLayer {
 	indexes = getIndexes();
     }
 
-    public void addToNetwork(NetworkBuilder nb) {
+    public void addToNetwork(NetworkBuilder nb) throws InvalidNetworkError {
 	ReadableVectorial readableVectorial = layer.getSource();
 
 	try {
@@ -45,7 +46,8 @@ public abstract class LinkLayer {
 	}
     }
 
-    public LinkWrapper processFeature(IFeature iFeature, NetworkBuilder nb) {
+    public LinkWrapper processFeature(IFeature iFeature, NetworkBuilder nb)
+	    throws InvalidNetworkError {
 	LinkWrapper link = processSpecific(iFeature, nb);
 	Value[] attr = iFeature.getAttributes();
 
@@ -68,8 +70,19 @@ public abstract class LinkLayer {
 	return r;
     }
 
+    protected NumericValue getValue(IFeature iFeature, int idx)
+	    throws InvalidNetworkError {
+	Value attribute = iFeature.getAttribute(idx);
+	if (attribute instanceof NumericValue) {
+	    return (NumericValue) attribute;
+	}
+	throw new InvalidNetworkError(
+		202,
+		"Error de introducción de datos: Existen elementos que no contienen todos los datos necesario para realizar los cálculo hidráulicos");
+    }
+
     protected abstract LinkWrapper processSpecific(IFeature iFeature,
-	    NetworkBuilder nb);
+	    NetworkBuilder nb) throws InvalidNetworkError;
 
     public void update() {
 	ModifyValues te = new ModifyValues(layer);
