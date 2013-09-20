@@ -68,21 +68,20 @@ public class ValveLayer extends LinkLayer {
 		.getNodesAt(coordinate);
 	if (existentNodesInThatCoord.size() > 1) {
 	    throw new InvalidNetworkErrorToFix(
-		    "Una válvula sólo puede estar sobre una fuente y en este punto hay más de un nodo");
-	}
-
-	if (existentNodesInThatCoord.size() == 1) {
+		    "Error de digitalización: Una válvula puede estar aislada, sobre una fuente o sobre una conexión, y en el punto actual hay más de un elemento superpuesto");
+	} else if (existentNodesInThatCoord.size() == 1) {
 	    NodeWrapper existentNodeInThatCoord = existentNodesInThatCoord
 		    .get(0);
-	    if (!(existentNodeInThatCoord instanceof ReservoirWrapper)) {
+	    if ((existentNodeInThatCoord instanceof ReservoirWrapper)
+		    || existentNodeInThatCoord instanceof TankWrapper) {
 		throw new InvalidNetworkErrorToFix(
-			"Una válvula sólo puede estar sobre una fuente y en este punto no hay una fuente");
+			"219. Error de digitalización: Existen válvulas conectadas directamente a embalses o depósitos");
 	    }
 
 	    if (!MathUtils.compare(elevation, existentNodeInThatCoord.getNode()
 		    .getElevation())) {
 		throw new InvalidNetworkErrorToFix(
-			"La elevación de la válvula y de la fuente sobre la que está no coinciden");
+			"Error de introducción de datos. La elevación de la válvula y de la fuente/conexión sobre la que está no coinciden");
 	    }
 
 	    startNode = existentNodeInThatCoord;
