@@ -62,6 +62,9 @@ public class NodeFinder {
 	    int b = Integer.parseInt(endNode.getId());
 	    return a > b ? startNode : endNode;
 
+	} else if (overlapped.size() == 0) {
+	    throw new InvalidNetworkErrorToFix(
+		    "Error de digitalización: Existen tuberías aisladas o no conectadas al sistema. El punto INICIAL de la tubería no está conectado a ningún nodo");
 	} else {
 	    throw new InvalidNetworkErrorToFix(overlapped.size()
 		    + " nodes at this point. Should be 1 or 2.");
@@ -80,9 +83,12 @@ public class NodeFinder {
 	    int b = Integer.parseInt(endNode.getId());
 	    return a < b ? startNode : endNode;
 
-	} else {
+	} else if (overlapped.size() == 0) {
 	    throw new InvalidNetworkErrorToFix(
-		    "More than two nodes in the same point");
+		    "Error de digitalización: Existen tuberías aisladas o no conectadas al sistema. El punto FINAL de la tubería no está conectado a ningún nodo");
+	} else {
+	    throw new InvalidNetworkErrorToFix(overlapped.size()
+		    + " nodes at this point. Should be 1 or 2.");
 	}
 
     }
