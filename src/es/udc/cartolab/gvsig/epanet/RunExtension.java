@@ -2,6 +2,7 @@ package es.udc.cartolab.gvsig.epanet;
 
 import java.awt.Component;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -40,6 +41,19 @@ public class RunExtension extends AbstractExtension {
 	    layerParser.add(layers);
 
 	    layerParser.hydraulicSim();
+
+	    List<String> simWarnings = layerParser.getSimWarnings();
+	    if (!simWarnings.isEmpty()) {
+		StringBuilder sb = new StringBuilder();
+		for (String str : simWarnings) {
+		    sb.append(str);
+		    sb.append("\n");
+		}
+
+		JOptionPane.showMessageDialog(
+			(Component) PluginServices.getMainFrame(),
+			sb.toString(), "", JOptionPane.WARNING_MESSAGE);
+	    }
 	} catch (InvalidNetworkError e) {
 	    JOptionPane.showMessageDialog(
 		    (Component) PluginServices.getMainFrame(), e.getMessage(),

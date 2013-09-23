@@ -2,6 +2,8 @@ package es.udc.cartolab.gvsig.epanet.network;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -11,15 +13,19 @@ import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.exceptions.SimulationError;
+import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionLayer;
+import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeLayer;
 import es.udc.cartolab.gvsig.epanet.structures.PumpLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirLayer;
+import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.SourceLayer;
 import es.udc.cartolab.gvsig.epanet.structures.TankLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ValveLayer;
+import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
 
 public class LayerParser {
 
@@ -31,10 +37,12 @@ public class LayerParser {
     private ValveLayer valveLayer;
     private PumpLayer pumpLayer;
     private SourceLayer sourceLayer;
+    private List<String> simWarnings;
 
     public LayerParser() {
 	nb = new NetworkBuilder();
 	IDCreator.reset();
+	simWarnings = new ArrayList<String>();
     }
 
     /**
@@ -133,6 +141,8 @@ public class LayerParser {
 		throw new SimulationError(
 			"El resultado del cálculo tiene más links de los esperados");
 	    }
+
+	    checkDemandVsOffer();
 	    updateLayers();
 	} catch (IOException e) {
 	    throw new ExternalError(e);
@@ -141,6 +151,11 @@ public class LayerParser {
 	    delete(output);
 	    delete(output);
 	}
+
+    }
+
+    private void checkDemandVsOffer() {
+	// TODO Auto-generated method stub
 
     }
 
@@ -172,7 +187,41 @@ public class LayerParser {
 			"Un nodo de la red no está entre los resultados");
 	    }
 	    node.cloneResults(s);
+	    checkNegativePressure(node);
+	    checkSourcePressure(node);
+	    checkReservoirDemand(node);
 	    simulated.remove(id);
+	}
+    }
+
+    private void checkReservoirDemand(NodeWrapper node) {
+	if (node instanceof ReservoirWrapper) {
+	    if (node.getDemand() > 0) {
+		simWarnings
+			.add("Aviso de cálculo hidráulico: Algún embalse del sistema actúa como recpetor del agua y no como emisor");
+	    }
+	}
+    }
+
+    private void checkSourcePressure(NodeWrapper node) {
+	// TODO: Not a really good form to check if the node is a Source
+	if (node.getDemand() < 0) {
+	    if (!MathUtils.inClosedInterval(-1, node.getPressure(), 0)) {
+		simWarnings
+			.add("Hay fuentes con presión cero o positiva, o muy negativa");
+	    }
+	}
+
+    }
+
+    private void checkNegativePressure(NodeWrapper node) {
+	if (node instanceof JunctionWrapper) {
+	    if (node.getDemand() > 0) {
+		if (node.getPressure() < 0) {
+		    simWarnings
+			    .add("Aviso de cálculo hidráulico: Existen conexiones con demanda con presiones negativas");
+		}
+	    }
 	}
     }
 
@@ -198,8 +247,28 @@ public class LayerParser {
 			"Un link de la red no está entre los resultados");
 	    }
 	    link.cloneResults(s);
+	    checkFlowSense(link);
+	    checkValveLosts(link);
 	    simulated.remove(id);
 	}
+    }
+
+    private void checkValveLosts(LinkWrapper link) {
+	if (link instanceof ValveWrapper) {
+	    if (MathUtils.compare(link.getUnitHeadLoss(), 0)) {
+		simWarnings
+			.add("Aviso de cálculo hidráulico: La energía del sistema en área donde se ha ubicado una válvula no es sufieciente para aportar caudal");
+	    }
+	}
+
+    }
+
+    private void checkFlowSense(LinkWrapper link) {
+	if (link.getFlow() < 0) {
+	    simWarnings
+		    .add("Aviso de cálculo hidráulico: Existen tuberías donde el agua discurre en sentido contrario al deseado");
+	}
+
     }
 
     private void updateLayers() {
@@ -232,6 +301,10 @@ public class LayerParser {
 
     public Map<String, LinkWrapper> getLinks() {
 	return nb.getLinks();
+    }
+
+    public List<String> getSimWarnings() {
+	return simWarnings;
     }
 
 }
