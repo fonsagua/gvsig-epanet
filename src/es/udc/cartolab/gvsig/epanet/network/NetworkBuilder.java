@@ -33,8 +33,10 @@ import org.addition.epanet.network.structures.Valve;
 import org.addition.epanet.util.ENException;
 
 import es.udc.cartolab.gvsig.epanet.exceptions.EpanetLoggerHandler;
+import es.udc.cartolab.gvsig.epanet.exceptions.ErrorCode;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
+import es.udc.cartolab.gvsig.epanet.exceptions.SimulationError;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
@@ -314,12 +316,16 @@ public class NetworkBuilder {
 	switch (e.getCodeID()) {
 	case 233:
 	    throw new InvalidNetworkError(
-		    "Error de digitalización: Existen elementos puntuales aislados o no conectados al sistema");
+		    ErrorCode.UNLINKED_NODES,
+		    "Error de digitalización: Existen elementos puntuales aislados o no conectados al sistema",
+		    e);
 	case 224:
 	    throw new InvalidNetworkError(
-		    "Error de digitalización: El sistema ha de contener al menos un embalse o un depósito");
+		    ErrorCode.TANK_MISSING,
+		    "Error de digitalización: El sistema ha de contener al menos un embalse o un depósito",
+		    e);
 	default:
-	    throw new RuntimeException("Error desconocido");
+	    throw new RuntimeException("Error desconocido", e);
 	}
 
     }
@@ -355,7 +361,7 @@ public class NetworkBuilder {
 	    NodeWrapper nw = nodesWrapper.get(node.getId());
 	    if (nw == null) {
 		if (auxNodes.get(node.getId()) == null) {
-		    throw new InvalidNetworkError(
+		    throw new SimulationError(
 			    "Una conexión de la red no encontrada entre nuestros nodos");
 		}
 		continue;

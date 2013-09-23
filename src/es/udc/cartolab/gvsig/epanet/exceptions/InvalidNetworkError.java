@@ -10,12 +10,9 @@ public class InvalidNetworkError extends Exception {
 	this.code = code;
     }
 
-    public InvalidNetworkError(String msg) {
-	super(msg);
-    }
-
-    public InvalidNetworkError(Throwable cause) {
-	super(cause);
+    public InvalidNetworkError(ErrorCode code, String msg, Throwable cause) {
+	super(msg, cause);
+	this.code = code;
     }
 
 }
