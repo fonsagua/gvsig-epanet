@@ -33,6 +33,7 @@ public class ModifyValues extends ToggleEditing {
 	    stopEditing(layer, false);
 	} catch (StopWriterVisitorException e) {
 	    cancelEditing();
+	    throw new ExternalError(e);
 	}
     }
 

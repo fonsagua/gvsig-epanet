@@ -134,14 +134,14 @@ public class FixtureSHPFactory {
 	FieldDescriptionFactory fdFactory = new FieldDescriptionFactory();
 	fdFactory.addDouble("elevation");
 	fdFactory.addString("type");
-	fdFactory.addString("value");
+	fdFactory.addDouble("value");
 	addLinkResultFields(fdFactory);
 	FieldDescription[] fieldsDesc = fdFactory.getFields();
 	SHPFactory.createSHP(file, fieldsDesc, FShape.POINT, features);
     }
 
     public static IFeature createPumpFeature(double x, double y,
-	    double elevation, String type, String value) {
+	    double elevation, String type, double value) {
 	Value[] values = new Value[3];
 	values[0] = ValueFactory.createValue(elevation);
 	values[1] = ValueFactory.createValue(type);

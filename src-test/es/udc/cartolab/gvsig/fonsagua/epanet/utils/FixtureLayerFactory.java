@@ -151,7 +151,7 @@ public class FixtureLayerFactory {
 
 	double elevation = 90;
 	String type = "POWER";
-	String value = "1";
+	double value = 1.0;
 	IFeature p1 = FixtureSHPFactory.createPumpFeature(100, yCoord,
 		elevation, type, value);
 	storePump(p1, 1.96, 0, -52.15, 0);
