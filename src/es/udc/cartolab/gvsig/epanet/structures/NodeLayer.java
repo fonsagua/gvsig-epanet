@@ -14,6 +14,7 @@ import com.iver.cit.gvsig.fmap.layers.ReadableVectorial;
 import com.iver.cit.gvsig.fmap.layers.SelectableDataSource;
 
 import es.udc.cartolab.gvsig.epanet.cad.ModifyValues;
+import es.udc.cartolab.gvsig.epanet.exceptions.ErrorCode;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
@@ -77,7 +78,7 @@ public abstract class NodeLayer {
 	    return (NumericValue) attribute;
 	}
 	throw new InvalidNetworkError(
-		202,
+		ErrorCode.ILLEGAL_VALUE,
 		"Error de introducción de datos: Existen elementos que no contienen todos los datos necesario para realizar los cálculo hidráulicos");
     }
 

@@ -3,11 +3,11 @@ package es.udc.cartolab.gvsig.epanet.exceptions;
 @SuppressWarnings("serial")
 public class InvalidNetworkError extends Exception {
 
-    private int id;
+    private ErrorCode code;
 
-    public InvalidNetworkError(int id, String msg) {
+    public InvalidNetworkError(ErrorCode code, String msg) {
 	super(msg);
-	this.id = id;
+	this.code = code;
     }
 
     public InvalidNetworkError(String msg) {
