@@ -16,7 +16,7 @@ import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 public class NodeFinderTest {
 
     @Test
-    public void noNodesCanBeFoundInAnEmptyNetwork() {
+    public void noNodesCanBeFoundInAnEmptyNetwork() throws InvalidNetworkError {
 	NetworkBuilder nb = new NetworkBuilder();
 	NodeFinder finder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
 	final Coordinate coordinate = new Coordinate(1, 2);
@@ -27,7 +27,8 @@ public class NodeFinderTest {
     }
 
     @Test(expected = InvalidNetworkError.class)
-    public void exceptionIfNoNodesLookingForLineEndings() {
+    public void exceptionIfNoNodesLookingForLineEndings()
+	    throws InvalidNetworkError {
 	NetworkBuilder nb = new NetworkBuilder();
 	NodeFinder finder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
 	final Coordinate coordinate = new Coordinate(1, 2);

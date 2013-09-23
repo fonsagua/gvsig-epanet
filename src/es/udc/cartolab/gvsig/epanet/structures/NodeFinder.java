@@ -6,7 +6,8 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkErrorToFix;
+import es.udc.cartolab.gvsig.epanet.exceptions.ErrorCode;
+import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 
 public class NodeFinder {
@@ -20,7 +21,8 @@ public class NodeFinder {
 	this.auxNodes = auxNodes;
     }
 
-    public List<NodeWrapper> getNodesAt(Coordinate coordinate) {
+    public List<NodeWrapper> getNodesAt(Coordinate coordinate)
+	    throws InvalidNetworkError {
 	List<NodeWrapper> finded = new ArrayList<NodeWrapper>(1);
 
 	for (NodeWrapper n : nodes.values()) {
@@ -35,7 +37,7 @@ public class NodeFinder {
 	}
 
 	if (!MathUtils.inClosedInterval(0, finded.size(), 2)) {
-	    throw new InvalidNetworkErrorToFix(
+	    throw new InvalidNetworkError(ErrorCode.OVERLAPPED_NODES,
 		    "More than two nodes in the same point");
 	}
 
@@ -51,7 +53,8 @@ public class NodeFinder {
      * menor id Esto asume que las tuberías se digitalizan en el sentido del
      * agua
      */
-    public NodeWrapper getNodeForInitialPoint(Coordinate coordinate) {
+    public NodeWrapper getNodeForInitialPoint(Coordinate coordinate)
+	    throws InvalidNetworkError {
 	List<NodeWrapper> overlapped = getNodesAt(coordinate);
 	if (overlapped.size() == 1) {
 	    return overlapped.get(0);
@@ -63,16 +66,19 @@ public class NodeFinder {
 	    return a > b ? startNode : endNode;
 
 	} else if (overlapped.size() == 0) {
-	    throw new InvalidNetworkErrorToFix(
+	    throw new InvalidNetworkError(
+		    ErrorCode.FLOATING_PIPE,
 		    "Error de digitalización: Existen tuberías aisladas o no conectadas al sistema. El punto INICIAL de la tubería no está conectado a ningún nodo");
 	} else {
-	    throw new InvalidNetworkErrorToFix(overlapped.size()
-		    + " nodes at this point. Should be 1 or 2.");
+	    throw new InvalidNetworkError(ErrorCode.OVERLAPPED_NODES,
+		    overlapped.size()
+			    + " nodes at this point. Should be 1 or 2.");
 	}
 
     }
 
-    public NodeWrapper getNodeForEndPoint(Coordinate coordinate) {
+    public NodeWrapper getNodeForEndPoint(Coordinate coordinate)
+	    throws InvalidNetworkError {
 	List<NodeWrapper> overlapped = getNodesAt(coordinate);
 	if (overlapped.size() == 1) {
 	    return overlapped.get(0);
@@ -84,11 +90,13 @@ public class NodeFinder {
 	    return a < b ? startNode : endNode;
 
 	} else if (overlapped.size() == 0) {
-	    throw new InvalidNetworkErrorToFix(
+	    throw new InvalidNetworkError(
+		    ErrorCode.FLOATING_PIPE,
 		    "Error de digitalización: Existen tuberías aisladas o no conectadas al sistema. El punto FINAL de la tubería no está conectado a ningún nodo");
 	} else {
-	    throw new InvalidNetworkErrorToFix(overlapped.size()
-		    + " nodes at this point. Should be 1 or 2.");
+	    throw new InvalidNetworkError(ErrorCode.OVERLAPPED_NODES,
+		    overlapped.size()
+			    + " nodes at this point. Should be 1 or 2.");
 	}
 
     }

@@ -11,9 +11,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.PumpFieldNames;
+import es.udc.cartolab.gvsig.epanet.exceptions.ErrorCode;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
-import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkErrorToFix;
 import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
@@ -57,13 +57,13 @@ public class PumpLayer extends LinkLayer {
     }
 
     private NodeWrapper getStartNode(NetworkBuilder nb, Coordinate coordinate,
-	    double elevation, String featureID) {
+	    double elevation, String featureID) throws InvalidNetworkError {
 	NodeWrapper startNode = null;
 	NodeFinder nodeFinder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
 	List<NodeWrapper> existentNodesInThatCoord = nodeFinder
 		.getNodesAt(coordinate);
 	if (existentNodesInThatCoord.size() > 1) {
-	    throw new InvalidNetworkErrorToFix(
+	    throw new InvalidNetworkError(ErrorCode.PUMP_POSITION,
 		    "Una bomba sólo puede estar sobre un tanque y en este punto hay más de un nodo");
 	}
 
@@ -71,13 +71,13 @@ public class PumpLayer extends LinkLayer {
 	    NodeWrapper existentNodeInThatCoord = existentNodesInThatCoord
 		    .get(0);
 	    if (!(existentNodeInThatCoord instanceof TankWrapper)) {
-		throw new InvalidNetworkErrorToFix(
+		throw new InvalidNetworkError(ErrorCode.PUMP_POSITION,
 			"Una bomba sólo puede estar sobre un tanque y en este punto no hay un tanque");
 	    }
 
 	    if (!MathUtils.compare(elevation, existentNodeInThatCoord.getNode()
 		    .getElevation())) {
-		throw new InvalidNetworkErrorToFix(
+		throw new InvalidNetworkError(ErrorCode.DATA_MISSMATCH,
 			"La elevación de la bomba y la del tanque sobre la que está no coinciden");
 	    }
 

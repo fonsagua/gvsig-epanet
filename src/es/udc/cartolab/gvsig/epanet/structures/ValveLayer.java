@@ -11,9 +11,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.config.ValveFieldNames;
+import es.udc.cartolab.gvsig.epanet.exceptions.ErrorCode;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
-import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkErrorToFix;
 import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.network.IDCreator;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
@@ -61,26 +61,29 @@ public class ValveLayer extends LinkLayer {
     }
 
     private NodeWrapper getStartNode(NetworkBuilder nb, Coordinate coordinate,
-	    double elevation, String featureID) {
+	    double elevation, String featureID) throws InvalidNetworkError {
 	NodeWrapper startNode = null;
 	NodeFinder nodeFinder = new NodeFinder(nb.getNodes(), nb.getAuxNodes());
 	List<NodeWrapper> existentNodesInThatCoord = nodeFinder
 		.getNodesAt(coordinate);
 	if (existentNodesInThatCoord.size() > 1) {
-	    throw new InvalidNetworkErrorToFix(
+	    throw new InvalidNetworkError(
+		    ErrorCode.OVERLAPPED_NODES,
 		    "Error de digitalización: Una válvula puede estar aislada, sobre una fuente o sobre una conexión, y en el punto actual hay más de un elemento superpuesto");
 	} else if (existentNodesInThatCoord.size() == 1) {
 	    NodeWrapper existentNodeInThatCoord = existentNodesInThatCoord
 		    .get(0);
 	    if ((existentNodeInThatCoord instanceof ReservoirWrapper)
 		    || existentNodeInThatCoord instanceof TankWrapper) {
-		throw new InvalidNetworkErrorToFix(
-			"219. Error de digitalización: Existen válvulas conectadas directamente a embalses o depósitos");
+		throw new InvalidNetworkError(
+			ErrorCode.VALVE_POSITION,
+			"Error de digitalización: Existen válvulas conectadas directamente a embalses o depósitos");
 	    }
 
 	    if (!MathUtils.compare(elevation, existentNodeInThatCoord.getNode()
 		    .getElevation())) {
-		throw new InvalidNetworkErrorToFix(
+		throw new InvalidNetworkError(
+			ErrorCode.DATA_MISSMATCH,
 			"Error de introducción de datos. La elevación de la válvula y de la fuente/conexión sobre la que está no coinciden");
 	    }
 
