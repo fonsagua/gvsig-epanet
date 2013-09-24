@@ -79,7 +79,7 @@ public abstract class NodeLayer {
 	}
 	throw new InvalidNetworkError(
 		ErrorCode.ILLEGAL_VALUE,
-		"Error de introducción de datos: Existen elementos que no contienen todos los datos necesario para realizar los cálculo hidráulicos");
+		"Error de introducción de datos: Existen elementos que no contienen todos los datos necesarios para realizar los cálculo hidráulicos");
     }
 
     protected abstract NodeWrapper processSpecific(IFeature iFeature,

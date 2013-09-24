@@ -9,6 +9,7 @@ import java.util.Map;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
+import es.udc.cartolab.gvsig.epanet.config.FonsaguaAlternative;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
@@ -19,7 +20,9 @@ import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeLayer;
+import es.udc.cartolab.gvsig.epanet.structures.PipeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PumpLayer;
+import es.udc.cartolab.gvsig.epanet.structures.PumpWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.SourceLayer;
@@ -155,7 +158,27 @@ public class LayerParser {
     }
 
     private void checkDemandVsOffer() {
-	// TODO Auto-generated method stub
+	double offert = 0;
+	double demand = 0;
+	for (NodeWrapper node : nb.getNodes().values()) {
+
+	    final double nodeDemand = node.getDemand();
+	    if (node instanceof ReservoirWrapper) {
+		offert += Math.abs(nodeDemand);
+	    } else if (node instanceof JunctionWrapper) {
+		if (nodeDemand < 0) {
+		    // TODO: Not a really good form to check if the node is a
+		    // Source
+		    offert += Math.abs(nodeDemand);
+		} else {
+		    demand += Math.abs(nodeDemand);
+		}
+	    }
+	}
+	if (demand > offert * FonsaguaAlternative.f_var_hor) {
+	    simWarnings
+		    .add("Aviso de cálculo hidráulico: La demanda de agua del sistema supera el caudal de entrada");
+	}
 
     }
 
@@ -206,9 +229,12 @@ public class LayerParser {
     private void checkSourcePressure(NodeWrapper node) {
 	// TODO: Not a really good form to check if the node is a Source
 	if (node.getDemand() < 0) {
-	    if (!MathUtils.inClosedInterval(-1, node.getPressure(), 0)) {
+	    final double pressure = node.getPressure();
+	    if (pressure > 0) {
 		simWarnings
-			.add("Hay fuentes con presión cero o positiva, o muy negativa");
+			.add("Hay fuentes donde la energía no es suficiente");
+	    } else if (pressure < -2) {
+		simWarnings.add("Sobra energía en una fuente");
 	    }
 	}
 
@@ -264,11 +290,12 @@ public class LayerParser {
     }
 
     private void checkFlowSense(LinkWrapper link) {
-	if (link.getFlow() < 0) {
-	    simWarnings
-		    .add("Aviso de cálculo hidráulico: Existen tuberías donde el agua discurre en sentido contrario al deseado");
+	if ((link instanceof PipeWrapper) || (link instanceof PumpWrapper)) {
+	    if (link.getFlow() < 0) {
+		simWarnings
+			.add("Aviso de cálculo hidráulico: Existen tuberías donde el agua discurre en sentido contrario al deseado");
+	    }
 	}
-
     }
 
     private void updateLayers() {
