@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.epanet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import es.udc.cartolab.gvsig.epanet.network.EpanetWrapper;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
+import es.udc.cartolab.gvsig.epanet.utils.ComparatorUtils;
+import es.udc.cartolab.gvsig.epanet.utils.TestProperties;
 
 /**
  * 

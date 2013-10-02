@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet.utils;
+package es.udc.cartolab.gvsig.epanet.utils;
 
 import java.util.HashMap;
 import java.util.Map;

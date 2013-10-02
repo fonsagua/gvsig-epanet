@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.epanet;
 
 import java.io.IOException;
 
@@ -6,7 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import es.udc.cartolab.gvsig.epanet.network.EpanetWrapper;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
+import es.udc.cartolab.gvsig.epanet.utils.TestProperties;
 
 public class EpanetWrapperExceptionTest {
     protected static EpanetWrapper epanet;

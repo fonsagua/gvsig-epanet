@@ -1,26 +1,31 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.epanet;
 
-import java.util.Map;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import es.udc.cartolab.gvsig.epanet.config.Preferences;
+import es.udc.cartolab.gvsig.epanet.network.BaseformWrapper;
+import es.udc.cartolab.gvsig.epanet.network.EpanetWrapper;
 import es.udc.cartolab.gvsig.epanet.network.LayerParser;
-import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
-import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureLayerFactory;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
+import es.udc.cartolab.gvsig.epanet.utils.ComparatorUtils;
+import es.udc.cartolab.gvsig.epanet.utils.FixtureLayerFactory;
+import es.udc.cartolab.gvsig.epanet.utils.TestProperties;
 import es.udc.cartolab.gvsig.shputils.Drivers;
 
-public class LayerSimulationIntegrationTest {
+public class LayerParserIntegrationTest {
 
     @Rule
     public TemporaryFolder temp = new TemporaryFolder();
+
+    private static EpanetWrapper epanet;
+    private static BaseformWrapper baseform;
 
     private LayerParser layerParser;
     private FixtureLayerFactory fixtureFactory;
@@ -28,14 +33,14 @@ public class LayerSimulationIntegrationTest {
     @BeforeClass
     public static void setUpBeforeClass() {
 	Drivers.initgvSIGDrivers(TestProperties.driversPath);
-	Preferences.setBaseformPath("lib/BaseformEpaNetLib-1.0.jar");
+	epanet = new EpanetWrapper(TestProperties.epanetPath);
+	baseform = new BaseformWrapper("lib/BaseformEpaNetLib-1.0.jar");
     }
 
     @Before
     public void setUp() throws Exception {
 	layerParser = new LayerParser();
 	fixtureFactory = new FixtureLayerFactory(temp, layerParser);
-
     }
 
     @Test
@@ -57,12 +62,6 @@ public class LayerSimulationIntegrationTest {
     }
 
     @Test
-    public void valve_over_reservoir() throws Exception {
-	fixtureFactory.getValveOverReservoir();
-	executeTest("valve_over_reservoir");
-    }
-
-    @Test
     public void pumpWithPower() throws Exception {
 	fixtureFactory.getPumpWithPower();
 	executeTest("pumpWithPower");
@@ -70,29 +69,21 @@ public class LayerSimulationIntegrationTest {
 
     private void executeTest(String patternName) throws Exception {
 	fixtureFactory.parseSHPs();
-	layerParser.hydraulicSim();
 
-	Object[] actual = ComparatorUtils.parseSHPAfterSimulation(temp);
+	File inp = temp.newFile("foo.inp");
+	layerParser.createInpFile(inp);
 
-	checkNodes(actual[0]);
-	checkLinks(actual[1]);
+	// Epanet
+	String actualRPT[] = epanet.execute(inp.getAbsolutePath());
+	final File expectedRPT = new File("fixtures/" + patternName + ".rpt");
+	assertTrue(ComparatorUtils.rptComparator(expectedRPT, new File(
+		actualRPT[0])));
 
-    }
-
-    private void checkLinks(Object object) {
-	Map<String, LinkWrapper> actuals = (Map<String, LinkWrapper>) object;
-	for (LinkWrapper expected : layerParser.getLinks().values()) {
-	    LinkWrapper actual = actuals.get(expected.getId());
-	    ComparatorUtils.checkLinks(expected, actual);
-	}
-
-    }
-
-    private void checkNodes(Object object) {
-	Map<String, NodeWrapper> actuals = (Map<String, NodeWrapper>) object;
-	for (NodeWrapper expected : layerParser.getNodes().values()) {
-	    NodeWrapper actual = actuals.get(expected.getId());
-	    ComparatorUtils.checkNodes(expected, actual);
-	}
+	// Baseform
+	String actualRPT2[] = baseform.execute(inp.getAbsolutePath());
+	assertTrue(FileUtils.contentEquals(new File(actualRPT2[0]), new File(
+		"fixtures/" + patternName + ".inp.links.out")));
+	assertTrue(FileUtils.contentEquals(new File(actualRPT2[1]), new File(
+		"fixtures/" + patternName + ".inp.nodes.out")));
     }
 }

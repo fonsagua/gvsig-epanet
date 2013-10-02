@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet;
+package es.udc.cartolab.gvsig.epanet;
 
 import static org.junit.Assert.assertTrue;
 
@@ -14,9 +14,9 @@ import org.junit.rules.TemporaryFolder;
 import es.udc.cartolab.gvsig.epanet.network.BaseformWrapper;
 import es.udc.cartolab.gvsig.epanet.network.EpanetWrapper;
 import es.udc.cartolab.gvsig.epanet.network.NetworkBuilder;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.ComparatorUtils;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.FixtureNetworkFactory;
-import es.udc.cartolab.gvsig.fonsagua.epanet.utils.TestProperties;
+import es.udc.cartolab.gvsig.epanet.utils.ComparatorUtils;
+import es.udc.cartolab.gvsig.epanet.utils.FixtureNetworkFactory;
+import es.udc.cartolab.gvsig.epanet.utils.TestProperties;
 
 public class NetworkBuilderIntegrationTest {
 

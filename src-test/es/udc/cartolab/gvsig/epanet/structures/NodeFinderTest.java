@@ -1,4 +1,4 @@
-package es.udc.cartolab.gvsig.fonsagua.epanet.structures;
+package es.udc.cartolab.gvsig.epanet.structures;
 
 import static org.junit.Assert.assertEquals;
 
