@@ -228,7 +228,7 @@ public class LayerParser {
 
     private void checkSourcePressure(NodeWrapper node) {
 	// TODO: Not a really good form to check if the node is a Source
-	if (node.getDemand() < 0) {
+	if ((node instanceof JunctionWrapper) && (node.getDemand() < 0)) {
 	    final double pressure = node.getPressure();
 	    if (pressure > 0) {
 		simWarnings
