@@ -4,7 +4,7 @@ import org.addition.epanet.network.structures.Link;
 
 import com.iver.cit.gvsig.fmap.core.IFeature;
 
-public class LinkWrapper {
+public class LinkWrapper extends StructureFeature {
 
     private double flow;
     private double velocity;
@@ -12,13 +12,13 @@ public class LinkWrapper {
     private double frictionFactor;
 
     private Link link;
-    private IFeature feature;
 
     public LinkWrapper(IFeature feature) {
-	this.feature = feature;
+	super(feature);
     }
 
     public LinkWrapper() {
+	super(null);
     }
 
     public double getFlow() {

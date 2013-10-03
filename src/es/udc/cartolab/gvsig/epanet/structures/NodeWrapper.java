@@ -4,20 +4,20 @@ import org.addition.epanet.network.structures.Node;
 
 import com.iver.cit.gvsig.fmap.core.IFeature;
 
-public abstract class NodeWrapper {
+public abstract class NodeWrapper extends StructureFeature {
 
     private double demand;
     private double head;
     private double pressure;
 
     private Node node;
-    private IFeature feature;
 
     public NodeWrapper(IFeature feature) {
-	this.feature = feature;
+	super(feature);
     }
 
     public NodeWrapper() {
+	super(null);
     }
 
     public double getDemand() {
