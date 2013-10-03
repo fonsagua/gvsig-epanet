@@ -41,7 +41,8 @@ public class PipeLayer extends LinkLayer {
 
 	NodeWrapper startNode = nodeFinder
 		.getNodeForInitialPoint(coordinates[0]);
-	NodeWrapper endNode = nodeFinder.getNodeForEndPoint(coordinates[1]);
+	NodeWrapper endNode = nodeFinder
+		.getNodeForEndPoint(coordinates[coordinates.length - 1]);
 
 	pipe.createPipe(id, startNode, endNode, geom.getLength(),
 		diameter.doubleValue(), roughness.doubleValue());
