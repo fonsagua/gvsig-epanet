@@ -3,32 +3,30 @@ package es.udc.cartolab.gvsig.epanet.network;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 
-import es.udc.cartolab.gvsig.epanet.config.FonsaguaAlternative;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.ExternalError;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.exceptions.SimulationError;
-import es.udc.cartolab.gvsig.epanet.math.MathUtils;
 import es.udc.cartolab.gvsig.epanet.structures.JunctionLayer;
-import es.udc.cartolab.gvsig.epanet.structures.JunctionWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.LinkWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.NodeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PipeLayer;
-import es.udc.cartolab.gvsig.epanet.structures.PipeWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.PumpLayer;
-import es.udc.cartolab.gvsig.epanet.structures.PumpWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirLayer;
-import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.SourceLayer;
 import es.udc.cartolab.gvsig.epanet.structures.TankLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ValveLayer;
-import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
+import es.udc.cartolab.gvsig.epanet.structures.validations.LinkChecker;
+import es.udc.cartolab.gvsig.epanet.structures.validations.NodeChecker;
+import es.udc.cartolab.gvsig.epanet.structures.validations.NodesChecker;
+import es.udc.cartolab.gvsig.epanet.structures.validations.Warning;
 
 public class LayerParser {
 
@@ -40,12 +38,18 @@ public class LayerParser {
     private ValveLayer valveLayer;
     private PumpLayer pumpLayer;
     private SourceLayer sourceLayer;
-    private List<String> simWarnings;
+    private List<Warning> simWarnings;
+    private Map<String, NodeChecker> nodeCheckers;
+    private Map<String, NodesChecker> nodesCheckers;
+    private Map<String, LinkChecker> linkCheckers;
 
     public LayerParser() {
 	nb = new NetworkBuilder();
 	IDCreator.reset();
-	simWarnings = new ArrayList<String>();
+	simWarnings = new ArrayList<Warning>();
+	nodeCheckers = new HashMap<String, NodeChecker>();
+	nodesCheckers = new HashMap<String, NodesChecker>();
+	linkCheckers = new HashMap<String, LinkChecker>();
     }
 
     /**
@@ -145,7 +149,13 @@ public class LayerParser {
 			"El resultado del cálculo tiene más links de los esperados");
 	    }
 
-	    checkDemandVsOffer();
+	    for (NodesChecker checker : nodesCheckers.values()) {
+		Warning warning = checker.check(nb.getNodes());
+
+		if (warning != null) {
+		    simWarnings.add(warning);
+		}
+	    }
 	    updateLayers();
 	} catch (IOException e) {
 	    throw new ExternalError(e);
@@ -153,31 +163,6 @@ public class LayerParser {
 	    delete(inp);
 	    delete(output);
 	    delete(output);
-	}
-
-    }
-
-    private void checkDemandVsOffer() {
-	double offert = 0;
-	double demand = 0;
-	for (NodeWrapper node : nb.getNodes().values()) {
-
-	    final double nodeDemand = node.getDemand();
-	    if (node instanceof ReservoirWrapper) {
-		offert += Math.abs(nodeDemand);
-	    } else if (node instanceof JunctionWrapper) {
-		if (nodeDemand < 0) {
-		    // TODO: Not a really good form to check if the node is a
-		    // Source
-		    offert += Math.abs(nodeDemand);
-		} else {
-		    demand += Math.abs(nodeDemand);
-		}
-	    }
-	}
-	if (demand > offert * FonsaguaAlternative.f_var_hor) {
-	    simWarnings
-		    .add("Aviso de cálculo hidráulico: La demanda de agua del sistema supera el caudal de entrada");
 	}
 
     }
@@ -210,44 +195,13 @@ public class LayerParser {
 			"Un nodo de la red no está entre los resultados");
 	    }
 	    node.cloneResults(s);
-	    checkNegativePressure(node);
-	    checkSourcePressure(node);
-	    checkReservoirDemand(node);
-	    simulated.remove(id);
-	}
-    }
-
-    private void checkReservoirDemand(NodeWrapper node) {
-	if (node instanceof ReservoirWrapper) {
-	    if (node.getDemand() > 0) {
-		simWarnings
-			.add("Aviso de cálculo hidráulico: Algún embalse del sistema actúa como recpetor del agua y no como emisor");
-	    }
-	}
-    }
-
-    private void checkSourcePressure(NodeWrapper node) {
-	// TODO: Not a really good form to check if the node is a Source
-	if ((node instanceof JunctionWrapper) && (node.getDemand() < 0)) {
-	    final double pressure = node.getPressure();
-	    if (pressure > 0) {
-		simWarnings
-			.add("Hay fuentes donde la energía no es suficiente");
-	    } else if (pressure < -2) {
-		simWarnings.add("Sobra energía en una fuente");
-	    }
-	}
-
-    }
-
-    private void checkNegativePressure(NodeWrapper node) {
-	if (node instanceof JunctionWrapper) {
-	    if (node.getDemand() > 0) {
-		if (node.getPressure() < 0) {
-		    simWarnings
-			    .add("Aviso de cálculo hidráulico: Existen conexiones con demanda con presiones negativas");
+	    for (NodeChecker checker : nodeCheckers.values()) {
+		Warning warning = checker.check(node);
+		if (warning != null) {
+		    simWarnings.add(warning);
 		}
 	    }
+	    simulated.remove(id);
 	}
     }
 
@@ -273,28 +227,13 @@ public class LayerParser {
 			"Un link de la red no está entre los resultados");
 	    }
 	    link.cloneResults(s);
-	    checkFlowSense(link);
-	    checkValveLosts(link);
+	    for (LinkChecker checker : linkCheckers.values()) {
+		Warning warning = checker.check(link);
+		if (warning != null) {
+		    simWarnings.add(warning);
+		}
+	    }
 	    simulated.remove(id);
-	}
-    }
-
-    private void checkValveLosts(LinkWrapper link) {
-	if (link instanceof ValveWrapper) {
-	    if (MathUtils.compare(link.getUnitHeadLoss(), 0)) {
-		simWarnings
-			.add("Aviso de cálculo hidráulico: La energía del sistema en área donde se ha ubicado una válvula no es sufieciente para aportar caudal");
-	    }
-	}
-
-    }
-
-    private void checkFlowSense(LinkWrapper link) {
-	if ((link instanceof PipeWrapper) || (link instanceof PumpWrapper)) {
-	    if (link.getFlow() < 0) {
-		simWarnings
-			.add("Aviso de cálculo hidráulico: Existen tuberías donde el agua discurre en sentido contrario al deseado");
-	    }
 	}
     }
 
@@ -330,8 +269,20 @@ public class LayerParser {
 	return nb.getLinks();
     }
 
-    public List<String> getSimWarnings() {
+    public List<Warning> getSimWarnings() {
 	return simWarnings;
+    }
+
+    public void setNodeCheckers(Map<String, NodeChecker> nodeCheckers) {
+	this.nodeCheckers = nodeCheckers;
+    }
+
+    public void setNodesCheckers(Map<String, NodesChecker> nodesCheckers) {
+	this.nodesCheckers = nodesCheckers;
+    }
+
+    public void setLinkCheckers(Map<String, LinkChecker> linkCheckers) {
+	this.linkCheckers = linkCheckers;
     }
 
 }

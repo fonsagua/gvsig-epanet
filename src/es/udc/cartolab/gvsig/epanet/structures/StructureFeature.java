@@ -10,4 +10,8 @@ public class StructureFeature {
 	this.feature = feature;
     }
 
+    public IFeature getFeature() {
+	return feature;
+    }
+
 }

@@ -12,6 +12,7 @@ import com.iver.cit.gvsig.fmap.layers.FLayers;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 import es.udc.cartolab.gvsig.epanet.exceptions.InvalidNetworkError;
 import es.udc.cartolab.gvsig.epanet.network.LayerParser;
+import es.udc.cartolab.gvsig.epanet.structures.validations.Warning;
 
 public class RunExtension extends AbstractExtension {
 
@@ -36,17 +37,20 @@ public class RunExtension extends AbstractExtension {
 	try {
 	    PluginServices.getMDIManager().setWaitCursor();
 	    LayerParser layerParser = new LayerParser();
+	    layerParser.setNodeCheckers(Preferences.getNodeCheckers());
+	    layerParser.setLinkCheckers(Preferences.getLinkCheckers());
+	    layerParser.setNodesCheckers(Preferences.getNodesCheckers());
 	    final FLayers layers = getView().getMapControl().getMapContext()
 		    .getLayers();
 	    layerParser.add(layers);
 
 	    layerParser.hydraulicSim();
 
-	    List<String> simWarnings = layerParser.getSimWarnings();
+	    List<Warning> simWarnings = layerParser.getSimWarnings();
 	    if (!simWarnings.isEmpty()) {
 		StringBuilder sb = new StringBuilder();
-		for (String str : simWarnings) {
-		    sb.append(str);
+		for (Warning str : simWarnings) {
+		    sb.append(str.getMsg());
 		    sb.append("\n");
 		}
 
