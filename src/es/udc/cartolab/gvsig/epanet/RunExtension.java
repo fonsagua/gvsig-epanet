@@ -16,7 +16,7 @@ import es.udc.cartolab.gvsig.epanet.structures.validations.Warning;
 
 public class RunExtension extends AbstractExtension {
 
-    private static boolean externalEnability;
+    private static boolean externalEnability = true;
 
     @Override
     public void initialize() {

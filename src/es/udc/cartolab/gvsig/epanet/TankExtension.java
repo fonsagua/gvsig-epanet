@@ -8,7 +8,7 @@ import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class TankExtension extends AbstractCADExtension {
 
-    private static boolean externalEnability;
+    private static boolean externalEnability = true;
 
     @Override
     public void initialize() {
