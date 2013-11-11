@@ -62,20 +62,45 @@ public class LayerParser {
      */
     public void add(FLayers fLayers) throws InvalidNetworkError {
 
-	addSources((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getSources()));
-	addJunctions((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getJunctions()));
-	addReservoirs((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getReservoirs()));
-	addTanks((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getTanks()));
-	addValves((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getValves()));
-	addPumps((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getPumps()));
-	addPipes((FLyrVect) fLayers.getLayer(Preferences.getLayerNames()
-		.getPipes()));
+	final FLyrVect sources = (FLyrVect) fLayers.getLayer(Preferences
+		.getLayerNames().getSources());
+	if (sources != null) {
+	    addSources(sources);
+	}
+	final FLyrVect junctions = (FLyrVect) fLayers.getLayer(Preferences
+		.getLayerNames().getJunctions());
+	if (junctions != null) {
+	    addJunctions(junctions);
+	}
+	final FLyrVect reservoirs = (FLyrVect) fLayers.getLayer(Preferences
+		.getLayerNames().getReservoirs());
+	if (reservoirs != null) {
+	    addReservoirs(reservoirs);
+	}
+
+	final FLyrVect tanks = (FLyrVect) fLayers.getLayer(Preferences
+		.getLayerNames().getTanks());
+	if (tanks != null) {
+	    addTanks(tanks);
+	}
+
+	final FLyrVect valves = (FLyrVect) fLayers.getLayer(Preferences
+		.getLayerNames().getValves());
+	if (valves != null) {
+	    addValves(valves);
+	}
+
+	final FLyrVect pumps = (FLyrVect) fLayers.getLayer(Preferences
+		.getLayerNames().getPumps());
+	if (pumps != null) {
+	    addPumps(pumps);
+	}
+
+	final FLyrVect pipes = (FLyrVect) fLayers.getLayer(Preferences
+		.getLayerNames().getPipes());
+	if (pipes != null) {
+	    addPipes(pipes);
+	}
     }
 
     /**
