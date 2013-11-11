@@ -10,8 +10,10 @@ import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
+import com.iver.cit.gvsig.listeners.EndGeometryListener;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
+import es.udc.cartolab.gvsig.epanet.cad.EpanetEndGeometryListener;
 import es.udc.cartolab.gvsig.epanet.structures.validations.FlowSense;
 import es.udc.cartolab.gvsig.epanet.structures.validations.LinkChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.NegativePressure;
@@ -35,6 +37,7 @@ public class Preferences {
     private static Map<String, NodeChecker> nodeCheckers;
     private static Map<String, LinkChecker> linkCheckers;
     private static HashMap<String, NodesChecker> nodesCheckers;
+    private static EpanetEndGeometryListener cadListener;
 
     public static LayerNames getLayerNames() {
 	if (layerNames == null) {
@@ -191,6 +194,13 @@ public class Preferences {
 	    nodesCheckers = new HashMap<String, NodesChecker>();
 	}
 	return nodesCheckers;
+    }
+
+    public static EndGeometryListener getCADListener() {
+	if (cadListener == null) {
+	    cadListener = new EpanetEndGeometryListener();
+	}
+	return cadListener;
     }
 
 }
