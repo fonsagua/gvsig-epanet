@@ -7,7 +7,7 @@ import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
 public class SourceExtension extends AbstractCADExtension {
 
-    private static boolean externalEnability = true;
+    private static boolean externalEnability = false;
 
     @Override
     public void initialize() {

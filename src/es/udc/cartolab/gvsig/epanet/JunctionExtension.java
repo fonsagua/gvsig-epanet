@@ -2,8 +2,8 @@ package es.udc.cartolab.gvsig.epanet;
 
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.listeners.CADListenerManager;
+import com.iver.cit.gvsig.listeners.EndGeometryListener;
 
-import es.udc.cartolab.gvsig.epanet.cad.EpanetEndGeometryListener;
 import es.udc.cartolab.gvsig.epanet.cad.JunctionCADTool;
 import es.udc.cartolab.gvsig.epanet.config.Preferences;
 
@@ -23,7 +23,7 @@ public class JunctionExtension extends AbstractCADExtension {
 	layername = Preferences.getLayerNames().getJunctions();
 	super.postInitialize();
 
-	EpanetEndGeometryListener listener = new EpanetEndGeometryListener();
+	EndGeometryListener listener = Preferences.getCADListener();
 	CADListenerManager.addEndGeometryListener("epanet-listener", listener);
     }
 

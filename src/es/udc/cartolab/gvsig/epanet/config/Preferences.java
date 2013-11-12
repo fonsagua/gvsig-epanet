@@ -37,7 +37,7 @@ public class Preferences {
     private static Map<String, NodeChecker> nodeCheckers;
     private static Map<String, LinkChecker> linkCheckers;
     private static HashMap<String, NodesChecker> nodesCheckers;
-    private static EpanetEndGeometryListener cadListener;
+    private static EndGeometryListener cadListener;
 
     public static LayerNames getLayerNames() {
 	if (layerNames == null) {
@@ -201,6 +201,10 @@ public class Preferences {
 	    cadListener = new EpanetEndGeometryListener();
 	}
 	return cadListener;
+    }
+
+    public static void setCADListener(EndGeometryListener cadListener) {
+	Preferences.cadListener = cadListener;
     }
 
 }
