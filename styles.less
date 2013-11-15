@@ -1,0 +1,156 @@
+
+// ===== VARIABLES =====
+
+@sectionmargin: 30px;
+
+// --- Colors ---
+@water:  #59B3F7;
+@darkwater: #0582E1;
+@bluetext: #066AB5;
+@grey:     #8F999F;
+
+// ===== MIXINS =====
+
+.margin-std (@top: 30px; @bottom: 50px) {
+    margin-top: @top;
+    margin-bottom: @bottom;
+}
+
+.h2-title (@font-size: 3em) {
+    color: @bluetext;
+    font-size: @font-size;
+}
+
+.button-color (@bg: @bluetext; @bdr: @darkwater;) {
+	background-color: @bg;
+	border-color: @bdr;
+	color: white; 
+}
+
+// ===== GENERAL =====
+
+#no-js {
+    position:fixed;
+    z-index: 9999;
+    text-align: center;
+    width: 100%;
+    background-color: #FBF78F;
+    padding: 20px;
+}
+
+/* --- Tipography --- */
+
+@font-face {
+    font-family: 'titulos';
+    src: url('fonts/expletussans-medium-webfont.eot');
+    src: url('fonts/expletussans-medium-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/expletussans-medium-webfont.woff') format('woff'),
+         url('fonts/JosefinSans-Regular.ttf') format('truetype'),
+         url('fonts/expletussans-medium-webfont.svg#ubuntubold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'labels';
+    src: url('fonts/Marvel-Bold.ttf') format('truetype'),
+}
+
+body {
+   background-color: @water;
+}
+
+h2 {
+    font-family: "titulos";
+    font-size: 2.5em;
+}
+
+.btn {
+    font-size: 1.4em;
+    font-family: "labels";
+}
+
+.label {
+    font-family: "labels";
+    font-size: 1em;
+}
+
+a, p, h3, h4 {
+    font-family: "titulos";
+    &:link {text-decoration: none;}
+    &:active {border: none;}
+}
+
+/* --- General classes --- */
+
+.label-default,
+.btn-default {
+    .button-color (@bg: @darkwater; @bdr: @bluetext;);
+    &:hover {
+		.button-color();
+    }
+}
+
+.btn:active,
+.btn:focus {
+	.button-color;
+}
+
+.img {
+    border: 0px;
+}
+
+li {
+	list-style: none;
+	& span {
+		padding-right: 5px;
+		&.glyphicon {font-size: 0.8em;}
+	}
+}
+
+.section {
+	.margin-std;
+}
+
+
+/* --- Index Page --- */
+
+#header {
+	//background-image: url('images/concrete.jpg');
+}
+
+#title  {
+	text-align: center;
+	& h2 {.h2-title;}
+}
+
+#intro {
+	text-align: center;
+	& p {text-align: justify;}
+}
+
+#overview {
+	.margin-std(@bottom: 0px);
+}
+
+#screenshots-btn {
+	margin-top: 50px;
+}
+
+#video {
+	max-width: 100%; 
+	//height: auto; 
+	height: 500px;
+	background-color: @grey;
+	.margin-std;
+}
+
+/* --- Screenshots Page --- */
+
+#images {
+	& img {
+		.margin-std(@bottom: 20px;);
+		min-width: 600px;
+		background-color: @grey;
+	}
+}
