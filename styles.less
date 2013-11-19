@@ -7,7 +7,8 @@
 @water:  #59B3F7;
 @darkwater: #0582E1;
 @bluetext: #066AB5;
-@grey:     #8F999F;
+//@grey:     #8F999F;
+@grey:     #D6D6D6;
 
 // ===== MIXINS =====
 
@@ -52,8 +53,19 @@
 }
 
 @font-face {
-    font-family: 'labels';
-    src: url('fonts/Marvel-Bold.ttf') format('truetype'),
+    font-family: 'headline';
+    src: url('fonts/Oleo_Script/OleoScript-Regular.ttf') format('truetype'),
+}
+
+@font-face {
+    font-family: 'titles';
+    //font-family: 'headline';
+    src: url('fonts/Fjalla_One/FjallaOne-Regular.ttf') format('truetype'),
+}
+
+@font-face {
+    font-family: 'text';
+    src: url('fonts/Arvo/Arvo-Regular.ttf') format('truetype'),
 }
 
 body {
@@ -61,22 +73,28 @@ body {
 }
 
 h2 {
-    font-family: "titulos";
-    font-size: 2.5em;
+	font-family: "headline";
+	font-size: 2.5em;
+}
+
+#title > h2 > a {
+	font-family: "headline"; 
+}
+
+h3 {
+    font-family: "headline";
 }
 
 .btn {
     font-size: 1.4em;
-    font-family: "labels";
+    font-family: "headline";
 }
 
-.label {
-    font-family: "labels";
-    font-size: 1em;
-}
-
-a, p, h3, h4 {
-    font-family: "titulos";
+a,
+p,
+h4,
+li {
+    font-family: "text";
     &:link {text-decoration: none;}
     &:active {border: none;}
 }
@@ -116,7 +134,7 @@ li {
 /* --- Index Page --- */
 
 #header {
-	//background-image: url('images/concrete.jpg');
+	background-image: url('images/background/textured_paper.png');
 }
 
 #title  {
