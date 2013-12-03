@@ -1,14 +1,18 @@
 
 // ===== VARIABLES =====
 
-@sectionmargin: 30px;
+@concrete: url('images/background/textured_paper.png');
+@air-height: unit(`document.getElementById("air").clientHeight`, px) + 80;
 
 // --- Colors ---
-@title: #428BCA;
-@water:  #59B3F7;
+//@water:  #59B3F7;
+@water:  #5CA5DD;
+//@water:  #4594D0;
+//@water:  #237EC3;
+
 @darkwater: #0582E1;
 @bluetext: #066AB5;
-@grey:     #D6D6D6;
+@grey:     #8F999F;
 
 // ===== MIXINS =====
 
@@ -75,7 +79,7 @@ h2 {
 }
 
 #title > h2 > a {
-	font-family: "headline"; 
+	font-family: "headline";
 }
 
 h3 {
@@ -87,10 +91,17 @@ h3 {
     font-family: "headline";
 }
 
+.jumbotron {
+    background-color: none;
+    background-image: @concrete;
+    //height: 250px;
+}
+
 a,
 p,
 h4,
-li {
+li,
+#leveltxt {
     font-family: "text";
     &:link {text-decoration: none;}
     &:active {border: none;}
@@ -123,15 +134,67 @@ li {
 	}
 }
 
-.section {
+.content-section {
 	.margin-std;
+	& p { padding-top: 5px; }
 }
 
 
 /* --- Index Page --- */
 
-#header {
-	background-image: url('images/background/textured_paper.png');
+#air {
+    position: absolute;
+    z-index: 80;
+    width: 100%;
+    height: @air-height;
+    background-image: @concrete;
+    //background-color: @grey;
+    //padding-left: 20px;
+}
+
+#water {
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    //background-color: @water;
+}
+
+#level {
+    display: none;
+    position: fixed;
+    width: 10%;
+    //border-top: 2px solid white;
+    margin-top: 50px;
+    & #nivel { 
+        margin-top: 22px;
+        margin-left: 50px;
+    }
+    & #flecha {
+        margin-top: -26px;
+        margin-left: 70px;
+    }
+    & #leveltxt { 
+        margin-top: -44px;
+        margin-left: 90px;
+        font-size: 14px;
+    }
+}
+
+#level-fixed {
+    position: absolute;
+    margin-top: @air-height - 28;
+    margin-left: 50px;
+    & #flecha-fixed {
+        margin-left: 20px;
+    }
+}
+
+#contenido {
+    width: 100%;
+    position: absolute;
+    z-index: 90;
+    margin-top: @air-height;
+    background: none;
 }
 
 #title  {
@@ -145,6 +208,10 @@ li {
 #intro {
 	text-align: center;
 	& p {text-align: justify;}
+}
+
+#contenidos {
+    text-align: justify;
 }
 
 #overview {
@@ -164,6 +231,10 @@ li {
 }
 
 /* --- Screenshots Page --- */
+
+#screenshots-title {
+    padding-top: 20px;
+}
 
 #images {
 	& img {

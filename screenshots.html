@@ -28,54 +28,69 @@
 </head>
 
 <body>
-	
-	<a href="https://github.com/cartolab"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-	
-	<div id="header" class="jumbotron">
-	<div id="title" class="container">
-		<h2><a href="index.html">gvSIG-Epanet</a></h2>
-		<p class="lead">probablemente la mejor integración entre gvSIG y Epanet</p>
-	</div>
-	</div>
-	
-	<div class="container col-md-8 col-md-offset-2">
 
-		<h2>Screenshots</h2>
-		
-		<div id="images" class="">
-			<div class="caption section">
-				<img src="images/screenshots/1.jpg" class="img-responsive img-thumbnail" alt="screenshot#1" title="Screenshot One">
-				<p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
-			</div>
-			
-			<div class="caption section">
-				<img src="images/screenshots/2.jpg" class="img-responsive img-thumbnail" alt="screenshot#2" title="Screenshot Two">
-				<p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
-			</div>
-			
-			<div class="caption section">
-				<img src="images/screenshots/3.jpg" class="img-responsive img-thumbnail" alt="screenshot#3" title="Screenshot Three">
-				<p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
-			</div>
-			
-			<div class="caption section">
-				<img src="images/screenshots/4.jpg" class="img-responsive img-thumbnail" alt="screenshot#4" title="Screenshot Four">
-				<p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
-			</div>
-			
-			<div class="caption section">
-				<img src="images/screenshots/5.jpg" class="img-responsive img-thumbnail" alt="screenshot#5" title="Screenshot Five">
-				<p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
-			</div>
-			
-		</div>
-	
-	</div>
+    <!-- Section air -->
+    <section id="air" data-type="background">
+        <a href="https://github.com/cartolab"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+        <div id="header" class="jumbotron">
+        <div id="title" class="container">
+            <h2><a href="index.html">gvSIG-Epanet</a></h2>
+            <p class="lead">probablemente la mejor integración entre gvSIG y Epanet</p>
+        </div>
+        </div>
+    </section>  
+    
+    <!-- Section water -->
+    <section id="water" data-type="background">
+        <div id="level">
+            <h5>Level: <span id="leveltxt">25</span></h5>
+        </div>
+    </section>  
+
+    <section id="contenido">
+        <div id="contenidos" class="container">
+        <div class="col-md-8 col-md-offset-2">
+            
+            <h2 id="screenshots-title">Screenshots</h2>
+
+            <div id="images" class="">
+                
+                <div class="caption section">
+                    <img src="images/screenshots/1.jpg" class="img-responsive img-thumbnail" alt="screenshot#1" title="Screenshot One">
+                    <p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
+                </div>
+                
+                <div class="caption section">
+                    <img src="images/screenshots/2.jpg" class="img-responsive img-thumbnail" alt="screenshot#2" title="Screenshot Two">
+                    <p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
+                </div>
+                
+                <div class="caption section">
+                    <img src="images/screenshots/3.jpg" class="img-responsive img-thumbnail" alt="screenshot#3" title="Screenshot Three">
+                    <p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
+                </div>
+                
+                <div class="caption section">
+                    <img src="images/screenshots/4.jpg" class="img-responsive img-thumbnail" alt="screenshot#4" title="Screenshot Four">
+                    <p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
+                </div>
+                
+                <div class="caption section">
+                    <img src="images/screenshots/5.jpg" class="img-responsive img-thumbnail" alt="screenshot#5" title="Screenshot Five">
+                    <p><i>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.</i></p>
+                </div>
+                
+            </div>
+        
+        </div>
+        </div>
+    </section>  
 	
 	<!-- JS -->
 	<script type="text/javascript" src="bs/js/jquery.js"></script>
     <script type="text/javascript" src="bs/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="less.js"></script>
+    <script type="text/javascript" src="dotimeout.js" ></script>
 	<script type="text/javascript" src="gvsig-epanet.js"></script>
 
 </body>
