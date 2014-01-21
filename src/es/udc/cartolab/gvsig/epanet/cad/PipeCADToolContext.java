@@ -26,11 +26,14 @@
 package es.udc.cartolab.gvsig.epanet.cad;
 
 import java.awt.event.InputEvent;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import com.iver.andami.PluginServices;
+import com.iver.cit.gvsig.fmap.core.IGeometry;
 import com.iver.cit.gvsig.fmap.drivers.IFeatureIterator;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.iver.cit.gvsig.gui.cad.CADStatus;
@@ -46,12 +49,27 @@ public final class PipeCADToolContext extends statemap.FSMContext {
     // ---------------------------------------------------------------
     // Member methods.
     //
-    private static Collection<FLyrVect> pointLayers;
+    private Collection<FLyrVect> pointLayers;
+    private static List<IGeometry> geometries;
 
     public PipeCADToolContext(PipeCADTool owner) {
 	super();
 
 	pointLayers = Preferences.getPointLayers();
+
+	try {
+	    geometries = new ArrayList<IGeometry>();
+	    IFeatureIterator iterator;
+	    for (FLyrVect layer : pointLayers) {
+		iterator = layer.getSource().getFeatureIterator();
+		while (iterator.hasNext()) {
+		    geometries.add(iterator.next().getGeometry());
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
 	_owner = owner;
 	setState(Polyline.FirstPoint);
 	Polyline.FirstPoint.Entry(this);
@@ -329,12 +347,9 @@ public final class PipeCADToolContext extends statemap.FSMContext {
 	protected boolean validStartEnd(double x, double y) {
 	    try {
 		IFeatureIterator iterator;
-		for (FLyrVect layer : pointLayers) {
-		    iterator = layer.getSource().getFeatureIterator();
-		    while (iterator.hasNext()) {
-			if (iterator.next().getGeometry().contains(x, y)) {
-			    return true;
-			}
+		for (IGeometry geom : geometries) {
+		    if (geom.contains(x, y)) {
+			return true;
 		    }
 		}
 	    } catch (Exception e) {
