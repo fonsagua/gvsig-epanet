@@ -13,7 +13,7 @@ import com.iver.cit.gvsig.fmap.core.ShapeFactory;
 import com.iver.cit.gvsig.fmap.drivers.FieldDescription;
 
 import es.udc.cartolab.gvsig.shputils.FieldDescriptionFactory;
-import es.udc.cartolab.gvsig.shputils.SHPFactory;
+import es.udc.cartolab.gvsig.testutils.SHPFactory;
 
 public class FixtureSHPFactory {
 

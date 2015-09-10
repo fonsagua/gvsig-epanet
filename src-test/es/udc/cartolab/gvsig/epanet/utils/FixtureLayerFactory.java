@@ -19,7 +19,7 @@ import es.udc.cartolab.gvsig.epanet.structures.PumpWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ReservoirWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.TankWrapper;
 import es.udc.cartolab.gvsig.epanet.structures.ValveWrapper;
-import es.udc.cartolab.gvsig.shputils.SHPFactory;
+import es.udc.cartolab.gvsig.testutils.SHPFactory;
 
 public class FixtureLayerFactory {
 
