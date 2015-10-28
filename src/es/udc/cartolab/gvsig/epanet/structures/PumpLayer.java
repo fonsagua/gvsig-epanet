@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.hardcode.gdbms.driver.exceptions.ReadDriverException;
 import com.hardcode.gdbms.engine.values.NumericValue;
+import com.hardcode.gdbms.engine.values.Value;
 import com.iver.cit.gvsig.fmap.core.IFeature;
 import com.iver.cit.gvsig.fmap.layers.FLyrVect;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -64,21 +65,22 @@ public class PumpLayer extends LinkLayer {
 		.getNodesAt(coordinate);
 	if (existentNodesInThatCoord.size() > 1) {
 	    throw new InvalidNetworkError(ErrorCode.PUMP_POSITION,
-		    "Una bomba sólo puede estar sobre un tanque y en este punto hay más de un nodo");
+		    "Una bomba sólo puede estar sobre un tanque o pozo y en este punto hay más de un nodo");
 	}
 
 	if (existentNodesInThatCoord.size() == 1) {
 	    NodeWrapper existentNodeInThatCoord = existentNodesInThatCoord
 		    .get(0);
-	    if (!(existentNodeInThatCoord instanceof TankWrapper)) {
+	    
+	    if (!(existentNodeInThatCoord instanceof TankWrapper || isPozo(existentNodeInThatCoord))) {
 		throw new InvalidNetworkError(ErrorCode.PUMP_POSITION,
-			"Una bomba sólo puede estar sobre un tanque y en este punto no hay un tanque");
+			"Una bomba sólo puede estar sobre un tanque o pozo y en este punto no hay un tanque");
 	    }
 
 	    if (!MathUtils.compare(elevation, existentNodeInThatCoord.getNode()
 		    .getElevation())) {
 		throw new InvalidNetworkError(ErrorCode.DATA_MISSMATCH,
-			"La elevación de la bomba y la del tanque sobre la que está no coinciden");
+			"La elevación de la bomba y la del tanque o pozo sobre la que está no coinciden");
 	    }
 
 	    startNode = existentNodeInThatCoord;
@@ -109,6 +111,14 @@ public class PumpLayer extends LinkLayer {
 
 	return new int[] { flowIdx, velocityIdx, unitHeadLossIdx,
 		frictionFactorIdx };
+    }
+    
+    // FIXME. Este método se introduce como workaround, pero está rompiendo como
+    // funciona gvsig-epanet. gvsig-epanet debería ser un plugin independiente,
+    // cualquier conocimiento que tenga de las capas debería provenir del exterior
+    private boolean isPozo(NodeWrapper existentNodeInThatCoord) {
+	Value attribute = existentNodeInThatCoord.getFeature().getAttribute(4);
+	return attribute.toString().equalsIgnoreCase("pozo");
     }
 
 }
