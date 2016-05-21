@@ -37,6 +37,7 @@ public class RunExtension extends AbstractExtension {
 	try {
 	    PluginServices.getMDIManager().setWaitCursor();
 	    LayerParser layerParser = new LayerParser();
+	    layerParser.setLayerCheckers(Preferences.getLayerCheckers());
 	    layerParser.setNodeCheckers(Preferences.getNodeCheckers());
 	    layerParser.setLinkCheckers(Preferences.getLinkCheckers());
 	    layerParser.setNodesCheckers(Preferences.getNodesCheckers());

@@ -23,6 +23,7 @@ import es.udc.cartolab.gvsig.epanet.structures.ReservoirLayer;
 import es.udc.cartolab.gvsig.epanet.structures.SourceLayer;
 import es.udc.cartolab.gvsig.epanet.structures.TankLayer;
 import es.udc.cartolab.gvsig.epanet.structures.ValveLayer;
+import es.udc.cartolab.gvsig.epanet.structures.validations.LayerChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.LinkChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.NodeChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.NodesChecker;
@@ -42,6 +43,7 @@ public class LayerParser {
     private Map<String, NodeChecker> nodeCheckers;
     private Map<String, NodesChecker> nodesCheckers;
     private Map<String, LinkChecker> linkCheckers;
+    private Map<String, LayerChecker> layerCheckers;
 
     public LayerParser() {
 	nb = new NetworkBuilder();
@@ -61,45 +63,58 @@ public class LayerParser {
      * @throws InvalidNetworkError
      */
     public void add(FLayers fLayers) throws InvalidNetworkError {
-
+	
 	final FLyrVect sources = (FLyrVect) fLayers.getLayer(Preferences
 		.getLayerNames().getSources());
 	if (sources != null) {
+	    checkLayer(sources);
 	    addSources(sources);
 	}
 	final FLyrVect junctions = (FLyrVect) fLayers.getLayer(Preferences
 		.getLayerNames().getJunctions());
 	if (junctions != null) {
+	    checkLayer(junctions);
 	    addJunctions(junctions);
 	}
 	final FLyrVect reservoirs = (FLyrVect) fLayers.getLayer(Preferences
 		.getLayerNames().getReservoirs());
 	if (reservoirs != null) {
+	    checkLayer(reservoirs);
 	    addReservoirs(reservoirs);
 	}
 
 	final FLyrVect tanks = (FLyrVect) fLayers.getLayer(Preferences
 		.getLayerNames().getTanks());
 	if (tanks != null) {
+	    checkLayer(tanks);
 	    addTanks(tanks);
 	}
 
 	final FLyrVect valves = (FLyrVect) fLayers.getLayer(Preferences
 		.getLayerNames().getValves());
 	if (valves != null) {
+	    checkLayer(valves);
 	    addValves(valves);
 	}
 
 	final FLyrVect pumps = (FLyrVect) fLayers.getLayer(Preferences
 		.getLayerNames().getPumps());
 	if (pumps != null) {
+	    checkLayer(pumps);
 	    addPumps(pumps);
 	}
 
 	final FLyrVect pipes = (FLyrVect) fLayers.getLayer(Preferences
 		.getLayerNames().getPipes());
 	if (pipes != null) {
+	    checkLayer(pipes);
 	    addPipes(pipes);
+	}
+    }
+
+    private void checkLayer(FLyrVect layer) throws InvalidNetworkError {
+	for (LayerChecker checker : layerCheckers.values()) {
+	    checker.check(layer);
 	}
     }
 
@@ -308,6 +323,10 @@ public class LayerParser {
 
     public void setLinkCheckers(Map<String, LinkChecker> linkCheckers) {
 	this.linkCheckers = linkCheckers;
+    }
+
+    public void setLayerCheckers(Map<String, LayerChecker> layerCheckers) {
+	this.layerCheckers = layerCheckers;
     }
 
 }

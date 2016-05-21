@@ -14,7 +14,9 @@ import com.iver.cit.gvsig.listeners.EndGeometryListener;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 import es.udc.cartolab.gvsig.epanet.cad.EpanetEndGeometryListener;
+import es.udc.cartolab.gvsig.epanet.structures.validations.DuplicateGeometry;
 import es.udc.cartolab.gvsig.epanet.structures.validations.FlowSense;
+import es.udc.cartolab.gvsig.epanet.structures.validations.LayerChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.LinkChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.NegativePressure;
 import es.udc.cartolab.gvsig.epanet.structures.validations.NodeChecker;
@@ -38,6 +40,7 @@ public class Preferences {
     private static Map<String, LinkChecker> linkCheckers;
     private static HashMap<String, NodesChecker> nodesCheckers;
     private static EndGeometryListener cadListener;
+    private static HashMap<String, LayerChecker> layerCheckers;
 
     public static LayerNames getLayerNames() {
 	if (layerNames == null) {
@@ -165,6 +168,14 @@ public class Preferences {
 
     public static void setLayerNames(LayerNames layerNames) {
 	Preferences.layerNames = layerNames;
+    }
+    
+    public static Map<String, LayerChecker> getLayerCheckers() {
+	if (layerCheckers == null) {
+	    layerCheckers = new HashMap<String, LayerChecker>();
+	    layerCheckers.put(DuplicateGeometry.class.getName(), new DuplicateGeometry());
+	}
+	return layerCheckers;
     }
 
     public static Map<String, NodeChecker> getNodeCheckers() {
