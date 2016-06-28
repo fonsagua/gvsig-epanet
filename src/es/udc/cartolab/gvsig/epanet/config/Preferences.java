@@ -16,6 +16,7 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 import es.udc.cartolab.gvsig.epanet.cad.EpanetEndGeometryListener;
 import es.udc.cartolab.gvsig.epanet.structures.validations.DuplicateGeometry;
 import es.udc.cartolab.gvsig.epanet.structures.validations.FlowSense;
+import es.udc.cartolab.gvsig.epanet.structures.validations.IsolatedPoints;
 import es.udc.cartolab.gvsig.epanet.structures.validations.LayerChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.LinkChecker;
 import es.udc.cartolab.gvsig.epanet.structures.validations.NegativePressure;
@@ -174,6 +175,7 @@ public class Preferences {
 	if (layerCheckers == null) {
 	    layerCheckers = new HashMap<String, LayerChecker>();
 	    layerCheckers.put(DuplicateGeometry.class.getName(), new DuplicateGeometry());
+	    layerCheckers.put(IsolatedPoints.class.getName(), new IsolatedPoints());
 	}
 	return layerCheckers;
     }
