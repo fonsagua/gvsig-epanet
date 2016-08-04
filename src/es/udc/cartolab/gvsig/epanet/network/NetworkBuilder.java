@@ -324,6 +324,11 @@ public class NetworkBuilder {
 		    ErrorCode.TANK_MISSING,
 		    "Error de digitalización: El sistema ha de contener al menos un embalse o un depósito",
 		    e);
+	case 225:
+	    throw new InvalidNetworkError(
+		    ErrorCode.TANK_LEVELS,
+		    "Error. Valor mínimo o máximo incorrecto para un depósito",
+		    e);
 	default:
 	    throw new RuntimeException("Error desconocido", e);
 	}
