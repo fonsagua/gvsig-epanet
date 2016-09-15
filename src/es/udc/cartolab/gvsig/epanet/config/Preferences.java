@@ -172,11 +172,9 @@ public class Preferences {
     }
     
     public static Map<String, LayerChecker> getLayerCheckers() {
-	if (layerCheckers == null) {
 	    layerCheckers = new HashMap<String, LayerChecker>();
 	    layerCheckers.put(DuplicateGeometry.class.getName(), new DuplicateGeometry());
 	    layerCheckers.put(IsolatedPoints.class.getName(), new IsolatedPoints());
-	}
 	return layerCheckers;
     }
 
